@@ -4,11 +4,13 @@ import UIRouting
 enum AppSheet: Routable {
     case addTodo
     case filter
+    case advancedSettings
 
     var id: String {
         switch self {
         case .addTodo: return "addTodo"
         case .filter: return "filter"
+        case .advancedSettings: return "advancedSettings"
         }
     }
 
@@ -23,6 +25,8 @@ enum AppSheet: Routable {
             NavigationStack {
                 FilterSheet()
             }
+        case .advancedSettings:
+            AdvancedSettingsSheet()
         }
     }
 }

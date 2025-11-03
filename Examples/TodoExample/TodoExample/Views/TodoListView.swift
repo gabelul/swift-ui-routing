@@ -5,6 +5,7 @@ struct TodoListView: View {
     @Environment(.router(AppRoute.self)) private var router
     @Environment(.sheet(AppSheet.self)) private var sheetPresenter
     @Environment(.alert(AppAlert.self, context: .navigation)) private var alertPresenter
+    @Environment(.customHeightSheet(AppCustomHeightSheet.self)) private var customHeightSheetPresenter
 
     @State private var todos = Todo.samples
 
@@ -31,8 +32,30 @@ struct TodoListView: View {
         .navigationTitle("Todos")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button {
-                    sheetPresenter.present(.addTodo)
+                Menu {
+                    Button {
+                        sheetPresenter.present(.addTodo)
+                    } label: {
+                        Label("通常の追加", systemImage: "plus")
+                    }
+
+                    Button {
+                        customHeightSheetPresenter.present(.quickAdd)
+                    } label: {
+                        Label("クイック追加", systemImage: "bolt.fill")
+                    }
+
+                    Divider()
+
+                    Button(role: .destructive) {
+                        alertPresenter.present(.deleteConfirmation(todoTitle: "すべてのTodo") {
+                            withAnimation {
+                                deleteAllTodos()
+                            }
+                        })
+                    } label: {
+                        Label("すべて削除", systemImage: "trash")
+                    }
                 } label: {
                     Image(systemName: "plus")
                 }
@@ -56,6 +79,10 @@ struct TodoListView: View {
 
     private func deleteTodo(_ todo: Todo) {
         todos.removeAll { $0.id == todo.id }
+    }
+
+    private func deleteAllTodos() {
+        todos.removeAll()
     }
 }
 

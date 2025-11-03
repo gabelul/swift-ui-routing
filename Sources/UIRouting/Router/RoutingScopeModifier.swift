@@ -19,9 +19,10 @@ public struct RoutingScopeModifier<Route: Routable, Alert: Alertable>: ViewModif
 
         NavigationStack(path: $routerBinding.path) {
             content
+                .routingAlert(for: Alert.self)
                 .navigationDestination(for: Route.self) { route in
                     route.body
-                        .alertOnNavigation(for: Alert.self)
+                        .routingAlert(for: Alert.self)
                 }
         }
     }

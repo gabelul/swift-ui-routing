@@ -69,14 +69,24 @@ public struct AlertOnSheetModifier<Alert: Alertable>: ViewModifier {
 }
 
 public extension View {
-    /// Navigation内でアラートを表示
+    /// UIRoutingのアラートを表示（通常のコンテキスト）
+    ///
+    /// 通常は `.routingScope()` により自動適用されるため、直接呼ぶ必要はありません。
+    /// 独自のNavigationStackを使用する場合など、高度な使い方で明示的に適用する場合に使用します。
     ///
     /// # 使用例
     /// ```swift
+    /// // 基本パターン（推奨）
     /// ContentView()
-    ///     .alertOnNavigation(for: Alert.self)
+    ///     .routingScope(for: AppRoute.self, alert: AppAlert.self)
+    ///
+    /// // 高度な使い方: 独自NavigationStackを使う場合
+    /// NavigationStack(path: $customPath) {
+    ///     ContentView()
+    ///         .routingAlert(for: AppAlert.self)
+    /// }
     /// ```
-    func alertOnNavigation<Alert: Alertable>(for: Alert.Type) -> some View {
+    func routingAlert<Alert: Alertable>(for: Alert.Type) -> some View {
         modifier(AlertOnNavigationModifier<Alert>())
     }
 
@@ -85,9 +95,9 @@ public extension View {
     /// # 使用例
     /// ```swift
     /// SheetContent()
-    ///     .alertOnSheet(for: Alert.self)
+    ///     .sheetAlert(for: AppAlert.self)
     /// ```
-    func alertOnSheet<Alert: Alertable>(for: Alert.Type) -> some View {
+    func sheetAlert<Alert: Alertable>(for: Alert.Type) -> some View {
         modifier(AlertOnSheetModifier<Alert>())
     }
 }

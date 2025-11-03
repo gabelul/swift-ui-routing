@@ -4,6 +4,7 @@ import UIRouting
 struct TodoDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(.alert(AppAlert.self, context: .navigation)) private var alertPresenter
+    @Environment(.fullScreenCover(AppFullScreenCover.self)) private var fullScreenCoverPresenter
 
     let todo: Todo
     @State private var editedTitle: String
@@ -37,6 +38,20 @@ struct TodoDetailView: View {
                     dismiss()
                 }
                 .disabled(editedTitle.isEmpty)
+            }
+
+            Section("アクション") {
+                Button {
+                    fullScreenCoverPresenter.present(.noteEditor(todoId: todo.id))
+                } label: {
+                    Label("メモを編集", systemImage: "note.text")
+                }
+
+                Button {
+                    fullScreenCoverPresenter.present(.photoCapture)
+                } label: {
+                    Label("写真を撮影", systemImage: "camera.fill")
+                }
             }
 
             Section {

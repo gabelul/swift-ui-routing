@@ -1,6 +1,8 @@
 import SwiftUI
+import UIRouting
 
 struct SettingsView: View {
+    @Environment(.sheet(AppSheet.self)) private var sheetPresenter
     @State private var notificationsEnabled = true
     @State private var selectedTheme = "システム"
 
@@ -15,6 +17,14 @@ struct SettingsView: View {
                     Text("ライト").tag("ライト")
                     Text("ダーク").tag("ダーク")
                     Text("システム").tag("システム")
+                }
+            }
+
+            Section("詳細設定") {
+                Button {
+                    sheetPresenter.present(.advancedSettings)
+                } label: {
+                    Label("詳細設定", systemImage: "gearshape.2")
                 }
             }
 

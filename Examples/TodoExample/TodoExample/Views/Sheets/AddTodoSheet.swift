@@ -42,7 +42,7 @@ struct AddTodoSheet: View {
                 }
             }
         }
-        .alertOnSheet(for: AppAlert.self)
+        .sheetAlert(for: AppAlert.self)
     }
 }
 
