@@ -88,5 +88,6 @@ struct TodoListView: View {
 }
 
 #Preview {
-    TodoTabRoot()
+    @Previewable @State var tabPresenter = TabPresenter<AppTab>(initialTab: .todoList)
+    TabRouting(tabPresenter: tabPresenter, tabs: [AppTab.todoList, AppTab.settings])
 }

@@ -1,7 +1,7 @@
 import SwiftUI
 import UIRouting
 
-enum AppSheet: Routable {
+enum AppSheet: Sheetable {
     case addTodo
     case filter
     case advancedSettings

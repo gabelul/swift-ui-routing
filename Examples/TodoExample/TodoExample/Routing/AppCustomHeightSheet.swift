@@ -1,7 +1,7 @@
 import SwiftUI
 import UIRouting
 
-enum AppCustomHeightSheet: Routable {
+enum AppCustomHeightSheet: CustomHeightSheetable {
     case categoryPicker(onSelect: (Todo.Category) -> Void)
     case quickAdd
 

@@ -1,7 +1,7 @@
 import SwiftUI
 import UIRouting
 
-enum AppFullScreenCover: Routable {
+enum AppFullScreenCover: FullScreenCoverable {
     case photoCapture
     case noteEditor(todoId: UUID)
 

@@ -9,11 +9,28 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             Form {
-                Section("タブ切り替え") {
+                Section("タブ切り替えとナビゲーション") {
+                    // 基本: タブ切り替えのみ
                     Button {
                         tabPresenter.select(.todoList)
                     } label: {
                         Label("タスクタブへ移動", systemImage: "checklist")
+                    }
+
+                    // 拡張: タブ切り替え + 特定画面へ遷移
+                    Button {
+                        let sampleTodo = Todo(
+                            id: UUID(),
+                            title: "設定から開いたタスク",
+                            isCompleted: false,
+                            category: .work
+                        )
+
+                        tabPresenter.select(.todoList) { (router: Router<AppRoute>) in
+                            router.navigate(to: .todoDetail(todo: sampleTodo))
+                        }
+                    } label: {
+                        Label("特定のタスク詳細を開く", systemImage: "arrow.right.circle")
                     }
                 }
 
