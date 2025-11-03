@@ -116,37 +116,37 @@ import UIRouting
 
 // 画面遷移先を定義
 enum AppRoute: Routable {
-    case bookDetail(book: Book)
-    case chatMemo(bookId: String)
+    case detail(item: Item)
+    case settings
 
     var id: String {
         switch self {
-        case .bookDetail(let book):
-            return "bookDetail_\(book.id)"
-        case .chatMemo(let bookId):
-            return "chatMemo_\(bookId)"
+        case .detail(let item):
+            return "detail_\(item.id)"
+        case .settings:
+            return "settings"
         }
     }
 
     @ViewBuilder
     var body: some View {
         switch self {
-        case .bookDetail(let book):
-            BookDetailView(book: book)
-        case .chatMemo(let bookId):
-            ChatMemoView(bookId: bookId)
+        case .detail(let item):
+            DetailView(item: item)
+        case .settings:
+            SettingsView()
         }
     }
 }
 
 // ビューで使用
-struct BookListView: View {
+struct ContentView: View {
     @Environment(.router(AppRoute.self)) private var router
 
     var body: some View {
-        List(books) { book in
-            Button(book.title) {
-                router.navigate(to: .bookDetail(book: book))
+        List(items) { item in
+            Button(item.name) {
+                router.navigate(to: .detail(item: item))
             }
         }
         .routingScope(for: AppRoute.self)
@@ -159,26 +159,26 @@ struct BookListView: View {
 ```swift
 // シート画面を定義
 enum AppSheet: Routable {
-    case searchBook
-    case profileEdit
+    case filter
+    case create
 
     var id: String {
         switch self {
-        case .searchBook: return "searchBook"
-        case .profileEdit: return "profileEdit"
+        case .filter: return "filter"
+        case .create: return "create"
         }
     }
 
     @ViewBuilder
     var body: some View {
         switch self {
-        case .searchBook:
+        case .filter:
             NavigationStack {
-                BookSearchView()
+                FilterView()
             }
-        case .profileEdit:
+        case .create:
             NavigationStack {
-                ProfileEditView()
+                CreateView()
             }
         }
     }
@@ -210,8 +210,8 @@ struct ToolbarView: View {
     @Environment(.sheet(AppSheet.self)) private var sheetPresenter
 
     var body: some View {
-        Button("検索") {
-            sheetPresenter.present(.searchBook)
+        Button("フィルター") {
+            sheetPresenter.present(.filter)
         }
     }
 }
@@ -222,21 +222,21 @@ struct ToolbarView: View {
 ```swift
 // フルスクリーンカバーを定義
 enum AppFullScreenCover: Routable {
-    case chatMemo(bookId: String)
+    case editor(itemId: String)
 
     var id: String {
         switch self {
-        case .chatMemo(let bookId):
-            return "chatMemo_\(bookId)"
+        case .editor(let itemId):
+            return "editor_\(itemId)"
         }
     }
 
     @ViewBuilder
     var body: some View {
         switch self {
-        case .chatMemo(let bookId):
+        case .editor(let itemId):
             NavigationStack {
-                ChatMemoView(bookId: bookId)
+                EditorView(itemId: itemId)
             }
         }
     }
@@ -267,12 +267,13 @@ struct AppRootView: View {
 }
 
 // ビューで使用
-struct BookView: View {
+struct DetailView: View {
     @Environment(.fullScreenCover(AppFullScreenCover.self)) private var fullScreenCoverPresenter
+    let item: Item
 
     var body: some View {
-        Button("チャットメモを開く") {
-            fullScreenCoverPresenter.present(.chatMemo(bookId: book.id))
+        Button("編集") {
+            fullScreenCoverPresenter.present(.editor(itemId: item.id))
         }
     }
 }
