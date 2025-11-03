@@ -52,7 +52,6 @@ struct TodoDetailView: View {
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
-        .alertOnNavigation(for: AppAlert.self)
     }
 }
 

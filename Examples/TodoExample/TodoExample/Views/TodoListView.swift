@@ -9,46 +9,43 @@ struct TodoListView: View {
     @State private var todos = Todo.samples
 
     var body: some View {
-        NavigationStack {
-            List {
-                ForEach(todos) { todo in
-                    TodoRow(todo: todo) {
-                        toggleTodo(todo)
-                    }
-                    .onTapGesture {
-                        router.navigate(to: .todoDetail(todo: todo))
-                    }
-                    .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                        Button(role: .destructive) {
-                            alertPresenter.present(.deleteConfirmation(todoTitle: todo.title) {
-                                deleteTodo(todo)
-                            })
-                        } label: {
-                            Label("削除", systemImage: "trash")
+        List {
+            ForEach(todos) { todo in
+                TodoRow(todo: todo) {
+                    toggleTodo(todo)
+                }
+                .onTapGesture {
+                    router.navigate(to: .todoDetail(todo: todo))
+                }
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                    Button(role: .destructive) {
+                        withAnimation {
+                            deleteTodo(todo)
                         }
+                    } label: {
+                        Label("削除", systemImage: "trash")
                     }
                 }
             }
-            .navigationTitle("Todos")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button {
-                        sheetPresenter.present(.addTodo)
-                    } label: {
-                        Image(systemName: "plus")
-                    }
-                }
-                ToolbarItem(placement: .topBarLeading) {
-                    Button {
-                        router.navigate(to: .settings)
-                    } label: {
-                        Image(systemName: "gearshape")
-                    }
-                }
-            }
-            .routingScope(for: AppRoute.self)
-            .alertOnNavigation(for: AppAlert.self)
         }
+        .navigationTitle("Todos")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    sheetPresenter.present(.addTodo)
+                } label: {
+                    Image(systemName: "plus")
+                }
+            }
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    router.navigate(to: .settings)
+                } label: {
+                    Image(systemName: "gearshape")
+                }
+            }
+        }
+        .routingScope(for: AppRoute.self, alert: AppAlert.self)
     }
 
     private func toggleTodo(_ todo: Todo) {

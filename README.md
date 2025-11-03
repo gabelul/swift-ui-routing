@@ -97,10 +97,8 @@ struct ContentView: View {
     @Environment(.router(AppRoute.self)) private var router
 
     var body: some View {
-        NavigationStack {
-            Button("詳細へ") {
-                router.navigate(to: .detail(id: "123"))
-            }
+        Button("詳細へ") {
+            router.navigate(to: .detail(id: "123"))
         }
         .routingScope(for: AppRoute.self)
     }

@@ -5,12 +5,9 @@ import SwiftUI
 /// # 使用例
 /// ```swift
 /// ContentView()
-///     .routingScope(for: Screen.self)
-///     .navigationDestination(for: Screen.self) { screen in
-///         screen.body
-///     }
+///     .routingScope(for: Screen.self, alert: Alert.self)
 /// ```
-public struct RoutingScopeModifier<Route: Routable>: ViewModifier {
+public struct RoutingScopeModifier<Route: Routable, Alert: Alertable>: ViewModifier {
     @Environment private var router: Router<Route>
 
     public init() {
@@ -22,6 +19,10 @@ public struct RoutingScopeModifier<Route: Routable>: ViewModifier {
 
         NavigationStack(path: $routerBinding.path) {
             content
+                .navigationDestination(for: Route.self) { route in
+                    route.body
+                        .alertOnNavigation(for: Alert.self)
+                }
         }
     }
 }
@@ -29,8 +30,10 @@ public struct RoutingScopeModifier<Route: Routable>: ViewModifier {
 public extension View {
     /// NavigationStack と Router を連携
     ///
-    /// - Parameter for: ルーティング対象の型
-    func routingScope<Route: Routable>(for: Route.Type) -> some View {
-        modifier(RoutingScopeModifier<Route>())
+    /// - Parameters:
+    ///   - for: ルーティング対象の型
+    ///   - alert: アラートの型
+    func routingScope<Route: Routable, Alert: Alertable>(for: Route.Type, alert: Alert.Type) -> some View {
+        modifier(RoutingScopeModifier<Route, Alert>())
     }
 }
