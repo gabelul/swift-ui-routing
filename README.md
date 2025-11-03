@@ -9,18 +9,15 @@ SwiftUI向けの型安全で宣言的なルーティングライブラリ
 
 ## 概要
 
-`swift-ui-routing` は、SwiftUIアプリケーションで画面遷移、シート表示、アラート表示を型安全かつ宣言的に管理するためのルーティングライブラリです。静的メンバールックアップパターンとEnvironment値を活用し、簡潔で保守性の高いコードを実現します。
+SwiftUIアプリケーションで画面遷移、シート表示、アラート表示を**型安全**かつ**宣言的**に管理するルーティングライブラリ。
 
-### 主な機能
+### 主な特徴
 
-- ✅ **型安全なルーティング** - コンパイル時に型チェックされる画面遷移
-- ✅ **宣言的API** - SwiftUIの設計思想に沿った直感的なインターフェース
-- ✅ **静的メンバールックアップ** - `@Environment(.router(AppRoute.self))` による簡潔な記述
-- ✅ **コンテキスト分離** - NavigationとSheetで独立したアラート管理
-- ✅ **フルスクリーンカバー対応** - `.fullScreenCover()` による全画面モーダル表示
-- ✅ **カスタム高さシート対応** - `.presentationDetents()` による柔軟なシート高さ
-- ✅ **ゼロ依存** - SwiftUIのみに依存した軽量設計
-- ✅ **クロスプラットフォーム** - iOS および macOS 対応
+- ✅ **型安全** - コンパイル時に画面遷移を検証
+- ✅ **簡潔な記述** - `@Environment(.router(AppRoute.self))` で即座にアクセス
+- ✅ **コンテキスト分離** - NavigationとSheet で独立したアラート管理
+- ✅ **フルスクリーン・カスタムシート対応** - 全画面モーダルと柔軟なシート高さ
+- ✅ **軽量** - SwiftUIのみに依存、追加のフレームワーク不要
 
 ## 必要要件
 
@@ -107,37 +104,55 @@ struct ContentView: View {
 
 ## 使い方
 
-### 基本的な画面遷移
+### 1. ルートを定義
 
 ```swift
-import UIRouting
-
-// 画面遷移先を定義
 enum AppRoute: Routable {
     case detail(item: Item)
     case settings
 
     var id: String {
         switch self {
-        case .detail(let item):
-            return "detail_\(item.id)"
-        case .settings:
-            return "settings"
+        case .detail(let item): return "detail_\(item.id)"
+        case .settings: return "settings"
         }
     }
 
     @ViewBuilder
     var body: some View {
         switch self {
-        case .detail(let item):
-            DetailView(item: item)
-        case .settings:
-            SettingsView()
+        case .detail(let item): DetailView(item: item)
+        case .settings: SettingsView()
         }
     }
 }
+```
 
-// ビューで使用
+### 2. ルート画面でセットアップ
+
+```swift
+struct RootView: View {
+    @State private var router = Router<AppRoute>()
+    @State private var sheetPresenter = SheetPresenter<AppSheet>()
+    @State private var alertPresenterOnNavigation = AlertPresenter<AppAlert>()
+    @State private var alertPresenterOnSheet = AlertPresenter<AppAlert>()
+
+    var body: some View {
+        ContentView()
+            .routing(
+                router: router,
+                sheetPresenter: sheetPresenter,
+                alertPresenterOnNavigation: alertPresenterOnNavigation,
+                alertPresenterOnSheet: alertPresenterOnSheet
+            )
+            .sheet(item: $sheetPresenter.presentedSheet) { $0.body }
+    }
+}
+```
+
+### 3. ビューで使用
+
+```swift
 struct ContentView: View {
     @Environment(.router(AppRoute.self)) private var router
 
@@ -147,420 +162,126 @@ struct ContentView: View {
                 router.navigate(to: .detail(item: item))
             }
         }
-        .routingScope(for: AppRoute.self)
+        .routingScope(for: AppRoute.self, alert: AppAlert.self)
     }
 }
 ```
 
-### シート表示
+### シート・フルスクリーン・アラート
 
 ```swift
-// シート画面を定義
-enum AppSheet: Routable {
-    case filter
-    case create
+// シートを表示
+@Environment(.sheet(AppSheet.self)) private var sheetPresenter
+sheetPresenter.present(.filter)
 
-    var id: String {
-        switch self {
-        case .filter: return "filter"
-        case .create: return "create"
-        }
-    }
+// フルスクリーンカバーを表示
+@Environment(.fullScreenCover(AppFullScreenCover.self)) private var fullScreenCoverPresenter
+fullScreenCoverPresenter.present(.editor(itemId: "123"))
 
-    @ViewBuilder
-    var body: some View {
-        switch self {
-        case .filter:
-            NavigationStack {
-                FilterView()
-            }
-        case .create:
-            NavigationStack {
-                CreateView()
-            }
-        }
-    }
-}
-
-// アプリのルートでセットアップ
-struct AppRootView: View {
-    @State private var router = Router<AppRoute>()
-    @State private var sheetPresenter = SheetPresenter<AppSheet>()
-    @State private var alertPresenterOnNavigation = AlertPresenter<AppAlert>()
-    @State private var alertPresenterOnSheet = AlertPresenter<AppAlert>()
-
-    var body: some View {
-        ContentView()
-            .routing(
-                router: router,
-                sheetPresenter: sheetPresenter,
-                alertPresenterOnNavigation: alertPresenterOnNavigation,
-                alertPresenterOnSheet: alertPresenterOnSheet
-            )
-            .sheet(item: $sheetPresenter.presentedSheet) { sheet in
-                sheet.body
-            }
-    }
-}
-
-// ビューで使用
-struct ToolbarView: View {
-    @Environment(.sheet(AppSheet.self)) private var sheetPresenter
-
-    var body: some View {
-        Button("フィルター") {
-            sheetPresenter.present(.filter)
-        }
-    }
-}
+// アラートを表示
+@Environment(.alert(AppAlert.self, context: .navigation)) private var alertPresenter
+alertPresenter.present(.deleteConfirmation(itemName: "アイテム") {
+    // 削除処理
+})
 ```
 
-### フルスクリーンカバー表示
+### アラートの定義
 
 ```swift
-// フルスクリーンカバーを定義
-enum AppFullScreenCover: Routable {
-    case editor(itemId: String)
-
-    var id: String {
-        switch self {
-        case .editor(let itemId):
-            return "editor_\(itemId)"
-        }
-    }
-
-    @ViewBuilder
-    var body: some View {
-        switch self {
-        case .editor(let itemId):
-            NavigationStack {
-                EditorView(itemId: itemId)
-            }
-        }
-    }
-}
-
-// アプリのルートでセットアップ
-struct AppRootView: View {
-    @State private var router = Router<AppRoute>()
-    @State private var sheetPresenter = SheetPresenter<AppSheet>()
-    @State private var fullScreenCoverPresenter = FullScreenCoverPresenter<AppFullScreenCover>()
-    @State private var alertPresenterOnNavigation = AlertPresenter<AppAlert>()
-    @State private var alertPresenterOnSheet = AlertPresenter<AppAlert>()
-
-    var body: some View {
-        ContentView()
-            .routing(
-                router: router,
-                sheetPresenter: sheetPresenter,
-                customHeightSheetPresenter: CustomHeightSheetPresenter<Never>(),
-                fullScreenCoverPresenter: fullScreenCoverPresenter,
-                alertPresenterOnNavigation: alertPresenterOnNavigation,
-                alertPresenterOnSheet: alertPresenterOnSheet
-            )
-            .fullScreenCover(item: $fullScreenCoverPresenter.presentedCover) { cover in
-                cover.body
-            }
-    }
-}
-
-// ビューで使用
-struct DetailView: View {
-    @Environment(.fullScreenCover(AppFullScreenCover.self)) private var fullScreenCoverPresenter
-    let item: Item
-
-    var body: some View {
-        Button("編集") {
-            fullScreenCoverPresenter.present(.editor(itemId: item.id))
-        }
-    }
-}
-```
-
-### アラート表示
-
-```swift
-// アラートを定義
 enum AppAlert: Alertable {
-    case confirmation(
-        title: String,
-        message: String?,
-        onConfirm: () -> Void
-    )
-
-    case error(
-        title: String = "エラー",
-        message: String
-    )
-
-    case deleteConfirmation(
-        itemName: String,
-        onConfirm: () -> Void
-    )
+    case deleteConfirmation(itemName: String, onConfirm: () -> Void)
+    case error(message: String)
 
     var title: String {
         switch self {
-        case .confirmation(let title, _, _):
-            return title
-        case .error(let title, _):
-            return title
-        case .deleteConfirmation(let itemName, _):
-            return "\(itemName)を削除しますか？"
+        case .deleteConfirmation(let itemName, _): return "\(itemName)を削除しますか？"
+        case .error: return "エラー"
         }
     }
 
     var message: String? {
         switch self {
-        case .confirmation(_, let message, _):
-            return message
-        case .error(_, let message):
-            return message
-        case .deleteConfirmation:
-            return "この操作は取り消せません。"
+        case .deleteConfirmation: return "この操作は取り消せません。"
+        case .error(let message): return message
         }
     }
 
     var actions: [AlertAction] {
         switch self {
-        case .confirmation(_, _, let onConfirm):
-            return [
-                AlertAction(title: "キャンセル", role: .cancel, action: {}),
-                AlertAction(title: "確認", role: nil, action: onConfirm)
-            ]
-        case .error:
-            return [
-                AlertAction(title: "OK", role: nil, action: {})
-            ]
         case .deleteConfirmation(_, let onConfirm):
             return [
                 AlertAction(title: "キャンセル", role: .cancel, action: {}),
                 AlertAction(title: "削除", role: .destructive, action: onConfirm)
             ]
+        case .error:
+            return [AlertAction(title: "OK", role: nil, action: {})]
         }
     }
 
-    // Equatable conformance - closures are ignored in comparison
+    // Equatable/Hashable - closuresを除外
     static func == (lhs: AppAlert, rhs: AppAlert) -> Bool {
         switch (lhs, rhs) {
-        case (.confirmation(let lTitle, let lMessage, _), .confirmation(let rTitle, let rMessage, _)):
-            return lTitle == rTitle && lMessage == rMessage
-        case (.error(let lTitle, let lMessage), .error(let rTitle, let rMessage)):
-            return lTitle == rTitle && lMessage == rMessage
-        case (.deleteConfirmation(let lItemName, _), .deleteConfirmation(let rItemName, _)):
-            return lItemName == rItemName
-        default:
-            return false
+        case (.deleteConfirmation(let l, _), .deleteConfirmation(let r, _)): return l == r
+        case (.error(let l), .error(let r)): return l == r
+        default: return false
         }
     }
 
-    // Hashable conformance - closures are ignored in hashing
     func hash(into hasher: inout Hasher) {
         switch self {
-        case .confirmation(let title, let message, _):
-            hasher.combine(0)
-            hasher.combine(title)
-            hasher.combine(message)
-        case .error(let title, let message):
-            hasher.combine(1)
-            hasher.combine(title)
-            hasher.combine(message)
         case .deleteConfirmation(let itemName, _):
-            hasher.combine(2)
+            hasher.combine(0)
             hasher.combine(itemName)
-        }
-    }
-}
-
-// ビューで使用
-struct DeleteButton: View {
-    @Environment(.alert(AppAlert.self, context: .navigation)) private var alertPresenter
-
-    var body: some View {
-        Button("削除") {
-            alertPresenter.present(.deleteConfirmation(itemName: "アイテム") {
-                // 削除処理
-                deleteItem()
-            })
+        case .error(let message):
+            hasher.combine(1)
+            hasher.combine(message)
         }
     }
 }
 ```
 
-### コンテキスト分離（Navigation vs Sheet）
+### アラートのコンテキスト分離
 
-アラートは Navigation コンテキストと Sheet コンテキストで独立して管理されます：
-
-```swift
-struct ContentView: View {
-    // Navigation コンテキストのアラート
-    @Environment(.alert(AppAlert.self, context: .navigation)) private var navigationAlert
-
-    // Sheet コンテキストのアラート
-    @Environment(.alert(AppAlert.self, context: .sheet)) private var sheetAlert
-
-    var body: some View {
-        VStack {
-            Button("Navigation アラート") {
-                navigationAlert.present(.error(message: "Navigation のエラー"))
-            }
-
-            Button("シート表示") {
-                sheetPresenter.present(.settings)
-            }
-        }
-        .alertOnNavigation(for: AppAlert.self)
-    }
-}
-
-struct SettingsSheet: View {
-    @Environment(.alert(AppAlert.self, context: .sheet)) private var sheetAlert
-
-    var body: some View {
-        Button("Sheet アラート") {
-            sheetAlert.present(.error(message: "Sheet のエラー"))
-        }
-        .alertOnSheet(for: AppAlert.self)
-    }
-}
-```
-
-## API リファレンス
-
-### Router
-
-画面遷移を管理するクラス
+NavigationとSheetで独立したアラート管理：
 
 ```swift
-let router = Router<AppRoute>()
+// Navigation内でのアラート（自動適用）
+@Environment(.alert(AppAlert.self, context: .navigation)) private var alert
+// .routingScope() により自動的に適用される
 
-// 画面遷移
-router.navigate(to: .detail(id: "123"))
-
-// 前の画面に戻る
-router.back()
-
-// ルート画面まで戻る
-router.popToRoot()
-
-// 現在の画面を置き換え
-router.replace(with: .profile)
+// Sheet内でのアラート（手動適用）
+@Environment(.alert(AppAlert.self, context: .sheet)) private var sheetAlert
+// .sheetAlert(for: AppAlert.self) を明示的に適用
 ```
 
-### SheetPresenter
+## 主要なAPI
 
-シート表示を管理するクラス
+### Router - 画面遷移
 
 ```swift
-let sheetPresenter = SheetPresenter<AppSheet>()
-
-// シート表示
-sheetPresenter.present(.settings)
-
-// シートを閉じる
-sheetPresenter.dismiss()
-
-// 現在表示中のシート
-let currentSheet = sheetPresenter.presentedSheet
+router.navigate(to: .detail(id: "123"))  // 画面遷移
+router.back()                             // 前の画面へ
+router.popToRoot()                        // ルート画面へ
+router.replace(with: .profile)            // 現在の画面を置き換え
 ```
 
-### FullScreenCoverPresenter
-
-フルスクリーンカバーを管理するクラス
+### Presenter - モーダル表示
 
 ```swift
-let fullScreenCoverPresenter = FullScreenCoverPresenter<AppFullScreenCover>()
-
-// フルスクリーンカバー表示
-fullScreenCoverPresenter.present(.chatMemo(bookId: "123"))
-
-// フルスクリーンカバーを閉じる
-fullScreenCoverPresenter.dismiss()
-
-// 現在表示中のカバー
-let currentCover = fullScreenCoverPresenter.presentedCover
+sheetPresenter.present(.settings)                    // シート表示
+fullScreenCoverPresenter.present(.editor(id: "123")) // フルスクリーン表示
+customHeightSheetPresenter.present(.picker)          // カスタムシート表示
+alertPresenter.present(.error(message: "Error"))     // アラート表示
 ```
 
-### CustomHeightSheetPresenter
+## 詳細な実装例
 
-カスタム高さのシートを管理するクラス
+完全な実装例は [Examples/TodoExample](Examples/TodoExample) を参照してください：
 
-```swift
-let customHeightSheetPresenter = CustomHeightSheetPresenter<AppCustomHeightSheet>()
-
-// カスタム高さシート表示
-customHeightSheetPresenter.present(.picker)
-
-// シートを閉じる
-customHeightSheetPresenter.dismiss()
-```
-
-### AlertPresenter
-
-アラート表示を管理するクラス
-
-```swift
-let alertPresenter = AlertPresenter<AppAlert>()
-
-// アラート表示
-alertPresenter.present(.error(message: "エラーが発生しました"))
-
-// アラートを閉じる
-alertPresenter.dismiss()
-
-// 現在表示中のアラート
-let currentAlert = alertPresenter.presentedAlert
-```
-
-## プロトコル
-
-### Routable
-
-画面遷移先やシート画面を定義するプロトコル
-
-```swift
-public protocol Routable: Identifiable, Hashable {
-    associatedtype Body: View
-
-    @ViewBuilder
-    var body: Body { get }
-}
-```
-
-### Alertable
-
-アラートを定義するプロトコル
-
-```swift
-public protocol Alertable: Identifiable, Hashable {
-    var title: String { get }
-    var message: String? { get }
-    var actions: [AlertAction] { get }
-}
-```
-
-## 設計思想
-
-### 静的メンバールックアップパターン
-
-`@Environment` の引数として関数呼び出しのような記法を使用することで、型安全性と可読性を両立しています：
-
-```swift
-// 従来の方法（型安全だが冗長）
-@Environment(\.routerForAppRoute) private var router
-
-// 静的メンバールックアップパターン（簡潔で型安全）
-@Environment(.router(AppRoute.self)) private var router
-@Environment(.sheet(AppSheet.self)) private var sheetPresenter
-@Environment(.alert(AppAlert.self, context: .navigation)) private var alertPresenter
-```
-
-### コンテキスト分離
-
-Navigation と Sheet で独立したアラート管理を実現することで、以下のメリットがあります：
-
-- **明確な責任分離** - 各コンテキストで独立してアラートを管理
-- **バグの防止** - Sheet を閉じても Navigation のアラートは影響を受けない
-- **直感的な動作** - ユーザーの期待に沿った動作を実現
+- ✅ 基本的な画面遷移とアラート
+- ✅ フルスクリーンモーダル（カメラ、メモ編集）
+- ✅ カスタム高さシート（カテゴリー選択、クイック追加）
+- ✅ Sheet内での独自NavigationStackとアラート処理
 
 ## ライセンス
 
