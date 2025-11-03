@@ -70,6 +70,20 @@ public extension FullScreenCoverEnvironmentKey {
     }
 }
 
+/// TabPresenter用の環境値アクセス
+public struct TabEnvironmentKey<Tab: Tabbable> {
+    fileprivate let specifier: TabPresenterSpecifier<Tab>
+    fileprivate init() {
+        self.specifier = TabPresenterSpecifier<Tab>()
+    }
+}
+
+public extension TabEnvironmentKey {
+    static func tab(_ type: Tab.Type) -> TabEnvironmentKey<Tab> {
+        TabEnvironmentKey<Tab>()
+    }
+}
+
 public extension Environment {
     init<Route: Routable>(_ key: RouterEnvironmentKey<Route>) where Value == Router<Route> {
         self.init(\.[router: key.specifier])
@@ -89,5 +103,9 @@ public extension Environment {
 
     init<Cover>(_ key: FullScreenCoverEnvironmentKey<Cover>) where Value == FullScreenCoverPresenter<Cover>, Cover: Identifiable & Hashable {
         self.init(\.[fullScreenCoverPresenter: key.specifier])
+    }
+
+    init<Tab: Tabbable>(_ key: TabEnvironmentKey<Tab>) where Value == TabPresenter<Tab> {
+        self.init(\.[tabPresenter: key.specifier])
     }
 }

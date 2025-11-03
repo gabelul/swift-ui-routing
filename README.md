@@ -17,6 +17,7 @@ SwiftUIアプリケーションで画面遷移、シート表示、アラート�
 - ✅ **簡潔な記述** - `@Environment(.router(AppRoute.self))` で即座にアクセス
 - ✅ **コンテキスト分離** - NavigationとSheet で独立したアラート管理
 - ✅ **フルスクリーン・カスタムシート対応** - 全画面モーダルと柔軟なシート高さ
+- ✅ **TabView対応** - 型安全なタブ管理とプログラマティックな切り替え
 - ✅ **軽量** - SwiftUIのみに依存、追加のフレームワーク不要
 
 ## 必要要件
@@ -167,7 +168,7 @@ struct ContentView: View {
 }
 ```
 
-### シート・フルスクリーン・アラート
+### シート・フルスクリーン・アラート・タブ
 
 ```swift
 // シートを表示
@@ -183,6 +184,10 @@ fullScreenCoverPresenter.present(.editor(itemId: "123"))
 alertPresenter.present(.deleteConfirmation(itemName: "アイテム") {
     // 削除処理
 })
+
+// タブを切り替え
+@Environment(.tab(AppTab.self)) private var tabPresenter
+tabPresenter.select(.search)
 ```
 
 ### アラートの定義
@@ -272,6 +277,127 @@ sheetPresenter.present(.settings)                    // シート表示
 fullScreenCoverPresenter.present(.editor(id: "123")) // フルスクリーン表示
 customHeightSheetPresenter.present(.picker)          // カスタムシート表示
 alertPresenter.present(.error(message: "Error"))     // アラート表示
+tabPresenter.select(.search)                         // タブ切り替え
+```
+
+## TabView対応
+
+### タブの定義
+
+```swift
+enum AppTab: Tabbable {
+    case home
+    case search
+    case profile
+
+    var id: String {
+        switch self {
+        case .home: return "home"
+        case .search: return "search"
+        case .profile: return "profile"
+        }
+    }
+
+    @ViewBuilder
+    var body: some View {
+        switch self {
+        case .home: HomeView()
+        case .search: SearchView()
+        case .profile: ProfileView()
+        }
+    }
+
+    @ViewBuilder
+    var tabLabel: some View {
+        switch self {
+        case .home:
+            Label("ホーム", systemImage: "house")
+        case .search:
+            Label("検索", systemImage: "magnifyingglass")
+        case .profile:
+            Label("プロフィール", systemImage: "person")
+        }
+    }
+}
+```
+
+### TabViewのセットアップ
+
+```swift
+@main
+struct MyApp: App {
+    @State private var tabPresenter = TabPresenter<AppTab>(initialTab: .home)
+
+    var body: some Scene {
+        WindowGroup {
+            TabRouting(
+                tabPresenter: tabPresenter,
+                tabs: [.home, .search, .profile]
+            )
+        }
+    }
+}
+```
+
+### タブの切り替え
+
+```swift
+struct HomeView: View {
+    @Environment(.tab(AppTab.self)) private var tabPresenter
+
+    var body: some View {
+        Button("検索タブへ移動") {
+            tabPresenter.select(.search)
+        }
+    }
+}
+```
+
+### タブごとの独立したNavigation
+
+各タブは独自のNavigationStackとRouterを持つことができます：
+
+```swift
+enum AppTab: Tabbable {
+    case home
+    case settings
+
+    var id: String { /* ... */ }
+
+    @ViewBuilder
+    var body: some View {
+        switch self {
+        case .home:
+            // ホームタブ: 独自のNavigationStackとRouter
+            HomeTabRoot()
+        case .settings:
+            // 設定タブ: シンプルなビュー
+            SettingsView()
+        }
+    }
+
+    @ViewBuilder
+    var tabLabel: some View { /* ... */ }
+}
+
+struct HomeTabRoot: View {
+    @State private var router = Router<HomeRoute>()
+    @State private var sheetPresenter = SheetPresenter<HomeSheet>()
+    @State private var alertPresenterOnNavigation = AlertPresenter<HomeAlert>()
+    @State private var alertPresenterOnSheet = AlertPresenter<HomeAlert>()
+
+    var body: some View {
+        HomeListView()
+            .routing(
+                router: router,
+                sheetPresenter: sheetPresenter,
+                alertPresenterOnNavigation: alertPresenterOnNavigation,
+                alertPresenterOnSheet: alertPresenterOnSheet
+            )
+            .routingScope(for: HomeRoute.self, alert: HomeAlert.self)
+            .sheet(item: $sheetPresenter.presentedSheet) { $0.body }
+    }
+}
 ```
 
 ## 詳細な実装例
@@ -282,6 +408,7 @@ alertPresenter.present(.error(message: "Error"))     // アラート表示
 - ✅ フルスクリーンモーダル（カメラ、メモ編集）
 - ✅ カスタム高さシート（カテゴリー選択、クイック追加）
 - ✅ Sheet内での独自NavigationStackとアラート処理
+- ✅ TabView統合とタブごとの独立したNavigation
 
 ## ライセンス
 

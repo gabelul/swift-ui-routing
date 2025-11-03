@@ -6,6 +6,7 @@ struct TodoListView: View {
     @Environment(.sheet(AppSheet.self)) private var sheetPresenter
     @Environment(.alert(AppAlert.self, context: .navigation)) private var alertPresenter
     @Environment(.customHeightSheet(AppCustomHeightSheet.self)) private var customHeightSheetPresenter
+    @Environment(.tab(AppTab.self)) private var tabPresenter
 
     @State private var todos = Todo.samples
 
@@ -62,7 +63,7 @@ struct TodoListView: View {
             }
             ToolbarItem(placement: .topBarLeading) {
                 Button {
-                    router.navigate(to: .settings)
+                    tabPresenter.select(.settings)
                 } label: {
                     Image(systemName: "gearshape")
                 }
@@ -87,5 +88,5 @@ struct TodoListView: View {
 }
 
 #Preview {
-    RootView()
+    TodoTabRoot()
 }

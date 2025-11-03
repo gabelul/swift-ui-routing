@@ -71,7 +71,5 @@ struct TodoDetailView: View {
 }
 
 #Preview {
-    NavigationStack {
-        TodoDetailView(todo: Todo.samples[0])
-    }
+    TodoTabRoot()
 }

@@ -82,3 +82,16 @@ struct GenericAlertPresenterOnSheetKey<Alert: Alertable>: EnvironmentKey {
         }
     }
 }
+
+extension TabPresenter {
+    @MainActor
+    static func createDefault(initialTab: Tab) -> TabPresenter<Tab> {
+        TabPresenter<Tab>(initialTab: initialTab)
+    }
+}
+
+struct GenericTabPresenterKey<Tab: Tabbable>: EnvironmentKey {
+    static var defaultValue: TabPresenter<Tab> {
+        fatalError("TabPresenter must be explicitly provided via .tabRouting()")
+    }
+}

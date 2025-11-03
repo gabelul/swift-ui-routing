@@ -39,5 +39,10 @@ extension EnvironmentValues {
         get { self[GenericFullScreenCoverPresenterKey<Cover>.self] }
         set { self[GenericFullScreenCoverPresenterKey<Cover>.self] = newValue }
     }
+
+    subscript<Tab: Tabbable>(tabPresenter specifier: TabPresenterSpecifier<Tab>) -> TabPresenter<Tab> {
+        get { self[GenericTabPresenterKey<Tab>.self] }
+        set { self[GenericTabPresenterKey<Tab>.self] = newValue }
+    }
 }
 
