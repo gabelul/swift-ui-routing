@@ -111,8 +111,8 @@ public final class TabPresenter<Tab: Tabbable> {
 
     /// 保留中のナビゲーションを実行
     ///
-    /// 各タブのルートビューの `onAppear` で呼び出されます。
-    /// 通常、`TabRoutingModifier`が自動的に呼び出すため、手動で呼ぶ必要はありません。
+    /// タブ選択の変更時に `TabRoutingModifier` から自動的に呼び出されます。
+    /// 通常、手動で呼ぶ必要はありません。
     ///
     /// - Parameters:
     ///   - tab: 現在のタブ
@@ -126,10 +126,13 @@ public final class TabPresenter<Tab: Tabbable> {
             return
         }
 
+        // 二重実行を防ぐため、非同期実行前に即座にクリア
+        let actionToExecute = pending.action
+        pendingNavigation = nil
+
         // 次のrunloopで実行（タブ切り替えアニメーション完了後）
-        DispatchQueue.main.async { [weak self] in
-            pending.action(router)
-            self?.pendingNavigation = nil
+        DispatchQueue.main.async {
+            actionToExecute(router)
         }
     }
 

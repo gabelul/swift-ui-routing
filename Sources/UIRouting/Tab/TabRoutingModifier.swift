@@ -48,9 +48,12 @@ public struct TabRoutingModifier<
             .modifier(FullScreenCoverModifierIfNeeded(presenter: fullScreenCoverPresenter))
             // CustomHeightSheetの自動適用
             .modifier(CustomHeightSheetModifierIfNeeded(presenter: customHeightSheetPresenter))
-            // TabPresenterとの統合
-            .onAppear {
-                tabPresenter.executePendingNavigation(for: currentTab, with: router)
+            // TabPresenterとの統合: タブ選択変更時にpendingNavigationを実行
+            .onChange(of: tabPresenter.selectedTab) { oldValue, newValue in
+                // このタブが選択されたときのみ実行
+                if newValue == currentTab {
+                    tabPresenter.executePendingNavigation(for: currentTab, with: router)
+                }
             }
     }
 }
