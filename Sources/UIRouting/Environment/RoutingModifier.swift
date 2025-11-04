@@ -11,7 +11,8 @@ public struct RoutingModifier<
     Sheet,
     CustomHeightSheet,
     FullScreenCover,
-    Alert: Alertable
+    Alert: Alertable,
+    Sidebar: SidebarItem
 >: ViewModifier
     where
     Sheet: Sheetable,
@@ -24,6 +25,7 @@ public struct RoutingModifier<
     private let fullScreenCoverPresenter: FullScreenCoverPresenter<FullScreenCover>
     private let alertPresenterOnNavigation: AlertPresenter<Alert>
     private let alertPresenterOnSheet: AlertPresenter<Alert>
+    private let splitViewPresenter: SplitViewPresenter<Sidebar>
 
     public init(
         router: Router<Route>,
@@ -31,7 +33,8 @@ public struct RoutingModifier<
         customHeightSheetPresenter: CustomHeightSheetPresenter<CustomHeightSheet>,
         fullScreenCoverPresenter: FullScreenCoverPresenter<FullScreenCover>,
         alertPresenterOnNavigation: AlertPresenter<Alert>,
-        alertPresenterOnSheet: AlertPresenter<Alert>
+        alertPresenterOnSheet: AlertPresenter<Alert>,
+        splitViewPresenter: SplitViewPresenter<Sidebar>
     ) {
         self.router = router
         self.sheetPresenter = sheetPresenter
@@ -39,6 +42,7 @@ public struct RoutingModifier<
         self.fullScreenCoverPresenter = fullScreenCoverPresenter
         self.alertPresenterOnNavigation = alertPresenterOnNavigation
         self.alertPresenterOnSheet = alertPresenterOnSheet
+        self.splitViewPresenter = splitViewPresenter
     }
 
     public func body(content: Content) -> some View {
@@ -50,6 +54,7 @@ public struct RoutingModifier<
                 environment[fullScreenCoverPresenter: FullScreenCoverPresenterSpecifier<FullScreenCover>()] = fullScreenCoverPresenter
                 environment[alertPresenter: AlertPresenterSpecifier<Alert>(context: .navigation)] = alertPresenterOnNavigation
                 environment[alertPresenter: AlertPresenterSpecifier<Alert>(context: .sheet)] = alertPresenterOnSheet
+                environment[splitViewPresenter: SplitViewPresenterSpecifier<Sidebar>()] = splitViewPresenter
             }
     }
 }
@@ -85,13 +90,14 @@ public extension View {
     ///   - alertPresenterOnNavigation: Navigation コンテキストのアラート表示管理
     ///   - alertPresenterOnSheet: Sheet コンテキストのアラート表示管理
     /// - Returns: ルーティング環境が注入されたビュー
-    func routing<Route: Routable, Sheet, CustomHeightSheet, FullScreenCover, Alert: Alertable>(
+    func routing<Route: Routable, Sheet, CustomHeightSheet, FullScreenCover, Alert: Alertable, Sidebar: SidebarItem>(
         router: Router<Route>,
         sheetPresenter: SheetPresenter<Sheet>,
         customHeightSheetPresenter: CustomHeightSheetPresenter<CustomHeightSheet>,
         fullScreenCoverPresenter: FullScreenCoverPresenter<FullScreenCover>,
         alertPresenterOnNavigation: AlertPresenter<Alert>,
-        alertPresenterOnSheet: AlertPresenter<Alert>
+        alertPresenterOnSheet: AlertPresenter<Alert>,
+        splitViewPresenter: SplitViewPresenter<Sidebar>
     ) -> some View
         where
         Sheet: Sheetable,
@@ -104,7 +110,8 @@ public extension View {
             customHeightSheetPresenter: customHeightSheetPresenter,
             fullScreenCoverPresenter: fullScreenCoverPresenter,
             alertPresenterOnNavigation: alertPresenterOnNavigation,
-            alertPresenterOnSheet: alertPresenterOnSheet
+            alertPresenterOnSheet: alertPresenterOnSheet,
+            splitViewPresenter: splitViewPresenter
         ))
     }
 
@@ -146,7 +153,8 @@ public extension View {
             customHeightSheetPresenter: CustomHeightSheetPresenter<Never>(),
             fullScreenCoverPresenter: FullScreenCoverPresenter<Never>(),
             alertPresenterOnNavigation: alertPresenterOnNavigation,
-            alertPresenterOnSheet: alertPresenterOnSheet
+            alertPresenterOnSheet: alertPresenterOnSheet,
+            splitViewPresenter: SplitViewPresenter<Never>()
         )
     }
 }

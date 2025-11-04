@@ -26,7 +26,7 @@ extension View {
         tab: Tab
     ) -> some View where Tab: Tabbable {
         modifier(
-            TabRoutingModifier<Tab, Tab.Route, Tab.Sheet, Tab.Alert, Tab.FullScreen, Tab.CustomSheet>(
+            TabRoutingModifier<Tab, Tab.Route, Tab.Sheet, Tab.Alert, Tab.FullScreen, Tab.CustomSheet, Tab.Sidebar>(
                 tab: tab
             )
         )

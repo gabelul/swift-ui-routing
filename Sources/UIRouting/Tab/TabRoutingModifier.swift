@@ -14,8 +14,9 @@ public struct TabRoutingModifier<
     Sheet: Sheetable,
     Alert: Alertable,
     FullScreen: FullScreenCoverable,
-    CustomSheet: CustomHeightSheetable
->: ViewModifier where Tab.Route == Route {
+    CustomSheet: CustomHeightSheetable,
+    Sidebar: SidebarItem
+>: ViewModifier where Tab.Route == Route, Tab.Sidebar == Sidebar {
 
     @Environment private var tabPresenter: TabPresenter<Tab>
 
@@ -28,6 +29,7 @@ public struct TabRoutingModifier<
     @State private var alertPresenterOnSheet = AlertPresenter<Alert>()
     @State private var fullScreenCoverPresenter = FullScreenCoverPresenter<FullScreen>()
     @State private var customHeightSheetPresenter = CustomHeightSheetPresenter<CustomSheet>()
+    @State private var splitViewPresenter = SplitViewPresenter<Sidebar>()
 
     public init(tab: Tab) {
         self.currentTab = tab
@@ -36,7 +38,8 @@ public struct TabRoutingModifier<
 
     public func body(content: Content) -> some View {
         content
-            .routingScope(for: Route.self, alert: Alert.self)
+            // NavigationStack または NavigationSplitView を条件分岐で適用
+            .modifier(NavigationScopeModifierIfNeeded<Tab, Route, Alert, Sidebar>(tab: currentTab))
             // 既存のroutingモディファイアを適用
             .routing(
                 router: router,
@@ -44,7 +47,8 @@ public struct TabRoutingModifier<
                 customHeightSheetPresenter: customHeightSheetPresenter,
                 fullScreenCoverPresenter: fullScreenCoverPresenter,
                 alertPresenterOnNavigation: alertPresenterOnNavigation,
-                alertPresenterOnSheet: alertPresenterOnSheet
+                alertPresenterOnSheet: alertPresenterOnSheet,
+                splitViewPresenter: splitViewPresenter
             )
             // Sheetの自動適用
             .modifier(SheetModifierIfNeeded(presenter: sheetPresenter))
@@ -60,6 +64,32 @@ public struct TabRoutingModifier<
 }
 
 // MARK: - Conditional Modifiers
+
+/// NavigationStack または NavigationSplitView を条件分岐で適用する内部用 Modifier。
+///
+/// タブの Sidebar 型が Never でない場合は NavigationSplitView を、
+/// そうでない場合は NavigationStack を適用します。
+private struct NavigationScopeModifierIfNeeded<
+    Tab: Tabbable,
+    Route: Routable,
+    Alert: Alertable,
+    Sidebar: SidebarItem
+>: ViewModifier where Tab.Route == Route, Tab.Sidebar == Sidebar {
+    let tab: Tab
+
+    func body(content: Content) -> some View {
+        if Tab.Sidebar.self != Never.self {
+            // NavigationSplitView を使用
+            content.splitViewScope(for: Sidebar.self, items: tab.sidebarItems, alert: Alert.self)
+        } else if Tab.Route.self != Never.self {
+            // NavigationStack を使用
+            content.routingScope(for: Route.self, alert: Alert.self)
+        } else {
+            // どちらも使用しない
+            content
+        }
+    }
+}
 
 /// Sheet が必要な場合のみ適用する内部用 Modifier。
 ///

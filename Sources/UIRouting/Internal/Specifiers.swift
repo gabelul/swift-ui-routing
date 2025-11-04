@@ -97,3 +97,17 @@ struct TabPresenterSpecifier<Tab: Tabbable>: Hashable {
         true
     }
 }
+
+// MARK: - SplitViewPresenter Specifier
+
+struct SplitViewPresenterSpecifier<Sidebar: SidebarItem>: Hashable {
+    init() {}
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(Sidebar.self))
+    }
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        true
+    }
+}

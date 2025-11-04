@@ -52,11 +52,17 @@ public protocol Tabbable<Route>: Hashable, Identifiable {
     associatedtype FullScreen: FullScreenCoverable = Never
     associatedtype CustomSheet: CustomHeightSheetable = Never
 
+    // NavigationSplitView 用（デフォルトは Never）
+    associatedtype Sidebar: SidebarItem = Never
+
     /// タブの内容ビュー
     @ViewBuilder var contentView: ContentView { get }
 
     /// タブアイテムのラベル
     @ViewBuilder var tabLabel: TabLabel { get }
+
+    /// サイドバー項目（Sidebar != Never の場合のみ使用）
+    var sidebarItems: [Sidebar] { get }
 }
 
 // MARK: - Default Implementations
@@ -76,4 +82,9 @@ public extension Tabbable where ID == String {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
+}
+
+// NavigationStack を使用する場合（Sidebar == Never）のデフォルト実装
+public extension Tabbable where Sidebar == Never {
+    var sidebarItems: [Never] { [] }
 }

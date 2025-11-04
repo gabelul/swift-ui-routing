@@ -44,5 +44,10 @@ extension EnvironmentValues {
         get { self[GenericTabPresenterKey<Tab>.self] }
         set { self[GenericTabPresenterKey<Tab>.self] = newValue }
     }
+
+    subscript<Sidebar: SidebarItem>(splitViewPresenter specifier: SplitViewPresenterSpecifier<Sidebar>) -> SplitViewPresenter<Sidebar> {
+        get { self[GenericSplitViewPresenterKey<Sidebar>.self] }
+        set { self[GenericSplitViewPresenterKey<Sidebar>.self] = newValue }
+    }
 }
 

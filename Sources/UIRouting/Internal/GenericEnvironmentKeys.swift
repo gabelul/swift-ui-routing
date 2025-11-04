@@ -35,6 +35,13 @@ extension AlertPresenter {
     }
 }
 
+extension SplitViewPresenter {
+    @MainActor
+    static func createDefault() -> SplitViewPresenter<Sidebar> {
+        SplitViewPresenter<Sidebar>()
+    }
+}
+
 struct GenericRouterKey<Route: Routable>: EnvironmentKey {
     static var defaultValue: Router<Route> {
         MainActor.assumeIsolated {
@@ -86,5 +93,13 @@ struct GenericAlertPresenterOnSheetKey<Alert: Alertable>: EnvironmentKey {
 struct GenericTabPresenterKey<Tab: Tabbable>: EnvironmentKey {
     static var defaultValue: TabPresenter<Tab> {
         fatalError("TabPresenter must be explicitly provided via .tabRouting()")
+    }
+}
+
+struct GenericSplitViewPresenterKey<Sidebar: SidebarItem>: EnvironmentKey {
+    static var defaultValue: SplitViewPresenter<Sidebar> {
+        MainActor.assumeIsolated {
+            SplitViewPresenter<Sidebar>.createDefault()
+        }
     }
 }
