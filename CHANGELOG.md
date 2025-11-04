@@ -5,6 +5,45 @@
 このフォーマットは [Keep a Changelog](https://keepachangelog.com/ja/1.0.0/) に基づいており、
 このプロジェクトは [Semantic Versioning](https://semver.org/lang/ja/) に準拠しています。
 
+## [1.0.4] - 2025-11-04
+
+### 追加
+- **ThreeColumnSplitViewRouting**: 3カラムNavigationSplitView（サイドバー | リスト | 詳細）の完全対応
+  - `ContentItem: Selectable` - 中央カラムで選択可能なアイテム型
+  - `ContentRoute: Routable` - 中央カラム内でのナビゲーション
+  - `contentView` - 中央カラムに表示するビュー
+- **4階層ルーティング**:
+  1. サイドバー切り替え（受信箱 → 送信済み）
+  2. コンテンツ選択（メール選択 → 詳細に表示）
+  3. ContentRoute（中央カラム内のpush遷移）
+  4. DetailRoute（詳細カラム内のpush遷移）
+- **selectedContentBinding**: 中央カラムの選択状態を型安全に管理
+  - `@Environment(.selectedContentBinding(Email.self))` でアクセス
+  - ジェネリックな実装で完全な型安全性
+- **MailExample**: 3カラムSplitViewの完全実装例
+  - サイドバーごとに異なるデータ表示
+  - ContentRoute/DetailRouteの実装例
+  - 2カラムとの比較
+
+### 改善
+- **README完全リニューアル**: 404行 → 238行（41%削減）
+  - 冒頭にコード例を追加（3行で全機能を理解）
+  - 3カラムSplitViewの完全説明
+  - API一覧の追加
+  - 実装例重視の構成
+- **ドキュメントコメント改善**: 利用者目線での説明に統一
+  - 「将来使用」などの不正確な表現を削除
+  - 具体例を汎用的に改善
+  - 各型の役割と使い分けを明確化
+- **Examples README追加**: TodoExample/MailExampleの説明を充実
+
+### 内部実装
+- `SelectedContentBindingSpecifier` - 型安全なBinding管理
+- `GenericSelectedContentBindingKey` - Environment統合
+- `ThreeColumnSplitViewRoutingModifier` - 自動ルーティング設定
+- 既存のRouter/SheetPresenterと同じSpecifierパターンを踏襲
+- ランタイムチェック（`!= Never.self`）で機能の有無を判定
+
 ## [1.0.3] - 2025-11-04
 
 ### 追加
