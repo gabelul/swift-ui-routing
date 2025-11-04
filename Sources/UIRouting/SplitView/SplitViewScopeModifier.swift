@@ -71,23 +71,6 @@ public struct SplitViewScopeModifier<Sidebar: SidebarItem, Sheet: Sheetable, Ale
     }
 }
 
-// MARK: - Conditional Modifiers
-
-/// Sheet が必要な場合のみ適用する内部用 Modifier。
-private struct SheetModifierIfNeeded<Sheet: Sheetable>: ViewModifier {
-    @Bindable var presenter: SheetPresenter<Sheet>
-
-    func body(content: Content) -> some View {
-        if Sheet.self != Never.self {
-            content.sheet(item: $presenter.presentedSheet) { sheet in
-                sheet.body
-            }
-        } else {
-            content
-        }
-    }
-}
-
 public extension View {
     /// NavigationSplitView と SplitViewPresenter を連携させ、スプリットビュースコープを設定します。
     ///
