@@ -31,8 +31,7 @@ jobs:
 
       - name: Generate Documentation
         run: |
-          mkdir -p docs
-          chmod -R 755 docs
+          rm -rf docs
           swift package generate-documentation \
             --target UIRouting \
             --disable-indexing \
