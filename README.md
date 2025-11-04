@@ -17,7 +17,7 @@ SwiftUIアプリケーションで画面遷移、シート表示、アラート�
 - ✅ **簡潔な記述** - `@Environment(.router(AppRoute.self))` で即座にアクセス
 - ✅ **コンテキスト分離** - NavigationとSheet で独立したアラート管理
 - ✅ **フルスクリーン・カスタムシート対応** - 全画面モーダルと柔軟なシート高さ
-- ✅ **TabView対応** - 型安全なタブ管理とプログラマティックな切り替え
+- ✅ **TabView対応** - 型安全なタブ管理、クロスタブナビゲーション、自動ルーティング設定
 - ✅ **軽量** - SwiftUIのみに依存、追加のフレームワーク不要
 
 ## 必要要件
@@ -284,6 +284,8 @@ tabPresenter.select(.search)                         // タブ切り替え
 
 ### タブの定義
 
+各タブで共通のRoute、Sheet、Alert型を定義します：
+
 ```swift
 enum AppTab: Tabbable {
     case home
@@ -298,8 +300,15 @@ enum AppTab: Tabbable {
         }
     }
 
+    // 全タブで統一されたルーティング型
+    typealias Route = AppRoute
+    typealias Sheet = AppSheet
+    typealias Alert = AppAlert
+    typealias FullScreen = Never
+    typealias CustomSheet = Never
+
     @ViewBuilder
-    var body: some View {
+    var contentView: some View {
         switch self {
         case .home: HomeView()
         case .search: SearchView()
@@ -326,7 +335,7 @@ enum AppTab: Tabbable {
 ```swift
 @main
 struct MyApp: App {
-    @State private var tabPresenter = TabPresenter<AppTab>(initialTab: .home)
+    @State private var tabPresenter = TabPresenter(initialTab: AppTab.home)
 
     var body: some Scene {
         WindowGroup {
@@ -341,6 +350,8 @@ struct MyApp: App {
 
 ### タブの切り替え
 
+#### 基本的なタブ切り替え
+
 ```swift
 struct HomeView: View {
     @Environment(.tab(AppTab.self)) private var tabPresenter
@@ -353,49 +364,49 @@ struct HomeView: View {
 }
 ```
 
-### タブごとの独立したNavigation
+#### タブ切り替え + 画面遷移
 
-各タブは独自のNavigationStackとRouterを持つことができます：
+別のタブに切り替えて、さらにそのタブ内で特定の画面に遷移する：
 
 ```swift
-enum AppTab: Tabbable {
-    case home
-    case settings
+struct SettingsView: View {
+    @Environment(.tab(AppTab.self)) private var tabPresenter
 
-    var id: String { /* ... */ }
-
-    @ViewBuilder
     var body: some View {
-        switch self {
-        case .home:
-            // ホームタブ: 独自のNavigationStackとRouter
-            HomeTabRoot()
-        case .settings:
-            // 設定タブ: シンプルなビュー
-            SettingsView()
+        Button("ホームタブの詳細画面を開く") {
+            // ホームタブに切り替えて、詳細画面に遷移
+            tabPresenter.select(.home) { context in
+                context.router.navigate(to: .detail(id: "123"))
+            }
         }
     }
-
-    @ViewBuilder
-    var tabLabel: some View { /* ... */ }
 }
+```
 
-struct HomeTabRoot: View {
-    @State private var router = Router<HomeRoute>()
-    @State private var sheetPresenter = SheetPresenter<HomeSheet>()
-    @State private var alertPresenterOnNavigation = AlertPresenter<HomeAlert>()
-    @State private var alertPresenterOnSheet = AlertPresenter<HomeAlert>()
+### タブごとの独立したNavigation
+
+各タブは自動的に独立したRouter、SheetPresenter、AlertPresenterを持ちます。
+`TabRouting`が各タブに対して自動的にルーティング機能を適用するため、ボイラープレートコードは不要です：
+
+```swift
+// タブ内のビューで直接ルーティング機能を使用
+struct HomeView: View {
+    @Environment(.router(AppRoute.self)) private var router
+    @Environment(.sheet(AppSheet.self)) private var sheetPresenter
+    @Environment(.alert(AppAlert.self, context: .navigation)) private var alertPresenter
 
     var body: some View {
-        HomeListView()
-            .routing(
-                router: router,
-                sheetPresenter: sheetPresenter,
-                alertPresenterOnNavigation: alertPresenterOnNavigation,
-                alertPresenterOnSheet: alertPresenterOnSheet
-            )
-            .routingScope(for: HomeRoute.self, alert: HomeAlert.self)
-            .sheet(item: $sheetPresenter.presentedSheet) { $0.body }
+        List {
+            Button("詳細へ") {
+                router.navigate(to: .detail(id: "123"))
+            }
+            Button("設定シート") {
+                sheetPresenter.present(.settings)
+            }
+            Button("アラート") {
+                alertPresenter.present(.error(message: "エラー"))
+            }
+        }
     }
 }
 ```

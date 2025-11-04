@@ -1,9 +1,13 @@
 import SwiftUI
 
-/// タブのルーティング設定を自動化するViewModifier
+/// タブのルーティング設定を自動化する ViewModifier。
 ///
-/// TodoTabRootのようなボイラープレートを削減し、
-/// タブ定義内で直接ルーティング設定を行えるようにします。
+/// 各タブに対して Router、SheetPresenter、AlertPresenter などのルーティングコンポーネントを
+/// 自動的に設定し、NavigationStack との連携も行います。
+///
+/// これにより、タブごとに独立したルーティングスタックを持つことができます。
+///
+/// 通常は `.tabRouting(tab:)` モディファイアを通じて使用します。
 public struct TabRoutingModifier<
     Tab: Tabbable,
     Route: Routable,
@@ -57,7 +61,9 @@ public struct TabRoutingModifier<
 
 // MARK: - Conditional Modifiers
 
-/// Sheetが必要な場合のみ適用するModifier
+/// Sheet が必要な場合のみ適用する内部用 Modifier。
+///
+/// タブの Sheet 型が Never でない場合のみ、シート表示機能を適用します。
 private struct SheetModifierIfNeeded<Sheet: Sheetable>: ViewModifier {
     @Bindable var presenter: SheetPresenter<Sheet>
 
@@ -72,7 +78,10 @@ private struct SheetModifierIfNeeded<Sheet: Sheetable>: ViewModifier {
     }
 }
 
-/// FullScreenCoverが必要な場合のみ適用するModifier
+/// FullScreenCover が必要な場合のみ適用する内部用 Modifier。
+///
+/// タブの FullScreen 型が Never でない場合のみ、フルスクリーンカバー機能を適用します。
+/// macOS では fullScreenCover が利用できないため、通常の sheet を使用します。
 private struct FullScreenCoverModifierIfNeeded<FullScreen: FullScreenCoverable>: ViewModifier {
     @Bindable var presenter: FullScreenCoverPresenter<FullScreen>
 
@@ -83,7 +92,6 @@ private struct FullScreenCoverModifierIfNeeded<FullScreen: FullScreenCoverable>:
                 cover.body
             }
             #else
-            // macOSではfullScreenCoverが利用できないため、通常のsheetを使用
             content.sheet(item: $presenter.presentedCover) { cover in
                 cover.body
             }
@@ -94,7 +102,9 @@ private struct FullScreenCoverModifierIfNeeded<FullScreen: FullScreenCoverable>:
     }
 }
 
-/// CustomHeightSheetが必要な場合のみ適用するModifier
+/// CustomHeightSheet が必要な場合のみ適用する内部用 Modifier。
+///
+/// タブの CustomSheet 型が Never でない場合のみ、カスタム高さシート機能を適用します。
 private struct CustomHeightSheetModifierIfNeeded<CustomSheet: CustomHeightSheetable>: ViewModifier {
     @Bindable var presenter: CustomHeightSheetPresenter<CustomSheet>
 

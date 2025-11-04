@@ -60,12 +60,40 @@ public protocol Alertable: Hashable {
     var actions: [AlertAction] { get }
 }
 
-/// アラートのアクションボタン
+/// アラートのアクションボタンを表す構造体。
+///
+/// アラートダイアログに表示するボタンの情報を保持します。
+/// タイトル、役割（キャンセル、破壊的操作など）、実行するアクションを指定できます。
+///
+/// # 使用例
+/// ```swift
+/// // 通常のボタン
+/// AlertAction(title: "OK") { print("OK tapped") }
+///
+/// // キャンセルボタン
+/// AlertAction(title: "キャンセル", role: .cancel) {}
+///
+/// // 破壊的操作ボタン
+/// AlertAction(title: "削除", role: .destructive) {
+///     deleteItem()
+/// }
+/// ```
 public struct AlertAction: Hashable {
+    /// ボタンのタイトル
     public let title: String
+
+    /// ボタンの役割（.cancel、.destructive など）
     public let role: ButtonRole?
+
+    /// ボタンがタップされたときに実行されるアクション
     public let action: () -> Void
 
+    /// アラートアクションを初期化します。
+    ///
+    /// - Parameters:
+    ///   - title: ボタンのタイトル
+    ///   - role: ボタンの役割（省略可）
+    ///   - action: ボタンがタップされたときに実行されるクロージャ
     public init(
         title: String,
         role: ButtonRole? = nil,

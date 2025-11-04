@@ -1,6 +1,9 @@
 import SwiftUI
 
-/// Navigation コンテキストでアラートを表示する ViewModifier
+/// Navigation コンテキストでアラートを表示する ViewModifier。
+///
+/// NavigationStack 内でアラートを表示するために使用します。
+/// `.routingScope()` により自動適用されるため、通常は直接使用する必要はありません。
 public struct AlertOnNavigationModifier<Alert: Alertable>: ViewModifier {
     @Environment private var alertPresenter: AlertPresenter<Alert>
 
@@ -34,7 +37,10 @@ public struct AlertOnNavigationModifier<Alert: Alertable>: ViewModifier {
     }
 }
 
-/// Sheet コンテキストでアラートを表示する ViewModifier
+/// Sheet コンテキストでアラートを表示する ViewModifier。
+///
+/// シート内でアラートを表示するために使用します。
+/// シート内のビューに `.sheetAlert()` を適用することで有効化されます。
 public struct AlertOnSheetModifier<Alert: Alertable>: ViewModifier {
     @Environment private var alertPresenter: AlertPresenter<Alert>
 
@@ -69,7 +75,7 @@ public struct AlertOnSheetModifier<Alert: Alertable>: ViewModifier {
 }
 
 public extension View {
-    /// UIRoutingのアラートを表示（通常のコンテキスト）
+    /// Navigation コンテキストでアラートを表示可能にします。
     ///
     /// 通常は `.routingScope()` により自動適用されるため、直接呼ぶ必要はありません。
     /// 独自のNavigationStackを使用する場合など、高度な使い方で明示的に適用する場合に使用します。
@@ -86,17 +92,35 @@ public extension View {
     ///         .routingAlert(for: AppAlert.self)
     /// }
     /// ```
+    ///
+    /// - Parameter for: アラートの型
+    /// - Returns: アラート表示が有効化されたビュー
     func routingAlert<Alert: Alertable>(for: Alert.Type) -> some View {
         modifier(AlertOnNavigationModifier<Alert>())
     }
 
-    /// Sheet内でアラートを表示
+    /// Sheet 内でアラートを表示可能にします。
+    ///
+    /// シート内のビューでアラートを表示したい場合に使用します。
     ///
     /// # 使用例
     /// ```swift
-    /// SheetContent()
-    ///     .sheetAlert(for: AppAlert.self)
+    /// struct SettingsSheet: View {
+    ///     @Environment(\.alert(AppAlert.self, context: .sheet)) private var alertPresenter
+    ///
+    ///     var body: some View {
+    ///         Form {
+    ///             Button("削除") {
+    ///                 alertPresenter?.present(.confirmDelete)
+    ///             }
+    ///         }
+    ///         .sheetAlert(for: AppAlert.self)
+    ///     }
+    /// }
     /// ```
+    ///
+    /// - Parameter for: アラートの型
+    /// - Returns: アラート表示が有効化されたビュー
     func sheetAlert<Alert: Alertable>(for: Alert.Type) -> some View {
         modifier(AlertOnSheetModifier<Alert>())
     }

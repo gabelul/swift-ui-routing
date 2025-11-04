@@ -1,6 +1,11 @@
 import SwiftUI
 
-/// Router と NavigationStack を連携させる ViewModifier
+/// Router と NavigationStack を連携させる ViewModifier。
+///
+/// Router の path を NavigationStack にバインドし、
+/// 各画面に自動的にアラート機能を適用します。
+///
+/// 通常は `.routingScope()` モディファイアを通じて使用します。
 ///
 /// # 使用例
 /// ```swift
@@ -29,11 +34,27 @@ public struct RoutingScopeModifier<Route: Routable, Alert: Alertable>: ViewModif
 }
 
 public extension View {
-    /// NavigationStack と Router を連携
+    /// NavigationStack と Router を連携させ、ルーティングスコープを設定します。
+    ///
+    /// このモディファイアは以下を行います：
+    /// - Router の path を NavigationStack にバインド
+    /// - 各画面に `.routingAlert()` を自動適用
+    /// - `.navigationDestination()` で画面遷移先を設定
+    ///
+    /// # 使用例
+    /// ```swift
+    /// struct RootView: View {
+    ///     var body: some View {
+    ///         HomeView()
+    ///             .routingScope(for: AppRoute.self, alert: AppAlert.self)
+    ///     }
+    /// }
+    /// ```
     ///
     /// - Parameters:
-    ///   - for: ルーティング対象の型
-    ///   - alert: アラートの型
+    ///   - for: ルーティング対象の型（Routable に準拠）
+    ///   - alert: アラートの型（Alertable に準拠）
+    /// - Returns: NavigationStack でラップされ、ルーティングが有効化されたビュー
     func routingScope<Route: Routable, Alert: Alertable>(for: Route.Type, alert: Alert.Type) -> some View {
         modifier(RoutingScopeModifier<Route, Alert>())
     }

@@ -10,7 +10,8 @@
       "Bash(swift build)",
       "Bash(xcodebuild:*)",
       "WebSearch",
-      "WebFetch(domain:www.swiftbysundell.com)"
+      "WebFetch(domain:www.swiftbysundell.com)",
+      "Bash(tree:*)"
     ],
     "deny": [],
     "ask": []
