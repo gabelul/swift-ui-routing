@@ -32,12 +32,13 @@ jobs:
       - name: Generate Documentation
         run: |
           rm -rf docs
-          swift package generate-documentation \
+          swift package --allow-writing-to-directory ./docs \
+            generate-documentation \
             --target UIRouting \
             --disable-indexing \
             --transform-for-static-hosting \
             --hosting-base-path documentation/swift-ui-routing \
-            --output-path docs
+            --output-path ./docs
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
