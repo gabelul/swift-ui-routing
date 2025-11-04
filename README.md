@@ -45,21 +45,19 @@ dependencies: [
 
 ## クイックスタート
 
-最もシンプルな使用例：
+タブベースアプリの最もシンプルな使用例：
 
 ```swift
 import SwiftUI
 import UIRouting
 
-// 1. 画面遷移先を定義
+// 1. ルーティング定義
 enum AppRoute: Routable {
     case detail(id: String)
-    case profile
 
     var id: String {
         switch self {
         case .detail(let id): return "detail_\(id)"
-        case .profile: return "profile"
         }
     }
 
@@ -68,46 +66,131 @@ enum AppRoute: Routable {
         switch self {
         case .detail(let id):
             DetailView(id: id)
-        case .profile:
-            ProfileView()
         }
     }
 }
 
-// 2. アプリでセットアップ
+enum AppSheet: Sheetable {
+    case settings
+
+    var id: String { "settings" }
+
+    @ViewBuilder
+    var body: some View {
+        SettingsSheet()
+    }
+}
+
+enum AppAlert: Alertable {
+    case deleteConfirmation(onConfirm: () -> Void)
+
+    var title: String { "削除しますか？" }
+    var message: String? { "この操作は取り消せません" }
+    var actions: [AlertAction] {
+        switch self {
+        case .deleteConfirmation(let onConfirm):
+            return [
+                AlertAction(title: "キャンセル", role: .cancel, action: {}),
+                AlertAction(title: "削除", role: .destructive, action: onConfirm)
+            ]
+        }
+    }
+
+    static func == (lhs: AppAlert, rhs: AppAlert) -> Bool {
+        lhs.id == rhs.id
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+}
+
+// 2. タブを定義
+enum AppTab: Tabbable {
+    case home
+    case settings
+
+    var id: String {
+        switch self {
+        case .home: return "home"
+        case .settings: return "settings"
+        }
+    }
+
+    // 全タブで共通のルーティング型
+    typealias Route = AppRoute
+    typealias Sheet = AppSheet
+    typealias Alert = AppAlert
+    typealias FullScreen = Never
+    typealias CustomSheet = Never
+
+    @ViewBuilder
+    var contentView: some View {
+        switch self {
+        case .home: HomeView()
+        case .settings: SettingsView()
+        }
+    }
+
+    @ViewBuilder
+    var tabLabel: some View {
+        switch self {
+        case .home: Label("ホーム", systemImage: "house")
+        case .settings: Label("設定", systemImage: "gearshape")
+        }
+    }
+}
+
+// 3. アプリでセットアップ
 @main
 struct MyApp: App {
+    @State private var tabPresenter = TabPresenter(initialTab: AppTab.home)
+
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .routing(
-                    router: Router<AppRoute>(),
-                    sheetPresenter: SheetPresenter<Never>(),
-                    alertPresenterOnNavigation: AlertPresenter<Never>(),
-                    alertPresenterOnSheet: AlertPresenter<Never>()
-                )
+            TabRouting(
+                tabPresenter: tabPresenter,
+                tabs: [.home, .settings]
+            )
         }
     }
 }
 
-// 3. ビューで使用
-struct ContentView: View {
+// 4. タブ内のビューで使用
+struct HomeView: View {
     @Environment(.router(AppRoute.self)) private var router
+    @Environment(.sheet(AppSheet.self)) private var sheetPresenter
+    @Environment(.alert(AppAlert.self, context: .navigation)) private var alertPresenter
 
     var body: some View {
-        Button("詳細へ") {
-            router.navigate(to: .detail(id: "123"))
+        List {
+            Button("詳細へ") {
+                router.navigate(to: .detail(id: "123"))
+            }
+            Button("設定シート") {
+                sheetPresenter.present(.settings)
+            }
+            Button("削除確認") {
+                alertPresenter.present(.deleteConfirmation {
+                    print("削除実行")
+                })
+            }
         }
-        .routingScope(for: AppRoute.self)
     }
 }
 ```
 
 ## 使い方
 
-### 1. ルートを定義
+上記のクイックスタートがタブベースアプリの例です。タブを使わないシンプルなアプリの場合は以下のようになります。
+
+### タブなしのシンプルなアプリ
 
 ```swift
+import SwiftUI
+import UIRouting
+
+// 1. ルートを定義
 enum AppRoute: Routable {
     case detail(item: Item)
     case settings
@@ -127,33 +210,30 @@ enum AppRoute: Routable {
         }
     }
 }
-```
 
-### 2. ルート画面でセットアップ
-
-```swift
-struct RootView: View {
+// 2. ルート画面でセットアップ
+@main
+struct MyApp: App {
     @State private var router = Router<AppRoute>()
     @State private var sheetPresenter = SheetPresenter<AppSheet>()
     @State private var alertPresenterOnNavigation = AlertPresenter<AppAlert>()
-    @State private var alertPresenterOnSheet = AlertPresenter<AppAlert>()
 
-    var body: some View {
-        ContentView()
-            .routing(
-                router: router,
-                sheetPresenter: sheetPresenter,
-                alertPresenterOnNavigation: alertPresenterOnNavigation,
-                alertPresenterOnSheet: alertPresenterOnSheet
-            )
-            .sheet(item: $sheetPresenter.presentedSheet) { $0.body }
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+                .routing(
+                    router: router,
+                    sheetPresenter: sheetPresenter,
+                    alertPresenterOnNavigation: alertPresenterOnNavigation,
+                    alertPresenterOnSheet: AlertPresenter<AppAlert>()
+                )
+                .routingScope(for: AppRoute.self, alert: AppAlert.self)
+                .sheet(item: $sheetPresenter.presentedSheet) { $0.body }
+        }
     }
 }
-```
 
-### 3. ビューで使用
-
-```swift
+// 3. ビューで使用
 struct ContentView: View {
     @Environment(.router(AppRoute.self)) private var router
 
@@ -163,7 +243,6 @@ struct ContentView: View {
                 router.navigate(to: .detail(item: item))
             }
         }
-        .routingScope(for: AppRoute.self, alert: AppAlert.self)
     }
 }
 ```
