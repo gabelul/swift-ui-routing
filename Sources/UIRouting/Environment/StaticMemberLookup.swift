@@ -265,20 +265,33 @@ public extension Environment {
 
 /// SelectedContentBinding用の環境値アクセスキー。
 ///
-/// `@Environment(.selectedContentBinding(Email.self))` の形式で Binding<ContentItem?> にアクセスするために使用します。
+/// 3カラムNavigationSplitViewの中央カラムで選択されたアイテムへのBindingを取得します。
+/// `@Environment(.selectedContentBinding(YourContentItem.self))` の形式で使用します。
 ///
 /// # 使用例
 /// ```swift
-/// struct ContentView: View {
+/// // ContentItemの型を定義
+/// struct Email: Selectable { /* ... */ }
+///
+/// // 中央カラムのビューで使用
+/// struct MailListView: View {
 ///     @Environment(.selectedContentBinding(Email.self)) private var selectedContentBinding
 ///
 ///     var body: some View {
 ///         List(selection: selectedContentBinding) {
-///             // ...
+///             ForEach(emails) { email in
+///                 NavigationLink(value: email) {
+///                     email.label
+///                 }
+///             }
 ///         }
 ///     }
 /// }
 /// ```
+///
+/// # 注意
+/// - このBindingは`ThreeColumnSplitViewRouting`によって自動的に環境に注入されます
+/// - 利用者が手動でBindingを作成する必要はありません
 public struct SelectedContentBindingEnvironmentKey<ContentItem: Selectable> {
     fileprivate let specifier: SelectedContentBindingSpecifier<ContentItem>
     fileprivate init() {

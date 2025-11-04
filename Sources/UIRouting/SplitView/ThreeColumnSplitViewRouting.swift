@@ -1,53 +1,49 @@
 import SwiftUI
 
-/// 3カラムスプリットビューベースのルーティングを簡単に構築するためのビュー。
+/// 3カラムNavigationSplitViewのルーティングシステム。
 ///
-/// SplitViewPresenter を使用してサイドバーとコンテンツの選択状態を管理し、
-/// 各ビューに自動的にルーティング機能（Router、SheetPresenter など）を適用します。
+/// サイドバー | コンテンツ（中央） | 詳細（右）の3カラムレイアウトで、
+/// 各カラムの選択状態とナビゲーションを一元管理します。
+///
+/// # 機能
+/// - **サイドバー選択**: `SplitViewPresenter.selectedSidebar`
+/// - **コンテンツ選択**: `SplitViewPresenter.selectedContent`（中央カラムのリスト選択）
+/// - **コンテンツ内ナビゲーション**: `ContentRoute`（中央カラム内でのpush遷移）
+/// - **詳細内ナビゲーション**: `DetailRoute`（右カラム内でのpush遷移）
 ///
 /// # 使用例
 /// ```swift
-/// struct ContentView: View {
-///     @State private var splitViewPresenter = SplitViewPresenter<MailSidebar>(initialSelection: .inbox)
+/// @State private var splitViewPresenter = SplitViewPresenter<MailSidebar>(initialSelection: .inbox)
 ///
-///     var body: some View {
-///         ThreeColumnSplitViewRouting(
-///             splitViewPresenter: splitViewPresenter,
-///             items: [.inbox, .sent, .archive, .starred]
-///         )
-///     }
-/// }
+/// ThreeColumnSplitViewRouting(
+///     splitViewPresenter: splitViewPresenter,
+///     items: [.inbox, .sent, .archive, .starred]
+/// )
+/// ```
 ///
+/// # SidebarItem定義例
+/// ```swift
 /// enum MailSidebar: SidebarItem {
 ///     case inbox, sent, archive, starred
 ///
-///     typealias ContentItem = Email
-///     typealias DetailRoute = MailRoute
+///     // 3カラムに必要な型定義
+///     typealias ContentItem = Email           // 中央カラムで選択するアイテム
+///     typealias ContentRoute = MailContentRoute // 中央カラム内のナビゲーション
+///     typealias DetailRoute = MailRoute       // 右カラム内のナビゲーション
 ///     typealias Sheet = MailSheet
 ///     typealias Alert = MailAlert
 ///
-///     var label: some View {
-///         switch self {
-///         case .inbox:
-///             Label("受信箱", systemImage: "tray")
-///         case .sent:
-///             Label("送信済み", systemImage: "paperplane")
-///         case .archive:
-///             Label("アーカイブ", systemImage: "archivebox")
-///         case .starred:
-///             Label("スター付き", systemImage: "star")
-///         }
-///     }
-///
-///     var contentView: some View {
-///         MailListView(sidebarItem: self)
-///     }
-///
-///     var detail: some View {
-///         MailDetailWrapperView()
-///     }
+///     var label: some View { /* サイドバーのラベル */ }
+///     var contentView: some View { MailListView(sidebarItem: self) }  // 中央カラム
+///     var detail: some View { MailDetailWrapperView() }               // 右カラム
 /// }
 /// ```
+///
+/// # ルーティング階層
+/// 1. **サイドバー切り替え**: `.inbox` → `.sent` など
+/// 2. **コンテンツ選択**: メールをタップ → 詳細に表示
+/// 3. **コンテンツ内遷移**: フィルタや検索ビューへpush（ContentRoute）
+/// 4. **詳細内遷移**: 送信者情報や添付ファイルへpush（DetailRoute）
 public struct ThreeColumnSplitViewRouting<Sidebar: SidebarItem, ContentPlaceholder: View, DetailPlaceholder: View>: View {
     @Bindable private var splitViewPresenter: SplitViewPresenter<Sidebar>
     @State private var contentRouter = Router<Sidebar.ContentRoute>()

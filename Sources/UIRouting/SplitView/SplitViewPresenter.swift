@@ -2,24 +2,31 @@ import SwiftUI
 
 /// NavigationSplitView の選択状態を管理する型安全なプレゼンター。
 ///
-/// サイドバーの選択状態を管理し、2カラムおよび3カラムのNavigationSplitViewに対応します。
+/// 2カラムおよび3カラムのNavigationSplitViewに対応し、
+/// サイドバーとコンテンツの選択状態を一元管理します。
 ///
-/// # 使用例（2カラム）
+/// # 2カラムレイアウト
 /// ```swift
-/// struct ContentView: View {
-///     @State private var splitViewPresenter = SplitViewPresenter<AppSidebar>()
+/// @State private var splitViewPresenter = SplitViewPresenter<AppSidebar>()
 ///
-///     var body: some View {
-///         ContentView()
-///             .splitViewScope(
-///                 for: AppSidebar.self,
-///                 items: [.inbox, .sent, .archive],
-///                 alert: AppAlert.self
-///             )
-///     }
-/// }
+/// SplitViewRouting(
+///     splitViewPresenter: splitViewPresenter,
+///     items: [.inbox, .sent, .archive]
+/// )
+/// ```
 ///
-/// // サイドバー項目を選択
+/// # 3カラムレイアウト
+/// ```swift
+/// @State private var splitViewPresenter = SplitViewPresenter<MailSidebar>(initialSelection: .inbox)
+///
+/// ThreeColumnSplitViewRouting(
+///     splitViewPresenter: splitViewPresenter,
+///     items: [.inbox, .sent, .archive, .starred]
+/// )
+/// ```
+///
+/// # プログラムからの選択操作
+/// ```swift
 /// struct SomeView: View {
 ///     @Environment(.splitView(AppSidebar.self)) private var splitViewPresenter
 ///
@@ -33,10 +40,13 @@ import SwiftUI
 @MainActor
 @Observable
 public final class SplitViewPresenter<Sidebar: SidebarItem> {
-    /// 現在選択されているサイドバー項目
+    /// 現在選択されているサイドバー項目（左カラム）
     public var selectedSidebar: Sidebar?
 
-    /// 現在選択されているコンテンツ項目（3カラム用、将来使用）
+    /// 現在選択されているコンテンツ項目（中央カラム、3カラムレイアウト用）
+    ///
+    /// 3カラムレイアウトでは、中央カラムのリストで選択されたアイテムを保持します。
+    /// 2カラムレイアウトでは使用されません（常にnil）。
     public var selectedContent: Sidebar.ContentItem?
 
     /// SplitViewPresenter を初期化します。

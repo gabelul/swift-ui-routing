@@ -38,10 +38,15 @@ import SwiftUI
 /// }
 /// ```
 ///
+/// # 3カラムレイアウト対応
+/// 3カラムNavigationSplitViewを使用する場合は、以下の型を定義します：
+/// - `ContentItem`: 中央カラムで選択可能なアイテムの型（例: Email）
+/// - `ContentRoute`: 中央カラム内でのナビゲーションルート
+/// - `contentView`: 中央カラムに表示するビュー
+///
 /// # 注意
 /// - `id`プロパティの実装は不要です（自動生成されます）
 /// - `Hashable`の実装も不要です（自動提供されます）
-/// - `ContentItem`と`ContentRoute`は3カラム対応用の拡張ポイントです（将来使用）
 @MainActor
 public protocol SidebarItem: Hashable, Identifiable {
     // View 関連
@@ -99,9 +104,28 @@ public extension SidebarItem where ID == String {
 
 // MARK: - Selectable Protocol
 
-/// 選択可能なアイテムを表す基底プロトコル（3カラム用）
+/// 3カラムレイアウトの中央カラムで選択可能なアイテムを表すプロトコル。
 ///
-/// 3カラムレイアウトのコンテンツ項目として使用されます。
+/// `Selectable`に準拠した型は、NavigationSplitViewの中央カラムのリストで
+/// 選択可能なアイテムとして使用できます（例: メール、連絡先、ファイルなど）。
+///
+/// # 使用例
+/// ```swift
+/// struct Email: Identifiable, Hashable {
+///     let id: String
+///     let subject: String
+///     let from: String
+/// }
+///
+/// extension Email: Selectable {
+///     var label: some View {
+///         VStack(alignment: .leading) {
+///             Text(subject)
+///             Text(from).font(.caption)
+///         }
+///     }
+/// }
+/// ```
 @MainActor
 public protocol Selectable: Hashable, Identifiable {
     associatedtype LabelView: View
