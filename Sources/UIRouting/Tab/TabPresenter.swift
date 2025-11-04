@@ -16,8 +16,8 @@ public final class TabPresenter<Tab: Tabbable> {
     /// 現在選択されているタブ
     public var selectedTab: Tab
 
-    /// Router を型安全に保持
-    private var router: Router<Tab.Route>?
+    /// 各タブごとのRouterを保持
+    private var routers: [Tab.ID: Router<Tab.Route>] = [:]
 
     public init(initialTab: Tab) {
         self.selectedTab = initialTab
@@ -26,8 +26,8 @@ public final class TabPresenter<Tab: Tabbable> {
     // MARK: - Router Registration
 
     /// Router を登録（TabRoutingModifier から呼ばれる）
-    internal func registerRouter(_ router: Router<Tab.Route>) {
-        self.router = router
+    internal func registerRouter(_ router: Router<Tab.Route>, for tab: Tab) {
+        routers[tab.id] = router
     }
 
     // MARK: - Tab Selection
@@ -45,15 +45,21 @@ public final class TabPresenter<Tab: Tabbable> {
     ///     context.router.navigate(to: .todoDetail(todo: someTodo))
     /// }
     /// ```
-    public func select(_ tab: Tab, then callback: (TabContext<Tab.Route>) -> Void) {
+    public func select(_ tab: Tab, then callback: @escaping (TabContext<Tab.Route>) -> Void) {
         selectedTab = tab
 
-        guard let router = self.router else {
-            assertionFailure("Router not registered")
-            return
-        }
+        // タブ切り替えが完了してからコールバックを実行
+        Task { @MainActor in
+            // TabViewのアニメーション完了を待つ
+            try? await Task.sleep(for: .milliseconds(100))
 
-        let context = TabContext(router: router)
-        callback(context)
+            guard let router = routers[tab.id] else {
+                assertionFailure("Router not registered for tab: \(tab.id)")
+                return
+            }
+
+            let context = TabContext(router: router)
+            callback(context)
+        }
     }
 }

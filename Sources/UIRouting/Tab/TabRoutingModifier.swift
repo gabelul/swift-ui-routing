@@ -50,7 +50,7 @@ public struct TabRoutingModifier<
             .modifier(CustomHeightSheetModifierIfNeeded(presenter: customHeightSheetPresenter))
             // TabPresenterとの統合: Routerを登録
             .onAppear {
-                tabPresenter.registerRouter(router)
+                tabPresenter.registerRouter(router, for: currentTab)
             }
     }
 }
