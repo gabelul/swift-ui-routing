@@ -5,6 +5,19 @@
 このフォーマットは [Keep a Changelog](https://keepachangelog.com/ja/1.0.0/) に基づいており、
 このプロジェクトは [Semantic Versioning](https://semver.org/lang/ja/) に準拠しています。
 
+## [1.0.3] - 2025-11-04
+
+### 追加
+- **DocC ドキュメント自動デプロイ**: GitHub Actions による GitHub Pages へのドキュメント自動公開
+  - main ブランチへのプッシュで自動的にドキュメントを生成・デプロイ
+  - オンラインドキュメント: https://no-problem-dev.github.io/swift-ui-routing/documentation/uirouting/
+- **README にドキュメント URL を追加**: オンラインドキュメントへのリンクを追加
+
+### 改善
+- swift-docc-plugin の依存関係を追加
+- GitHub Actions ワークフローで macOS ランナーと Xcode 16.1 を使用
+- SwiftPM サンドボックス権限の適切な処理
+
 ## [1.0.2] - 2025-11-04
 
 ### 追加
