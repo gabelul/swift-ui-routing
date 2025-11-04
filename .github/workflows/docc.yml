@@ -31,7 +31,6 @@ jobs:
 
       - name: Generate Documentation
         run: |
-          rm -rf docs
           swift package --allow-writing-to-directory ./docs \
             generate-documentation \
             --target UIRouting \
