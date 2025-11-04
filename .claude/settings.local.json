@@ -8,7 +8,9 @@
       "mcp__context7__resolve-library-id",
       "mcp__context7__get-library-docs",
       "Bash(swift build)",
-      "Bash(xcodebuild:*)"
+      "Bash(xcodebuild:*)",
+      "WebSearch",
+      "WebFetch(domain:www.swiftbysundell.com)"
     ],
     "deny": [],
     "ask": []

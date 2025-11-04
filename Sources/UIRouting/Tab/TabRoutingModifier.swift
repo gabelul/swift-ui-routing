@@ -11,7 +11,7 @@ public struct TabRoutingModifier<
     Alert: Alertable,
     FullScreen: FullScreenCoverable,
     CustomSheet: CustomHeightSheetable
->: ViewModifier {
+>: ViewModifier where Tab.Route == Route {
 
     @Environment private var tabPresenter: TabPresenter<Tab>
 
@@ -32,6 +32,7 @@ public struct TabRoutingModifier<
 
     public func body(content: Content) -> some View {
         content
+            .routingScope(for: Route.self, alert: Alert.self)
             // 既存のroutingモディファイアを適用
             .routing(
                 router: router,
@@ -41,19 +42,15 @@ public struct TabRoutingModifier<
                 alertPresenterOnNavigation: alertPresenterOnNavigation,
                 alertPresenterOnSheet: alertPresenterOnSheet
             )
-            .routingScope(for: Route.self, alert: Alert.self)
             // Sheetの自動適用
             .modifier(SheetModifierIfNeeded(presenter: sheetPresenter))
             // FullScreenCoverの自動適用
             .modifier(FullScreenCoverModifierIfNeeded(presenter: fullScreenCoverPresenter))
             // CustomHeightSheetの自動適用
             .modifier(CustomHeightSheetModifierIfNeeded(presenter: customHeightSheetPresenter))
-            // TabPresenterとの統合: タブ選択変更時にpendingNavigationを実行
-            .onChange(of: tabPresenter.selectedTab) { oldValue, newValue in
-                // このタブが選択されたときのみ実行
-                if newValue == currentTab {
-                    tabPresenter.executePendingNavigation(for: currentTab, with: router)
-                }
+            // TabPresenterとの統合: Routerを登録
+            .onAppear {
+                tabPresenter.registerRouter(router)
             }
     }
 }

@@ -2,7 +2,9 @@ import SwiftUI
 import UIRouting
 
 struct RootView: View {
-    @State private var tabPresenter = TabPresenter<AppTab>(initialTab: .todoList)
+    @State private var tabPresenter = TabPresenter(
+        initialTab: AppTab.todoList
+    )
 
     var body: some View {
         TabRouting(

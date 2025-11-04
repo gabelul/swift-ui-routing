@@ -26,7 +26,8 @@ public struct TabScopeModifier<Tab: Tabbable>: ViewModifier {
 
         TabView(selection: $binding.selectedTab) {
             ForEach(tabs) { tab in
-                tab.body
+                tab.contentView
+                    .tabRouting(tab: tab)
                     .tabItem {
                         tab.tabLabel
                     }
@@ -38,44 +39,12 @@ public struct TabScopeModifier<Tab: Tabbable>: ViewModifier {
 
 /// TabView を直接構築する便利な関数
 ///
-/// TabView の選択状態を管理し、型安全なタブ切り替えを実現します。
-///
 /// # 使用例
 /// ```swift
-/// // 1. タブを定義
-/// enum AppTab: Tabbable {
-///     case home
-///     case search
-///     case profile
-///
-///     var id: String { ... }
-///
-///     @ViewBuilder
-///     var body: some View { ... }
-///
-///     @ViewBuilder
-///     var tabLabel: some View { ... }
-/// }
-///
-/// // 2. TabPresenterを作成してTabViewを構築
-/// @State private var tabPresenter = TabPresenter<AppTab>(initialTab: .home)
+/// @State private var tabPresenter = TabPresenter(initialTab: AppTab.todoList)
 ///
 /// var body: some View {
-///     TabRouting(
-///         tabPresenter: tabPresenter,
-///         tabs: [.home, .search, .profile]
-///     )
-/// }
-///
-/// // 3. 各ビューからタブを切り替え
-/// struct HomeView: View {
-///     @Environment(.tab(AppTab.self)) private var tabPresenter
-///
-///     var body: some View {
-///         Button("検索タブへ") {
-///             tabPresenter.select(.search)
-///         }
-///     }
+///     TabRouting(tabPresenter: tabPresenter, tabs: [.todoList, .settings])
 /// }
 /// ```
 public struct TabRouting<Tab: Tabbable>: View {
@@ -90,7 +59,8 @@ public struct TabRouting<Tab: Tabbable>: View {
     public var body: some View {
         TabView(selection: $tabPresenter.selectedTab) {
             ForEach(tabs) { tab in
-                tab.body
+                tab.contentView
+                    .tabRouting(tab: tab)
                     .tabItem {
                         tab.tabLabel
                     }

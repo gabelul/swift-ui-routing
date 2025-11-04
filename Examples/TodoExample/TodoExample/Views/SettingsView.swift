@@ -26,8 +26,8 @@ struct SettingsView: View {
                             category: .work
                         )
 
-                        tabPresenter.select(.todoList) { (router: Router<AppRoute>) in
-                            router.navigate(to: .todoDetail(todo: sampleTodo))
+                        tabPresenter.select(.todoList) { context in
+                            context.router.navigate(to: .todoDetail(todo: sampleTodo))
                         }
                     } label: {
                         Label("特定のタスク詳細を開く", systemImage: "arrow.right.circle")

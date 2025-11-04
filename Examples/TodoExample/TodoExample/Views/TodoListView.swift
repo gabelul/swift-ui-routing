@@ -69,7 +69,6 @@ struct TodoListView: View {
                 }
             }
         }
-        .routingScope(for: AppRoute.self, alert: AppAlert.self)
     }
 
     private func toggleTodo(_ todo: Todo) {

@@ -1,113 +1,34 @@
 import SwiftUI
 
 extension View {
-    /// タブのルーティング設定を適用（完全版）
+    /// タブのルーティング設定を自動適用
     ///
-    /// すべてのPresenter型を指定できます。不要な型は`Never`（デフォルト）を指定してください。
+    /// タブの型から自動的にルーティング型を推論して適用します。
     ///
     /// # 使用例
     /// ```swift
-    /// TodoListView()
-    ///     .tabRouting(
-    ///         tab: .todoList,
-    ///         route: AppRoute.self,
-    ///         sheet: AppSheet.self,
-    ///         alert: AppAlert.self,
-    ///         fullScreenCover: AppFullScreenCover.self,
-    ///         customHeightSheet: AppCustomHeightSheet.self
-    ///     )
+    /// struct TodoListTab: Tabbable {
+    ///     typealias Route = AppRoute
+    ///     typealias Sheet = AppSheet
+    ///     typealias Alert = AppAlert
+    ///
+    ///     var contentView: some View {
+    ///         TodoListView()
+    ///     }
+    /// }
+    ///
+    /// // ルーティング設定が自動適用される
+    /// TodoListTab().contentView.tabRouting(tab: TodoListTab())
     /// ```
     ///
-    /// - Parameters:
-    ///   - tab: 現在のタブ
-    ///   - route: ルート型（必須）
-    ///   - sheet: シート型（デフォルト: Never）
-    ///   - alert: アラート型（デフォルト: Never）
-    ///   - fullScreenCover: フルスクリーンカバー型（デフォルト: Never）
-    ///   - customHeightSheet: カスタム高さシート型（デフォルト: Never）
-    public func tabRouting<Tab, Route, Sheet, Alert, FullScreen, CustomSheet>(
-        tab: Tab,
-        route: Route.Type,
-        sheet: Sheet.Type = Never.self,
-        alert: Alert.Type = Never.self,
-        fullScreenCover: FullScreen.Type = Never.self,
-        customHeightSheet: CustomSheet.Type = Never.self
-    ) -> some View where
-        Tab: Tabbable,
-        Route: Routable,
-        Sheet: Sheetable,
-        Alert: Alertable,
-        FullScreen: FullScreenCoverable,
-        CustomSheet: CustomHeightSheetable
-    {
+    /// - Parameter tab: 現在のタブ
+    public func tabRouting<Tab>(
+        tab: Tab
+    ) -> some View where Tab: Tabbable {
         modifier(
-            TabRoutingModifier<Tab, Route, Sheet, Alert, FullScreen, CustomSheet>(
+            TabRoutingModifier<Tab, Tab.Route, Tab.Sheet, Tab.Alert, Tab.FullScreen, Tab.CustomSheet>(
                 tab: tab
             )
-        )
-    }
-
-    /// タブのルーティング設定を適用（Route + Sheet + Alert）
-    ///
-    /// 最も一般的な組み合わせのための便利メソッド。
-    ///
-    /// # 使用例
-    /// ```swift
-    /// TodoListView()
-    ///     .tabRouting(
-    ///         tab: .todoList,
-    ///         route: AppRoute.self,
-    ///         sheet: AppSheet.self,
-    ///         alert: AppAlert.self
-    ///     )
-    /// ```
-    public func tabRouting<Tab, Route, Sheet, Alert>(
-        tab: Tab,
-        route: Route.Type,
-        sheet: Sheet.Type,
-        alert: Alert.Type
-    ) -> some View where
-        Tab: Tabbable,
-        Route: Routable,
-        Sheet: Sheetable,
-        Alert: Alertable
-    {
-        tabRouting(
-            tab: tab,
-            route: route,
-            sheet: sheet,
-            alert: alert,
-            fullScreenCover: Never.self,
-            customHeightSheet: Never.self
-        )
-    }
-
-    /// タブのルーティング設定を適用（Routeのみ）
-    ///
-    /// ナビゲーションのみが必要な場合の最もシンプルな形式。
-    ///
-    /// # 使用例
-    /// ```swift
-    /// TodoListView()
-    ///     .tabRouting(
-    ///         tab: .todoList,
-    ///         route: AppRoute.self
-    ///     )
-    /// ```
-    public func tabRouting<Tab, Route>(
-        tab: Tab,
-        route: Route.Type
-    ) -> some View where
-        Tab: Tabbable,
-        Route: Routable
-    {
-        tabRouting(
-            tab: tab,
-            route: route,
-            sheet: Never.self,
-            alert: Never.self,
-            fullScreenCover: Never.self,
-            customHeightSheet: Never.self
         )
     }
 }

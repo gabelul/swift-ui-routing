@@ -12,7 +12,14 @@ enum AppTab: Tabbable {
         }
     }
 
-    // コンテンツビュー（ルーティング設定前）
+    // ルーティング型（全タブで統一する必要がある）
+    typealias Route = AppRoute
+    typealias Sheet = AppSheet
+    typealias Alert = AppAlert
+    typealias FullScreen = Never
+    typealias CustomSheet = Never
+
+    // コンテンツビュー
     @ViewBuilder
     var contentView: some View {
         switch self {
@@ -20,16 +27,6 @@ enum AppTab: Tabbable {
             TodoListView()
         case .settings:
             SettingsView()
-        }
-    }
-
-    // ルーティング設定（自動適用）
-    var routingConfiguration: (any RoutingConfiguration)? {
-        switch self {
-        case .todoList:
-            TodoListRoutingConfig()
-        case .settings:
-            nil  // ルーティング不要
         }
     }
 
@@ -43,6 +40,4 @@ enum AppTab: Tabbable {
             Label("設定", systemImage: "gearshape")
         }
     }
-
-    // body は Tabbable extension で自動生成されます
 }
