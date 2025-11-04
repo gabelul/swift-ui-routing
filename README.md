@@ -178,6 +178,27 @@ struct HomeView: View {
         }
     }
 }
+
+// 5. クロスタブナビゲーション（別のタブに切り替えて画面遷移）
+struct SettingsView: View {
+    @Environment(.tab(AppTab.self)) private var tabPresenter
+
+    var body: some View {
+        List {
+            Button("ホームタブに切り替え") {
+                // 基本的なタブ切り替え
+                tabPresenter.select(.home)
+            }
+
+            Button("ホームタブの詳細画面を開く") {
+                // タブ切り替え + 画面遷移
+                tabPresenter.select(.home) { context in
+                    context.router.navigate(to: .detail(id: "456"))
+                }
+            }
+        }
+    }
+}
 ```
 
 ## 使い方
