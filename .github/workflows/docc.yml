@@ -36,7 +36,7 @@ jobs:
             --target UIRouting \
             --disable-indexing \
             --transform-for-static-hosting \
-            --hosting-base-path documentation/swift-ui-routing \
+            --hosting-base-path swift-ui-routing \
             --output-path ./docs
 
       - name: Upload artifact
