@@ -39,28 +39,4 @@ enum AppAlert: Alertable {
             ]
         }
     }
-
-    // MARK: - Equatable
-    static func == (lhs: AppAlert, rhs: AppAlert) -> Bool {
-        switch (lhs, rhs) {
-        case (.deleteConfirmation(let lTitle, _), .deleteConfirmation(let rTitle, _)):
-            return lTitle == rTitle
-        case (.error(let lMessage), .error(let rMessage)):
-            return lMessage == rMessage
-        default:
-            return false
-        }
-    }
-
-    // MARK: - Hashable
-    func hash(into hasher: inout Hasher) {
-        switch self {
-        case .deleteConfirmation(let todoTitle, _):
-            hasher.combine(0)
-            hasher.combine(todoTitle)
-        case .error(let message):
-            hasher.combine(1)
-            hasher.combine(message)
-        }
-    }
 }

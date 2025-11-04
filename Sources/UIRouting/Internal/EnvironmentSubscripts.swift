@@ -6,7 +6,7 @@ extension EnvironmentValues {
         set { self[GenericRouterKey<Route>.self] = newValue }
     }
 
-    subscript<Sheet>(sheetPresenter specifier: SheetPresenterSpecifier<Sheet>) -> SheetPresenter<Sheet> where Sheet: Identifiable & Hashable {
+    subscript<Sheet>(sheetPresenter specifier: SheetPresenterSpecifier<Sheet>) -> SheetPresenter<Sheet> where Sheet: Sheetable {
         get { self[GenericSheetPresenterKey<Sheet>.self] }
         set { self[GenericSheetPresenterKey<Sheet>.self] = newValue }
     }
@@ -30,7 +30,7 @@ extension EnvironmentValues {
         }
     }
 
-    subscript<Sheet>(customHeightSheetPresenter specifier: CustomHeightSheetPresenterSpecifier<Sheet>) -> CustomHeightSheetPresenter<Sheet> where Sheet: Identifiable & Hashable {
+    subscript<Sheet>(customHeightSheetPresenter specifier: CustomHeightSheetPresenterSpecifier<Sheet>) -> CustomHeightSheetPresenter<Sheet> where Sheet: CustomHeightSheetable {
         get { self[GenericCustomHeightSheetPresenterKey<Sheet>.self] }
         set { self[GenericCustomHeightSheetPresenterKey<Sheet>.self] = newValue }
     }

@@ -5,13 +5,6 @@ enum AppTab: Tabbable {
     case todoList
     case settings
 
-    var id: String {
-        switch self {
-        case .todoList: return "todoList"
-        case .settings: return "settings"
-        }
-    }
-
     // ルーティング型（全タブで統一する必要がある）
     typealias Route = AppRoute
     typealias Sheet = AppSheet

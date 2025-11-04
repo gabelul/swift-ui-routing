@@ -68,7 +68,7 @@ import SwiftUI
 /// ```
 @MainActor
 @Observable
-public final class CustomHeightSheetPresenter<Sheet> where Sheet: Identifiable & Hashable {
+public final class CustomHeightSheetPresenter<Sheet> where Sheet: CustomHeightSheetable {
     public var presentedSheet: Sheet?
 
     public init() {}

@@ -14,8 +14,8 @@ public struct RoutingModifier<
     Alert: Alertable
 >: ViewModifier
     where
-    Sheet: Identifiable & Hashable,
-    CustomHeightSheet: Identifiable & Hashable,
+    Sheet: Sheetable,
+    CustomHeightSheet: CustomHeightSheetable,
     FullScreenCover: Identifiable & Hashable
 {
     private let router: Router<Route>
@@ -94,8 +94,8 @@ public extension View {
         alertPresenterOnSheet: AlertPresenter<Alert>
     ) -> some View
         where
-        Sheet: Identifiable & Hashable,
-        CustomHeightSheet: Identifiable & Hashable,
+        Sheet: Sheetable,
+        CustomHeightSheet: CustomHeightSheetable,
         FullScreenCover: Identifiable & Hashable
     {
         modifier(RoutingModifier(
@@ -139,7 +139,7 @@ public extension View {
         sheetPresenter: SheetPresenter<Sheet>,
         alertPresenterOnNavigation: AlertPresenter<Alert>,
         alertPresenterOnSheet: AlertPresenter<Alert>
-    ) -> some View where Sheet: Identifiable & Hashable {
+    ) -> some View where Sheet: Sheetable {
         routing(
             router: router,
             sheetPresenter: sheetPresenter,

@@ -57,7 +57,7 @@ import SwiftUI
 /// ```
 @MainActor
 @Observable
-public final class SheetPresenter<Sheet> where Sheet: Identifiable & Hashable {
+public final class SheetPresenter<Sheet> where Sheet: Sheetable {
     public var presentedSheet: Sheet?
 
     public init() {}

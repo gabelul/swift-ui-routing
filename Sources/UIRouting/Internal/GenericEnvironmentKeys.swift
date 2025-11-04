@@ -43,7 +43,7 @@ struct GenericRouterKey<Route: Routable>: EnvironmentKey {
     }
 }
 
-struct GenericSheetPresenterKey<Sheet>: EnvironmentKey where Sheet: Identifiable & Hashable {
+struct GenericSheetPresenterKey<Sheet>: EnvironmentKey where Sheet: Sheetable {
     static var defaultValue: SheetPresenter<Sheet> {
         MainActor.assumeIsolated {
             SheetPresenter<Sheet>.createDefault()
@@ -51,7 +51,7 @@ struct GenericSheetPresenterKey<Sheet>: EnvironmentKey where Sheet: Identifiable
     }
 }
 
-struct GenericCustomHeightSheetPresenterKey<Sheet>: EnvironmentKey where Sheet: Identifiable & Hashable {
+struct GenericCustomHeightSheetPresenterKey<Sheet>: EnvironmentKey where Sheet: CustomHeightSheetable {
     static var defaultValue: CustomHeightSheetPresenter<Sheet> {
         MainActor.assumeIsolated {
             CustomHeightSheetPresenter<Sheet>.createDefault()

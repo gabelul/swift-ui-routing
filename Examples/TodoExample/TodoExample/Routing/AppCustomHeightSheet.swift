@@ -5,13 +5,6 @@ enum AppCustomHeightSheet: CustomHeightSheetable {
     case categoryPicker(onSelect: (Todo.Category) -> Void)
     case quickAdd
 
-    var id: String {
-        switch self {
-        case .categoryPicker: return "categoryPicker"
-        case .quickAdd: return "quickAdd"
-        }
-    }
-
     var detents: Set<PresentationDetent> {
         switch self {
         case .categoryPicker:
@@ -29,15 +22,5 @@ enum AppCustomHeightSheet: CustomHeightSheetable {
         case .quickAdd:
             QuickAddSheet()
         }
-    }
-
-    // MARK: - Equatable
-    static func == (lhs: AppCustomHeightSheet, rhs: AppCustomHeightSheet) -> Bool {
-        lhs.id == rhs.id
-    }
-
-    // MARK: - Hashable
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
     }
 }
