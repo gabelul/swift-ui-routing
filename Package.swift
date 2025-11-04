@@ -15,7 +15,7 @@ let package = Package(
             targets: ["UIRouting"]),
     ],
     dependencies: [
-        // Zero dependencies - SwiftUI only
+        .package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.4.0")
     ],
     targets: [
         .target(
