@@ -6,6 +6,7 @@ struct TodoListView: View {
     @Environment(.sheet(AppSheet.self)) private var sheetPresenter
     @Environment(.alert(AppAlert.self, context: .navigation)) private var alertPresenter
     @Environment(.customHeightSheet(AppCustomHeightSheet.self)) private var customHeightSheetPresenter
+    @Environment(.fullScreenCover(AppFullScreenCover.self)) private var fullScreenCoverPresenter
     @Environment(.tab(AppTab.self)) private var tabPresenter
 
     @State private var todos = Todo.samples
@@ -44,6 +45,12 @@ struct TodoListView: View {
                         customHeightSheetPresenter.present(.quickAdd)
                     } label: {
                         Label("クイック追加", systemImage: "bolt.fill")
+                    }
+
+                    Button {
+                        fullScreenCoverPresenter.present(.photoCapture)
+                    } label: {
+                        Label("写真を撮影", systemImage: "camera.fill")
                     }
 
                     Divider()

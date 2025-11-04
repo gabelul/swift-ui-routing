@@ -16,8 +16,8 @@ enum AppTab: Tabbable {
     typealias Route = AppRoute
     typealias Sheet = AppSheet
     typealias Alert = AppAlert
-    typealias FullScreen = Never
-    typealias CustomSheet = Never
+    typealias FullScreen = AppFullScreenCover
+    typealias CustomSheet = AppCustomHeightSheet
 
     // コンテンツビュー
     @ViewBuilder
