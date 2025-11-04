@@ -7,6 +7,12 @@ SwiftUI向けの型安全で宣言的なルーティングライブラリ
 ![SPM](https://img.shields.io/badge/Swift_Package_Manager-compatible-brightgreen.svg)
 ![License](https://img.shields.io/badge/License-MIT-yellow.svg)
 
+## ドキュメント
+
+完全なAPIドキュメントは以下で公開されています：
+
+📚 **[オンラインドキュメント](https://no-problem-dev.github.io/swift-ui-routing/documentation/uirouting/)**
+
 ## 概要
 
 SwiftUIアプリケーションで画面遷移、シート表示、アラート表示を**型安全**かつ**宣言的**に管理するルーティングライブラリ。
