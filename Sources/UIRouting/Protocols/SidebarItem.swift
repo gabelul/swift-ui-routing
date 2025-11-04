@@ -55,9 +55,10 @@ public protocol SidebarItem: Hashable, Identifiable {
     associatedtype FullScreen: FullScreenCoverable = Never
     associatedtype CustomSheet: CustomHeightSheetable = Never
 
-    // 3カラム用の拡張ポイント（将来使用）
+    // 3カラム用の拡張ポイント
     associatedtype ContentItem: Selectable = Never
     associatedtype ContentRoute: Routable = Never
+    associatedtype ContentView: View = EmptyView
 
     /// サイドバーに表示されるラベル
     @ViewBuilder var label: LabelView { get }
@@ -65,15 +66,15 @@ public protocol SidebarItem: Hashable, Identifiable {
     /// このサイドバー項目が選択されたときに表示される詳細ビュー
     @ViewBuilder var detail: Detail { get }
 
-    /// このサイドバー項目のコンテンツ項目（3カラム用、将来使用）
-    var contentItems: [ContentItem] { get }
+    /// 3カラムレイアウトのコンテンツビュー（中央カラム）
+    @ViewBuilder var contentView: ContentView { get }
 }
 
 // MARK: - Default Implementations
 
 /// ContentItem が Never の場合のデフォルト実装（2カラム用）
 public extension SidebarItem where ContentItem == Never {
-    var contentItems: [Never] { [] }
+    var contentView: some View { EmptyView() }
 }
 
 /// ID が Int の場合の自動実装
@@ -98,10 +99,9 @@ public extension SidebarItem where ID == String {
 
 // MARK: - Selectable Protocol
 
-/// 選択可能なアイテムを表す基底プロトコル（3カラム用、将来使用）
+/// 選択可能なアイテムを表す基底プロトコル（3カラム用）
 ///
-/// このプロトコルは将来の3カラム対応で使用されます。
-/// 現在は `SidebarItem` の `ContentItem` 型制約として機能します。
+/// 3カラムレイアウトのコンテンツ項目として使用されます。
 @MainActor
 public protocol Selectable: Hashable, Identifiable {
     associatedtype LabelView: View

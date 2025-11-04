@@ -103,3 +103,9 @@ struct GenericSplitViewPresenterKey<Sidebar: SidebarItem>: EnvironmentKey {
         }
     }
 }
+
+struct GenericSelectedContentBindingKey<ContentItem: Selectable>: EnvironmentKey {
+    static var defaultValue: Binding<ContentItem?>? {
+        nil
+    }
+}

@@ -24,8 +24,21 @@ struct EmailDetailView: View {
 
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("From: \(email.from)")
-                                .font(.subheadline)
+                            // 送信者（タップで詳細へ遷移）
+                            Button {
+                                router.navigate(to: .senderInfo(email: email))
+                            } label: {
+                                HStack(spacing: 4) {
+                                    Text("From: \(email.from)")
+                                        .font(.subheadline)
+                                    Image(systemName: "chevron.right")
+                                        .font(.caption2)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundStyle(.primary)
+
                             Text("To: \(email.to)")
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
@@ -40,6 +53,27 @@ struct EmailDetailView: View {
                 }
                 .padding(.horizontal)
                 .padding(.top)
+
+                // 添付ファイルへのリンク（DetailRoute push遷移の例）
+                Button {
+                    router.navigate(to: .attachments(email: email))
+                } label: {
+                    HStack {
+                        Image(systemName: "paperclip")
+                        Text("添付ファイル (3)")
+                            .font(.subheadline)
+                        Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(.horizontal)
+                    .padding(.vertical, 12)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(8)
+                    .padding(.horizontal)
+                }
+                .buttonStyle(.plain)
 
                 Divider()
 

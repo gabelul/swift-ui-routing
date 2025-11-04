@@ -262,3 +262,42 @@ public extension Environment {
         self.init(\.[splitViewPresenter: key.specifier])
     }
 }
+
+/// SelectedContentBinding用の環境値アクセスキー。
+///
+/// `@Environment(.selectedContentBinding(Email.self))` の形式で Binding<ContentItem?> にアクセスするために使用します。
+///
+/// # 使用例
+/// ```swift
+/// struct ContentView: View {
+///     @Environment(.selectedContentBinding(Email.self)) private var selectedContentBinding
+///
+///     var body: some View {
+///         List(selection: selectedContentBinding) {
+///             // ...
+///         }
+///     }
+/// }
+/// ```
+public struct SelectedContentBindingEnvironmentKey<ContentItem: Selectable> {
+    fileprivate let specifier: SelectedContentBindingSpecifier<ContentItem>
+    fileprivate init() {
+        self.specifier = SelectedContentBindingSpecifier<ContentItem>()
+    }
+}
+
+public extension SelectedContentBindingEnvironmentKey {
+    /// SelectedContentBinding の環境値キーを生成します。
+    ///
+    /// - Parameter type: コンテンツアイテムの型
+    /// - Returns: SelectedContentBinding用の環境値キー
+    static func selectedContentBinding(_ type: ContentItem.Type) -> SelectedContentBindingEnvironmentKey<ContentItem> {
+        SelectedContentBindingEnvironmentKey<ContentItem>()
+    }
+}
+
+public extension Environment {
+    init<ContentItem: Selectable>(_ key: SelectedContentBindingEnvironmentKey<ContentItem>) where Value == Binding<ContentItem?>? {
+        self.init(\.[selectedContentBinding: key.specifier])
+    }
+}

@@ -14,6 +14,8 @@ enum MailSidebar: String, SidebarItem {
     case starred
 
     // ルーティング型の指定
+    typealias ContentItem = Email
+    typealias ContentRoute = MailContentRoute
     typealias DetailRoute = MailRoute
     typealias Sheet = MailSheet
     typealias Alert = MailAlert
@@ -33,16 +35,11 @@ enum MailSidebar: String, SidebarItem {
         }
     }
 
+    var contentView: some View {
+        MailListView(sidebarItem: self)
+    }
+
     var detail: some View {
-        switch self {
-        case .inbox:
-            InboxView()
-        case .sent:
-            SentView()
-        case .archive:
-            ArchiveView()
-        case .starred:
-            StarredView()
-        }
+        MailDetailWrapperView()
     }
 }

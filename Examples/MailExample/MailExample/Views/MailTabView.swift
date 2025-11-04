@@ -6,12 +6,12 @@
 import SwiftUI
 import UIRouting
 
-/// メールタブのビュー（SplitViewRoutingを使用）
+/// メールタブのビュー（ThreeColumnSplitViewRoutingを使用）
 struct MailTabView: View {
     @State private var splitViewPresenter = SplitViewPresenter<MailSidebar>(initialSelection: .inbox)
 
     var body: some View {
-        SplitViewRouting(
+        ThreeColumnSplitViewRouting(
             splitViewPresenter: splitViewPresenter,
             items: [.inbox, .sent, .archive, .starred]
         )
