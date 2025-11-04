@@ -22,30 +22,6 @@ struct InboxView: View {
                     EmailRow(email: email)
                 }
                 .buttonStyle(.plain)
-                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                    Button(role: .destructive) {
-                        alertPresenter.present(.deleteConfirmation(email: email) {
-                            withAnimation {
-                                emails.removeAll { $0.id == email.id }
-                            }
-                        })
-                    } label: {
-                        Label("削除", systemImage: "trash")
-                    }
-                }
-                .swipeActions(edge: .leading) {
-                    Button {
-                        if let index = emails.firstIndex(where: { $0.id == email.id }) {
-                            emails[index].isStarred.toggle()
-                        }
-                    } label: {
-                        Label(
-                            email.isStarred ? "スター解除" : "スター",
-                            systemImage: email.isStarred ? "star.fill" : "star"
-                        )
-                    }
-                    .tint(.yellow)
-                }
             }
         }
         .navigationTitle("受信箱")
@@ -56,6 +32,24 @@ struct InboxView: View {
                 } label: {
                     Label("新規作成", systemImage: "square.and.pencil")
                 }
+            }
+
+            ToolbarItem(placement: .topBarLeading) {
+                Button {
+                    alertPresenter.present(.deleteConfirmation(email: Email(
+                        subject: "全メール",
+                        from: "受信箱",
+                        to: "",
+                        body: ""
+                    )) {
+                        withAnimation {
+                            emails.removeAll()
+                        }
+                    })
+                } label: {
+                    Label("全削除", systemImage: "trash")
+                }
+                .disabled(emails.isEmpty)
             }
         }
     }

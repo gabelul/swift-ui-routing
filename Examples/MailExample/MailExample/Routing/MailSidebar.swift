@@ -15,6 +15,8 @@ enum MailSidebar: String, SidebarItem {
 
     // ルーティング型の指定
     typealias DetailRoute = MailRoute
+    typealias Sheet = MailSheet
+    typealias Alert = MailAlert
 
     var id: String { rawValue }
 

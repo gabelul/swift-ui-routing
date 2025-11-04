@@ -50,6 +50,10 @@ public protocol SidebarItem: Hashable, Identifiable {
 
     // ルーティング型
     associatedtype DetailRoute: Routable = Never
+    associatedtype Sheet: Sheetable = Never
+    associatedtype Alert: Alertable = Never
+    associatedtype FullScreen: FullScreenCoverable = Never
+    associatedtype CustomSheet: CustomHeightSheetable = Never
 
     // 3カラム用の拡張ポイント（将来使用）
     associatedtype ContentItem: Selectable = Never
