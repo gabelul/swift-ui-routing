@@ -8,14 +8,11 @@ import UIRouting
 
 @main
 struct MailExampleApp: App {
-    @State private var splitViewPresenter = SplitViewPresenter<MailSidebar>(initialSelection: .inbox)
+    @State private var tabPresenter = TabPresenter<AppTab>(initialTab: .mail)
 
     var body: some Scene {
         WindowGroup {
-            SplitViewRouting(
-                splitViewPresenter: splitViewPresenter,
-                items: [.inbox, .sent, .archive, .starred]
-            )
+            TabRouting(tabPresenter: tabPresenter, tabs: [.mail, .settings])
         }
     }
 }
