@@ -16,7 +16,6 @@ enum AppTab: Tabbable {
     typealias Alert = Never
     typealias FullScreen = Never
     typealias CustomSheet = Never
-    typealias Sidebar = Never
 
     var id: Int {
         switch self {

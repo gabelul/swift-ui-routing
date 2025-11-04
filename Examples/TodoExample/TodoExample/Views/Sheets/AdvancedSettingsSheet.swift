@@ -35,7 +35,8 @@ struct AdvancedSettingsSheet: View {
             customHeightSheetPresenter: CustomHeightSheetPresenter<AppCustomHeightSheet>(),
             fullScreenCoverPresenter: FullScreenCoverPresenter<AppFullScreenCover>(),
             alertPresenterOnNavigation: alertPresenter,
-            alertPresenterOnSheet: AlertPresenter<AppAlert>()
+            alertPresenterOnSheet: AlertPresenter<AppAlert>(),
+            splitViewPresenter: SplitViewPresenter<Never>()
         )
     }
 }
