@@ -23,7 +23,7 @@ alertPresenter.present(.deleteConfirmation { /* ... */ })
 
 - **型安全** - 全ての遷移をコンパイル時に検証
 - **簡潔** - `@Environment`で即座にアクセス
-- **完全対応** - Navigation, Sheet, Alert, Tab, SplitView
+- **完全対応** - Navigation, Sheet, FullScreenCover, CustomHeightSheet, Alert, Tab, SplitView
 
 ## インストール
 
@@ -144,6 +144,81 @@ tabPresenter.select(.home) { context in
 }
 ```
 
+## モーダル表示
+
+### FullScreenCover（フルスクリーン）
+
+```swift
+enum AppFullScreenCover: Identifiable, Hashable {
+    case camera
+    case editor(id: String)
+
+    var id: String {
+        switch self {
+        case .camera: return "camera"
+        case .editor(let id): return "editor_\(id)"
+        }
+    }
+
+    var body: some View {
+        switch self {
+        case .camera: CameraView()
+        case .editor(let id): EditorView(id: id)
+        }
+    }
+}
+
+// セットアップ
+@State private var presenter = FullScreenCoverPresenter<AppFullScreenCover>()
+
+ContentView()
+    .fullScreenCover(item: $presenter.presentedCover) { $0.body }
+
+// ビューで使用
+@Environment(.fullScreenCover(AppFullScreenCover.self)) private var presenter
+presenter.present(.camera)
+```
+
+### CustomHeightSheet（カスタム高さシート）
+
+```swift
+enum AppCustomSheet: CustomHeightSheetable {
+    case picker
+    case quickAdd
+
+    var id: String {
+        switch self {
+        case .picker: return "picker"
+        case .quickAdd: return "quickAdd"
+        }
+    }
+
+    var body: some View {
+        switch self {
+        case .picker: PickerView()
+        case .quickAdd: QuickAddView()
+        }
+    }
+
+    var detents: Set<PresentationDetent> {
+        switch self {
+        case .picker: return [.medium, .large]
+        case .quickAdd: return [.height(200)]
+        }
+    }
+}
+
+// セットアップ
+@State private var presenter = CustomHeightSheetPresenter<AppCustomSheet>()
+
+ContentView()
+    .customHeightSheet(presenter: presenter)
+
+// ビューで使用
+@Environment(.customHeightSheet(AppCustomSheet.self)) private var presenter
+presenter.present(.picker)
+```
+
 ## NavigationSplitView対応
 
 ### 2カラム（サイドバー + 詳細）
@@ -221,7 +296,7 @@ splitViewPresenter.select(.inbox)          // サイドバー選択
 ## 実装例
 
 完全な実装例を参照:
-- **[TodoExample](Examples/TodoExample)** - Navigation, Sheet, Alert, TabView
+- **[TodoExample](Examples/TodoExample)** - Navigation, Sheet, Alert, TabView, FullScreenCover, CustomHeightSheet
 - **[MailExample](Examples/MailExample)** - 3カラムNavigationSplitView
 
 ## 要件
