@@ -50,7 +50,7 @@ public protocol CustomHeightSheetable: Identifiable, Hashable {
 
 // MARK: - Default Implementations
 public extension CustomHeightSheetable where Self: Hashable, ID == Int {
-    var id: Int {
+    nonisolated var id: Int {
         var hasher = Hasher()
         self.hash(into: &hasher)
         return hasher.finalize()
@@ -70,7 +70,7 @@ public extension CustomHeightSheetable where ID == String {
 // MARK: - Enum Mirror-based Hashable (クロージャを自動的に無視)
 public extension CustomHeightSheetable {
     /// enumのcase名とHashable型のassociated valueのみでハッシュ化（クロージャは無視）
-    static func == (lhs: Self, rhs: Self) -> Bool {
+    nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
         let lhsMirror = Mirror(reflecting: lhs)
         let rhsMirror = Mirror(reflecting: rhs)
 
@@ -86,7 +86,7 @@ public extension CustomHeightSheetable {
         return lhsHashableValues == rhsHashableValues
     }
 
-    func hash(into hasher: inout Hasher) {
+    nonisolated func hash(into hasher: inout Hasher) {
         let mirror = Mirror(reflecting: self)
 
         // case名をハッシュ
@@ -97,7 +97,7 @@ public extension CustomHeightSheetable {
         hasher.combine(hashableValues)
     }
 
-    private static func extractHashableValues(from value: Self) -> [AnyHashable] {
+    private nonisolated static func extractHashableValues(from value: Self) -> [AnyHashable] {
         let mirror = Mirror(reflecting: value)
         guard let values = mirror.children.first?.value else {
             return []
@@ -110,7 +110,7 @@ public extension CustomHeightSheetable {
         }
     }
 
-    private func extractHashableValues(from value: Self) -> [AnyHashable] {
+    private nonisolated func extractHashableValues(from value: Self) -> [AnyHashable] {
         Self.extractHashableValues(from: value)
     }
 }

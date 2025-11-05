@@ -7,8 +7,14 @@ DerivedData/
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 .netrc
 
+# Xcode
+*.xcodeproj/project.xcworkspace/
+
 # Claude Code
 .claude/
+
+# Serena MCP
+.serena/
 
 # Playwright MCP
 .playwright-mcp/

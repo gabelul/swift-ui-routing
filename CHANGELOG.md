@@ -5,6 +5,38 @@
 このフォーマットは [Keep a Changelog](https://keepachangelog.com/ja/1.0.0/) に基づいており、
 このプロジェクトは [Semantic Versioning](https://semver.org/lang/ja/) に準拠しています。
 
+## [1.0.5] - 2025-11-06
+
+### 追加
+- **Mirror-based Hashable/Equatable実装**: すべてのプロトコルにenumのassociated values対応を追加
+  - `FullScreenCoverable` - クロージャを含むassociated valuesに対応
+  - `Sheetable` - クロージャを含むassociated valuesに対応
+  - `Routable` - クロージャを含むassociated valuesに対応
+  - `CustomHeightSheetable` - 既存実装に`nonisolated`を追加
+  - `Alertable` - 既存実装に`nonisolated`を追加
+
+### 改善
+- **Swift 6並行性対応**: すべてのHashable/Equatable実装に`nonisolated`を適用
+  - 厳格な並行性チェック（Swift 6）に完全対応
+  - Main Actor isolationとの競合を解消
+- **ドキュメント充実**: クロージャ対応の使用例を追加
+  - `FullScreenCoverable`: `picker(onSelect: (Item) -> Void)` の例
+  - `Routable`: `editor(onSave: () -> Void)` の例
+  - すべてのプロトコルに一貫した注意書きを追加
+
+### 技術詳細
+- **Mirror-based実装の仕組み**:
+  - enumのcase名で同一性を判定
+  - Hashable型のassociated valueのみを比較・ハッシュ化
+  - クロージャ型は`AnyHashable`に変換できないため自動的に除外
+  - 手動でのHashable/Equatable実装が不要に
+
+### 利点
+- ✅ クロージャを含むenumでコンパイルエラーが発生しない
+- ✅ 型安全性を維持しながら柔軟な設計が可能
+- ✅ ボイラープレートコードの大幅削減
+- ✅ Swift 6の厳格な並行性チェックに対応
+
 ## [1.0.4] - 2025-11-04
 
 ### 追加

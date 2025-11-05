@@ -59,7 +59,7 @@ public protocol Alertable: Identifiable, Hashable {
 
 // MARK: - Default Implementations
 public extension Alertable where Self: Hashable, ID == Int {
-    var id: Int {
+    nonisolated var id: Int {
         var hasher = Hasher()
         self.hash(into: &hasher)
         return hasher.finalize()
@@ -90,7 +90,7 @@ public extension Alertable where Self: RawRepresentable, Self.RawValue == String
 // MARK: - Enum without RawValue (Mirror-based)
 public extension Alertable {
     /// enumのcase名とHashable型のassociated valueのみでハッシュ化（クロージャは無視）
-    static func == (lhs: Self, rhs: Self) -> Bool {
+    nonisolated static func == (lhs: Self, rhs: Self) -> Bool {
         let lhsMirror = Mirror(reflecting: lhs)
         let rhsMirror = Mirror(reflecting: rhs)
 
@@ -106,7 +106,7 @@ public extension Alertable {
         return lhsHashableValues == rhsHashableValues
     }
 
-    func hash(into hasher: inout Hasher) {
+    nonisolated func hash(into hasher: inout Hasher) {
         let mirror = Mirror(reflecting: self)
 
         // case名をハッシュ
@@ -117,7 +117,7 @@ public extension Alertable {
         hasher.combine(hashableValues)
     }
 
-    private static func extractHashableValues(from value: Self) -> [AnyHashable] {
+    private nonisolated static func extractHashableValues(from value: Self) -> [AnyHashable] {
         let mirror = Mirror(reflecting: value)
         guard let values = mirror.children.first?.value else {
             return []
@@ -130,7 +130,7 @@ public extension Alertable {
         }
     }
 
-    private func extractHashableValues(from value: Self) -> [AnyHashable] {
+    private nonisolated func extractHashableValues(from value: Self) -> [AnyHashable] {
         Self.extractHashableValues(from: value)
     }
 }
