@@ -167,22 +167,86 @@
 - `TodoListRoutingConfig.swift`: enum-based移行により不要になった設定ファイル
 - 重複したTabView説明セクションをREADMEから削除（131行削減）
 
-## [1.0.1] - 2024-XX-XX
+## [1.0.1] - 2025-11-04
 
 ### 追加
-- TabView対応を追加
-- フルスクリーンカバー対応
-- カスタム高さシート対応
+- **TabView対応**: 型安全なタブ管理機能を実装
+  - `Tabbable`プロトコル - タブの定義（body + tabLabel）
+  - `TabPresenter` - タブの選択状態を管理（selectedTab + select()）
+  - `TabRouting` View - TabViewを直接構築する簡潔なAPI
+  - Environment統合 - `@Environment(.tab(AppTab.self))` でアクセス可能
+  - タブごとに独立したNavigationStack、Router、AlertPresenterを保持
+
+- **フルスクリーンカバー対応**: `FullScreenCoverPresenter` を実装
+  - `AppFullScreenCover` enum - フルスクリーンモーダル定義
+  - TodoExampleに実装例を追加（PhotoCaptureView、NoteEditorView）
+  - Environment統合 - `@Environment(.fullScreenCover(Cover.self))`
+
+- **カスタム高さシート対応**: `CustomHeightSheetPresenter` を実装
+  - `CustomHeightSheetable`プロトコル - detentsで高さをカスタマイズ
+  - TodoExampleに実装例を追加（CategoryPickerSheet、QuickAddSheet）
+  - Environment統合 - `@Environment(.customHeightSheet(Sheet.self))`
+
+### 改善
+- **アラートAPI改善**: より直感的な命名に変更
+  - `.alertOnNavigation()` → `.routingAlert()` に変更
+  - `.alertOnSheet()` → `.sheetAlert()` に変更
+  - NavigationStack以外でも使えることを明示
+
+### 修正
+- RoutingScopeModifierでListView（root content）にもアラートを適用
+  - 以前は遷移先画面にしかアラートが適用されていなかった
+  - NavigationStackの最初の画面でもアラートが動作するように修正
 
 ### 変更
-- README更新
+- TodoExample大幅拡張
+  - タブベースのアプリ構造に移行
+  - AppRouteからsettingsケースを削除（タブに移行）
+  - TodoTabRoot - Todoタブの独立したルーティングコンテキスト
+  - AdvancedSettingsSheet - Sheet内独自NavigationStack実装例
+- README更新 - TabView、FullScreenCover、CustomHeightSheetの使用例を追加
 
-## [1.0.0] - 2024-XX-XX
+## [1.0.0] - 2025-11-03
 
 ### 追加
-- 初回リリース
-- 型安全なルーティングシステム
-- NavigationStack統合
-- シート・アラート管理
-- コンテキスト分離（Navigation/Sheet）
-- プラットフォームサポート（iOS 17.0+、macOS 14.0+）
+- **初回リリース**: SwiftUI向け型安全なルーティングライブラリ
+
+- **基本ルーティング機能**:
+  - `Router<Route>` - NavigationStack統合のルーティング管理
+  - `Routable`プロトコル - 画面遷移の型定義
+  - `navigate(to:)` - 型安全な画面遷移
+  - `back()` / `popToRoot()` - ナビゲーションスタック操作
+
+- **シート管理**:
+  - `SheetPresenter<Sheet>` - モーダルシート管理
+  - `Sheetable`プロトコル - シート定義（Identifiable + Hashable + body）
+  - `present()` / `dismiss()` - シート表示・非表示
+
+- **アラート管理**:
+  - `AlertPresenter<Alert>` - アラート管理
+  - `Alertable`プロトコル - アラート定義（title + actions）
+  - `AlertAction` - アラートボタン定義（default/cancel/destructive）
+
+- **Environment統合**:
+  - 静的メンバールックアップパターン
+  - `@Environment(.router(Route.self))` - Router取得
+  - `@Environment(.sheet(Sheet.self))` - SheetPresenter取得
+  - `@Environment(.alert(Alert.self, context:))` - AlertPresenter取得
+
+- **コンテキスト分離**:
+  - Navigation階層とSheet階層で独立したAlertPresenterを持つ
+  - `.navigation` / `.sheet` コンテキストでアラートを区別
+
+- **TodoExampleサンプルアプリ**:
+  - Router、SheetPresenter、AlertPresenterの実装例
+  - Todoリストアプリ（追加、編集、削除、フィルタ）
+  - カテゴリ管理、設定画面
+
+### 技術仕様
+- **プラットフォーム**: iOS 17.0+、macOS 14.0+
+- **言語**: Swift 6.0+
+- **依存関係**: ゼロ依存
+- **アーキテクチャ**:
+  - Specifierパターン - 環境値の識別
+  - GenericEnvironmentKey - 型安全な環境値アクセス
+  - EnvironmentSubscript - 動的な環境値解決
