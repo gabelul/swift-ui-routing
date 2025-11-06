@@ -5,6 +5,7 @@ enum AppSheet: Sheetable {
     case addTodo
     case filter
     case advancedSettings
+    case categoryPicker(onSelect: (Todo.Category) -> Void)
 
     @ViewBuilder
     var body: some View {
@@ -13,12 +14,17 @@ enum AppSheet: Sheetable {
             NavigationStack {
                 AddTodoSheet()
             }
+            .sheetPresenter(for: AppSheet.self)
         case .filter:
             NavigationStack {
                 FilterSheet()
             }
         case .advancedSettings:
             AdvancedSettingsSheet()
+        case .categoryPicker(let onSelect):
+            NavigationStack {
+                CategoryPickerSheetViewWithClosure(onSelect: onSelect)
+            }
         }
     }
 }

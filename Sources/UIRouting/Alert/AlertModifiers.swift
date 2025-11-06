@@ -1,5 +1,45 @@
 import SwiftUI
 
+// MARK: - Conditional Presentation Modifier
+
+/// Alert が必要な場合のみ適用する内部用 Modifier。
+///
+/// Alert 型が Never でない場合のみ、アラート表示機能を適用します。
+struct AlertModifierIfNeeded<Alert: Alertable>: ViewModifier {
+    @Bindable var presenter: AlertPresenter<Alert>
+
+    func body(content: Content) -> some View {
+        if Alert.self != Never.self {
+            content.alert(
+                presenter.presentedAlert?.title ?? "",
+                isPresented: Binding(
+                    get: { presenter.isPresented },
+                    set: { presenter.isPresented = $0 }
+                ),
+                presenting: presenter.presentedAlert,
+                actions: { alert in
+                    ForEach(Array(alert.actions.enumerated()), id: \.offset) { _, action in
+                        Button(role: action.role) {
+                            action.action()
+                        } label: {
+                            Text(action.title)
+                        }
+                    }
+                },
+                message: { alert in
+                    if let message = alert.message {
+                        Text(message)
+                    }
+                }
+            )
+        } else {
+            content
+        }
+    }
+}
+
+// MARK: - Context-Specific Modifiers
+
 /// Navigation コンテキストでアラートを表示する ViewModifier。
 ///
 /// NavigationStack 内でアラートを表示するために使用します。

@@ -4,6 +4,7 @@ import UIRouting
 struct AddTodoSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(.alert(AppAlert.self, context: .sheet)) private var alertPresenter
+    @Environment(.sheet(AppSheet.self, context: .sheet)) private var sheetPresenter
 
     @State private var title = ""
     @State private var selectedCategory = Todo.Category.personal
@@ -13,9 +14,16 @@ struct AddTodoSheet: View {
             Section("新しいTodo") {
                 TextField("タイトル", text: $title)
 
-                Picker("カテゴリ", selection: $selectedCategory) {
-                    ForEach(Todo.Category.allCases) { category in
-                        Text(category.rawValue).tag(category)
+                Button(action: {
+                    sheetPresenter.present(.categoryPicker(onSelect: { category in
+                        selectedCategory = category
+                    }))
+                }) {
+                    HStack {
+                        Text("カテゴリ")
+                        Spacer()
+                        Text(selectedCategory.rawValue)
+                            .foregroundStyle(.secondary)
                     }
                 }
             }

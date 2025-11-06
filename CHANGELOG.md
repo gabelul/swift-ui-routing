@@ -5,6 +5,55 @@
 このフォーマットは [Keep a Changelog](https://keepachangelog.com/ja/1.0.0/) に基づいており、
 このプロジェクトは [Semantic Versioning](https://semver.org/lang/ja/) に準拠しています。
 
+## [1.0.6] - 2025-11-06
+
+### 追加
+- **ネストプレゼンテーション機能**: シート内からシートを開く機能を追加
+  - `PresentationContext` enum - `.navigation` と `.sheet` で階層を区別
+  - シート内プレゼンテーション用の `.sheetPresenter()` modifier
+  - TodoExampleに `CategoryPickerSheet` 実装例を追加
+  - クロージャベースのデータ受け渡しで型安全性を確保
+
+- **統合コンテキストサポート**: すべてのプレゼンテーションタイプにコンテキスト対応
+  - `Sheet` - `.sheet(AppSheet.self, context: .sheet)` でネスト可能
+  - `FullScreenCover` - `.fullScreenCover(Cover.self, context: .sheet)` でネスト可能
+  - `CustomHeightSheet` - `.customHeightSheet(Sheet.self, context: .sheet)` でネスト可能
+  - `Alert` - 既存の `context` パラメータを統合 `PresentationContext` に統一
+
+### 改善
+- **大規模なファイル構造リファクタリング**: コードベースの保守性と可読性を大幅に向上
+  - 1000行超の大規模ファイルを機能別に分割（単一責任の原則に準拠）
+  - 各プレゼンタータイプごとにファイルを整理（Alert/, Sheet/, Router/, など）
+  - 公開APIと内部実装の明確な分離
+
+### 変更
+- **ディレクトリ構造の最適化**:
+  - `Internal/` ディレクトリを削除（不要になった）
+  - `Environment/` ディレクトリを削除（ファイルを適切な場所に再配置）
+  - `Common/` ディレクトリに共通コンポーネントを集約
+    - `PresentationContext.swift` - 共通enum
+    - `RoutingModifier.swift` - 統合Modifier
+
+- **ファイル分割の詳細**:
+  - `Specifiers.swift` (146行) → 7つの専用ファイルに分割
+  - `GenericEnvironmentKeys.swift` (135行) → 7つの専用ファイルに分割
+  - `StaticMemberLookup.swift` (364行) → 7つの専用ファイルに分割
+  - `PresentationModifiers.swift` (255行) → 4つの専用ファイルに分割
+  - `EnvironmentSubscripts.swift` (100行) → 7つの専用ファイルに分割
+
+### 技術的改善
+- **コロケーション**: 関連するファイルを同じディレクトリに配置
+  - 例: `Sheet/` に `SheetPresenter.swift`, `SheetSpecifier.swift`, `SheetEnvironmentKey.swift`, `SheetModifiers.swift` など
+- **単一責任**: 各ファイルが1つの明確な責務のみを持つ
+- **保守性向上**: 変更時の影響範囲が明確化
+- **型安全なネスト**: クロージャを使用してBindingのHashable問題を回避
+
+### 影響
+- ✅ **公開API**: 後方互換性あり（新機能は additive）
+- ✅ **ビルド**: すべて正常にコンパイル
+- ✅ **ドキュメント**: すべて最新の構造を反映
+- ✅ **機能**: すべての機能が正常に動作
+
 ## [1.0.5] - 2025-11-06
 
 ### 追加
