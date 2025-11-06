@@ -5,6 +5,13 @@
 このフォーマットは [Keep a Changelog](https://keepachangelog.com/ja/1.0.0/) に基づいており、
 このプロジェクトは [Semantic Versioning](https://semver.org/lang/ja/) に準拠しています。
 
+## [1.0.7] - 2025-11-06
+
+### 修正
+- **Swift Package Manager 互換性**: v1.0.6 タグの fingerprint 不一致問題を解決
+  - タグの再作成により、SPM のバージョン解決エラーを修正
+  - ユーザーが `does not match previously recorded value` エラーに遭遇する問題を解消
+
 ## [1.0.6] - 2025-11-06
 
 ### 追加
