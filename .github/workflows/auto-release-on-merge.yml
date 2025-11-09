@@ -40,21 +40,21 @@ jobs:
           echo "version_tag=$VERSION_TAG" >> $GITHUB_OUTPUT
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-          echo "📦 Release branch: $BRANCH_NAME"
-          echo "🏷️ Version tag: $VERSION_TAG"
-          echo "🔢 Version number: $VERSION"
+          echo "📦 リリースブランチ: $BRANCH_NAME"
+          echo "🏷️ バージョンタグ: $VERSION_TAG"
+          echo "🔢 バージョン番号: $VERSION"
 
       - name: Validate CHANGELOG entry
         run: |
           VERSION="${{ steps.version.outputs.version }}"
 
           if ! grep -q "## \[$VERSION\]" CHANGELOG.md; then
-            echo "❌ Error: CHANGELOG.md missing version [$VERSION] section"
-            echo "Please update CHANGELOG.md in the release branch"
+            echo "❌ エラー: CHANGELOG.mdにバージョン [$VERSION] のセクションが見つかりません"
+            echo "リリースブランチでCHANGELOG.mdを更新してください"
             exit 1
           fi
 
-          echo "✅ CHANGELOG.md has [$VERSION] section"
+          echo "✅ CHANGELOG.mdに [$VERSION] セクションが存在します"
 
       - name: Create and push tag
         run: |
@@ -62,7 +62,7 @@ jobs:
 
           # タグが既に存在する場合はスキップ
           if git rev-parse "$VERSION_TAG" >/dev/null 2>&1; then
-            echo "⚠️ Tag $VERSION_TAG already exists. Skipping."
+            echo "⚠️ タグ $VERSION_TAG は既に存在します。スキップします。"
             exit 0
           fi
 
@@ -72,7 +72,7 @@ jobs:
           # タグをプッシュ
           git push origin "$VERSION_TAG"
 
-          echo "✅ Created and pushed tag $VERSION_TAG"
+          echo "✅ タグ $VERSION_TAG を作成してプッシュしました"
 
       - name: Extract changelog for release notes
         id: changelog
@@ -107,15 +107,15 @@ jobs:
 
             # リリースノートを整形して作成
             cat > release_notes.md <<EOF
-          # 🎉 ${TAG} Release
+          # 🎉 ${TAG} リリース
 
-          UIRouting ${TAG} has been released.
+          UIRouting ${TAG} がリリースされました。
 
-          ## 📝 Changes
+          ## 📝 変更内容
 
           $(cat changelog_section.md)
 
-          ## 📦 Installation
+          ## 📦 インストール
 
           \`\`\`swift
           dependencies: [
@@ -123,15 +123,15 @@ jobs:
           ]
           \`\`\`
 
-          ## 🔗 Links
-          - [CHANGELOG](https://github.com/no-problem-dev/swift-ui-routing/blob/main/CHANGELOG.md)
-          - [Documentation](https://no-problem-dev.github.io/swift-ui-routing/documentation/uirouting/)
+          ## 🔗 リンク
+          - [変更履歴](https://github.com/no-problem-dev/swift-ui-routing/blob/main/CHANGELOG.md)
+          - [ドキュメント](https://no-problem-dev.github.io/swift-ui-routing/documentation/uirouting/)
           EOF
 
             echo "found=true" >> $GITHUB_OUTPUT
           else
             echo "found=false" >> $GITHUB_OUTPUT
-            echo "⚠️ CHANGELOG.md version $VERSION not found" > release_notes.md
+            echo "⚠️ CHANGELOG.mdにバージョン $VERSION が見つかりませんでした" > release_notes.md
           fi
 
       - name: Create GitHub Release
@@ -164,8 +164,8 @@ jobs:
           echo "next_version_tag=$NEXT_VERSION_TAG" >> $GITHUB_OUTPUT
           echo "next_branch=$NEXT_BRANCH" >> $GITHUB_OUTPUT
 
-          echo "📈 Next version: $NEXT_VERSION"
-          echo "🌿 Next release branch: $NEXT_BRANCH"
+          echo "📈 次のバージョン: $NEXT_VERSION"
+          echo "🌿 次のリリースブランチ: $NEXT_BRANCH"
 
       - name: Delete old release branch if exists
         run: |
@@ -174,7 +174,7 @@ jobs:
           # リモートブランチが存在する場合は削除
           if git ls-remote --heads origin "$NEXT_BRANCH" | grep -q "$NEXT_BRANCH"; then
             git push origin --delete "$NEXT_BRANCH"
-            echo "🗑️ Deleted existing branch $NEXT_BRANCH"
+            echo "🗑️ 既存のブランチ $NEXT_BRANCH を削除しました"
           fi
 
       - name: Create next release branch
@@ -184,7 +184,7 @@ jobs:
           # mainブランチから新しいリリースブランチを作成
           git checkout -b "$NEXT_BRANCH"
 
-          echo "✅ Created next release branch $NEXT_BRANCH"
+          echo "✅ 次のリリースブランチ $NEXT_BRANCH を作成しました"
 
       - name: Update CHANGELOG for next version
         run: |
@@ -207,9 +207,9 @@ jobs:
             ' CHANGELOG.md > CHANGELOG.tmp
             mv CHANGELOG.tmp CHANGELOG.md
 
-            echo "✅ Added [未リリース] section to CHANGELOG.md"
+            echo "✅ CHANGELOG.mdに「未リリース」セクションを追加しました"
           else
-            echo "ℹ️ CHANGELOG.md already has [未リリース] section"
+            echo "ℹ️ CHANGELOG.mdに既に「未リリース」セクションが存在します"
           fi
 
           # 比較リンクを最新バージョンに更新
@@ -219,7 +219,7 @@ jobs:
           echo "" >> CHANGELOG.md
           echo "<!-- Auto-generated on $(date -u +%Y-%m-%dT%H:%M:%SZ) by release workflow -->" >> CHANGELOG.md
 
-          echo "✅ Updated CHANGELOG.md"
+          echo "✅ CHANGELOG.mdを更新しました"
 
       - name: Commit and push next release branch
         run: |
@@ -228,17 +228,17 @@ jobs:
 
           # 変更がある場合のみコミット
           if git diff --quiet CHANGELOG.md; then
-            echo "ℹ️ No changes in CHANGELOG.md, skipping commit"
+            echo "ℹ️ CHANGELOG.mdに変更がないため、コミットをスキップします"
           else
             git add CHANGELOG.md
             git commit -m "chore: prepare for $NEXT_VERSION_TAG release"
-            echo "✅ Committed changes"
+            echo "✅ 変更をコミットしました"
           fi
 
           # ブランチをプッシュ
           git push origin "$NEXT_BRANCH"
 
-          echo "✅ Pushed branch $NEXT_BRANCH"
+          echo "✅ ブランチ $NEXT_BRANCH をプッシュしました"
 
       - name: Create draft PR for next release
         run: |
@@ -251,32 +251,32 @@ jobs:
             --body "$(cat <<EOF
           # 🚀 Release $NEXT_VERSION_TAG
 
-          Next release preparation branch.
+          次のリリース準備用のブランチです。
 
-          ## 📝 Development Flow
+          ## 📝 開発フロー
 
-          1. **Development**: Merge new features/fixes to this branch
-          2. **Update CHANGELOG**: Record changes in the [未リリース] section of \`CHANGELOG.md\`
-          3. **Release Preparation**: When all changes are complete, convert [未リリース] to [$NEXT_VERSION_TAG] section
-          4. **Execute Release**: Merge this PR
+          1. **開発**: このブランチに新機能・修正をマージ
+          2. **CHANGELOG更新**: \`CHANGELOG.md\` の「未リリース」セクションに変更を記録
+          3. **リリース準備**: すべての変更が完了したら、「未リリース」を「$NEXT_VERSION_TAG」セクションに変換
+          4. **リリース実行**: このPRをマージ
 
-          ## ⚙️ Automation
+          ## ⚙️ 自動化
 
-          When this PR is merged to main, the following will be automatically executed:
-          - ✅ Auto-create tag $NEXT_VERSION_TAG
-          - ✅ Auto-create GitHub Release
-          - ✅ Auto-create next release branch
+          このPRをmainにマージすると、以下が自動実行されます：
+          - ✅ タグ $NEXT_VERSION_TAG の自動作成
+          - ✅ GitHub Releaseの自動作成
+          - ✅ 次のリリースブランチの自動作成
 
-          ## 📋 Pre-Release Checklist
+          ## 📋 リリース前チェックリスト
 
-          - [ ] Convert [未リリース] to [$NEXT_VERSION_TAG] in CHANGELOG.md
-          - [ ] Add date (YYYY-MM-DD format)
-          - [ ] Update comparison link section
-          - [ ] All tests pass
-          - [ ] Documentation is up to date
+          - [ ] CHANGELOG.mdの「未リリース」を「[$NEXT_VERSION_TAG]」に変換
+          - [ ] 日付を記載（YYYY-MM-DD形式）
+          - [ ] 比較リンクセクションを更新
+          - [ ] すべてのテストが通過
+          - [ ] ドキュメントが最新
 
           ---
-          🤖 This PR was auto-generated
+          🤖 このPRは自動生成されました
           EOF
           )" \
             --base main \
@@ -290,14 +290,14 @@ jobs:
           NEXT_VERSION_TAG="${{ steps.next_version.outputs.next_version_tag }}"
           NEXT_BRANCH="${{ steps.next_version.outputs.next_branch }}"
 
-          echo "## 🎉 Release Process Complete"
+          echo "## 🎉 リリース処理完了"
           echo ""
-          echo "### ✅ Executed Tasks"
-          echo "- Created and pushed tag $VERSION_TAG"
-          echo "- GitHub Release will be created"
-          echo "- Created next release branch $NEXT_BRANCH"
-          echo "- Created draft PR for next release"
+          echo "### ✅ 実行された処理"
+          echo "- タグ $VERSION_TAG を作成・プッシュ"
+          echo "- GitHub Releaseが作成されます"
+          echo "- 次のリリースブランチ $NEXT_BRANCH を作成"
+          echo "- 次のリリース用のドラフトPRを作成"
           echo ""
-          echo "### 🔗 Links"
-          echo "- Release: https://github.com/${{ github.repository }}/releases/tag/$VERSION_TAG"
-          echo "- Next PR: https://github.com/${{ github.repository }}/pulls"
+          echo "### 🔗 確認"
+          echo "- リリース: https://github.com/${{ github.repository }}/releases/tag/$VERSION_TAG"
+          echo "- 次のPR: https://github.com/${{ github.repository }}/pulls"
