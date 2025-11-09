@@ -5,6 +5,11 @@
 このフォーマットは [Keep a Changelog](https://keepachangelog.com/ja/1.0.0/) に基づいており、
 このプロジェクトは [Semantic Versioning](https://semver.org/lang/ja/) に準拠しています。
 
+## [1.0.10] - 2025-11-09
+
+### 修正
+- 自動リリースワークフローの完全版実装（swift-design-systemベース）
+
 ## [1.0.9] - 2025-11-09
 
 ### 修正
@@ -269,6 +274,7 @@
   - GenericEnvironmentKey - 型安全な環境値アクセス
   - EnvironmentSubscript - 動的な環境値解決
 
-[未リリース]: https://github.com/no-problem-dev/swift-ui-routing/compare/v1.0.9...HEAD
+[未リリース]: https://github.com/no-problem-dev/swift-ui-routing/compare/v1.0.10...HEAD
+[1.0.10]: https://github.com/no-problem-dev/swift-ui-routing/compare/v1.0.9...v1.0.10
 [1.0.9]: https://github.com/no-problem-dev/swift-ui-routing/compare/v1.0.8...v1.0.9
 [1.0.8]: https://github.com/no-problem-dev/swift-ui-routing/compare/v1.0.7...v1.0.8
