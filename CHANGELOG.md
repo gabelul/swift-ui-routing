@@ -5,6 +5,10 @@
 このフォーマットは [Keep a Changelog](https://keepachangelog.com/ja/1.0.0/) に基づいており、
 このプロジェクトは [Semantic Versioning](https://semver.org/lang/ja/) に準拠しています。
 
+## [未リリース]
+
+なし
+
 ## [1.0.8] - 2025-11-09
 
 ### その他
