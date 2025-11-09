@@ -107,26 +107,26 @@ jobs:
 
             # リリースノートを整形して作成
             cat > release_notes.md <<EOF
-# 🎉 ${TAG} Release
+          # 🎉 ${TAG} Release
 
-UIRouting ${TAG} has been released.
+          UIRouting ${TAG} has been released.
 
-## 📝 Changes
+          ## 📝 Changes
 
-$(cat changelog_section.md)
+          $(cat changelog_section.md)
 
-## 📦 Installation
+          ## 📦 Installation
 
-\`\`\`swift
-dependencies: [
-    .package(url: "https://github.com/no-problem-dev/swift-ui-routing.git", .upToNextMajor(from: "${VERSION}"))
-]
-\`\`\`
+          \`\`\`swift
+          dependencies: [
+              .package(url: "https://github.com/no-problem-dev/swift-ui-routing.git", .upToNextMajor(from: "${VERSION}"))
+          ]
+          \`\`\`
 
-## 🔗 Links
-- [CHANGELOG](https://github.com/no-problem-dev/swift-ui-routing/blob/main/CHANGELOG.md)
-- [Documentation](https://no-problem-dev.github.io/swift-ui-routing/documentation/uirouting/)
-EOF
+          ## 🔗 Links
+          - [CHANGELOG](https://github.com/no-problem-dev/swift-ui-routing/blob/main/CHANGELOG.md)
+          - [Documentation](https://no-problem-dev.github.io/swift-ui-routing/documentation/uirouting/)
+          EOF
 
             echo "found=true" >> $GITHUB_OUTPUT
           else
@@ -249,35 +249,35 @@ EOF
             --draft \
             --title "Release $NEXT_VERSION_TAG" \
             --body "$(cat <<EOF
-# 🚀 Release $NEXT_VERSION_TAG
+          # 🚀 Release $NEXT_VERSION_TAG
 
-Next release preparation branch.
+          Next release preparation branch.
 
-## 📝 Development Flow
+          ## 📝 Development Flow
 
-1. **Development**: Merge new features/fixes to this branch
-2. **Update CHANGELOG**: Record changes in the [未リリース] section of \`CHANGELOG.md\`
-3. **Release Preparation**: When all changes are complete, convert [未リリース] to [$NEXT_VERSION_TAG] section
-4. **Execute Release**: Merge this PR
+          1. **Development**: Merge new features/fixes to this branch
+          2. **Update CHANGELOG**: Record changes in the [未リリース] section of \`CHANGELOG.md\`
+          3. **Release Preparation**: When all changes are complete, convert [未リリース] to [$NEXT_VERSION_TAG] section
+          4. **Execute Release**: Merge this PR
 
-## ⚙️ Automation
+          ## ⚙️ Automation
 
-When this PR is merged to main, the following will be automatically executed:
-- ✅ Auto-create tag $NEXT_VERSION_TAG
-- ✅ Auto-create GitHub Release
-- ✅ Auto-create next release branch
+          When this PR is merged to main, the following will be automatically executed:
+          - ✅ Auto-create tag $NEXT_VERSION_TAG
+          - ✅ Auto-create GitHub Release
+          - ✅ Auto-create next release branch
 
-## 📋 Pre-Release Checklist
+          ## 📋 Pre-Release Checklist
 
-- [ ] Convert [未リリース] to [$NEXT_VERSION_TAG] in CHANGELOG.md
-- [ ] Add date (YYYY-MM-DD format)
-- [ ] Update comparison link section
-- [ ] All tests pass
-- [ ] Documentation is up to date
+          - [ ] Convert [未リリース] to [$NEXT_VERSION_TAG] in CHANGELOG.md
+          - [ ] Add date (YYYY-MM-DD format)
+          - [ ] Update comparison link section
+          - [ ] All tests pass
+          - [ ] Documentation is up to date
 
----
-🤖 This PR was auto-generated
-EOF
+          ---
+          🤖 This PR was auto-generated
+          EOF
           )" \
             --base main \
             --head "$NEXT_BRANCH"
