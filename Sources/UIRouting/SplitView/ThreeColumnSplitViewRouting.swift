@@ -201,14 +201,12 @@ extension ThreeColumnSplitViewRouting where SidebarToolbar == EmptySidebarToolba
         @ViewBuilder contentPlaceholder: () -> ContentPlaceholder,
         @ViewBuilder detailPlaceholder: () -> DetailPlaceholder
     ) {
-        self.init(
-            splitViewPresenter: splitViewPresenter,
-            sidebarTitle: sidebarTitle,
-            items: items,
-            contentPlaceholder: contentPlaceholder,
-            detailPlaceholder: detailPlaceholder,
-            sidebarToolbar: { EmptySidebarToolbar() }
-        )
+        self.splitViewPresenter = splitViewPresenter
+        self.sidebarTitle = sidebarTitle
+        self.sidebarItems = items
+        self.contentPlaceholder = contentPlaceholder()
+        self.detailPlaceholder = detailPlaceholder()
+        self.sidebarToolbar = EmptySidebarToolbar()
     }
 }
 
@@ -224,13 +222,12 @@ extension ThreeColumnSplitViewRouting where ContentPlaceholder == Text, DetailPl
         sidebarTitle: String = "サイドバー",
         items: [Sidebar]
     ) {
-        self.init(
-            splitViewPresenter: splitViewPresenter,
-            sidebarTitle: sidebarTitle,
-            items: items,
-            contentPlaceholder: { Text("サイドバーから項目を選択してください") },
-            detailPlaceholder: { Text("項目を選択してください") }
-        )
+        self.splitViewPresenter = splitViewPresenter
+        self.sidebarTitle = sidebarTitle
+        self.sidebarItems = items
+        self.contentPlaceholder = Text("サイドバーから項目を選択してください")
+        self.detailPlaceholder = Text("項目を選択してください")
+        self.sidebarToolbar = EmptySidebarToolbar()
     }
 }
 
@@ -248,13 +245,12 @@ extension ThreeColumnSplitViewRouting where ContentPlaceholder == Text, SidebarT
         items: [Sidebar],
         @ViewBuilder detailPlaceholder: () -> DetailPlaceholder
     ) {
-        self.init(
-            splitViewPresenter: splitViewPresenter,
-            sidebarTitle: sidebarTitle,
-            items: items,
-            contentPlaceholder: { Text("サイドバーから項目を選択してください") },
-            detailPlaceholder: detailPlaceholder
-        )
+        self.splitViewPresenter = splitViewPresenter
+        self.sidebarTitle = sidebarTitle
+        self.sidebarItems = items
+        self.contentPlaceholder = Text("サイドバーから項目を選択してください")
+        self.detailPlaceholder = detailPlaceholder()
+        self.sidebarToolbar = EmptySidebarToolbar()
     }
 }
 
@@ -272,12 +268,11 @@ extension ThreeColumnSplitViewRouting where DetailPlaceholder == Text, SidebarTo
         items: [Sidebar],
         @ViewBuilder contentPlaceholder: () -> ContentPlaceholder
     ) {
-        self.init(
-            splitViewPresenter: splitViewPresenter,
-            sidebarTitle: sidebarTitle,
-            items: items,
-            contentPlaceholder: contentPlaceholder,
-            detailPlaceholder: { Text("項目を選択してください") }
-        )
+        self.splitViewPresenter = splitViewPresenter
+        self.sidebarTitle = sidebarTitle
+        self.sidebarItems = items
+        self.contentPlaceholder = contentPlaceholder()
+        self.detailPlaceholder = Text("項目を選択してください")
+        self.sidebarToolbar = EmptySidebarToolbar()
     }
 }
