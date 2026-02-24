@@ -21,6 +21,21 @@ import SwiftUI
 /// )
 /// ```
 ///
+/// # サイドバーツールバー付きの使用例
+/// ```swift
+/// ThreeColumnSplitViewRouting(
+///     splitViewPresenter: splitViewPresenter,
+///     sidebarTitle: "セッション一覧",
+///     items: sessions,
+///     contentPlaceholder: { Text("選択してください") },
+///     detailPlaceholder: { Text("詳細") }
+/// ) {
+///     ToolbarItem(placement: .primaryAction) {
+///         Button { } label: { Image(systemName: "plus") }
+///     }
+/// }
+/// ```
+///
 /// # SidebarItem定義例
 /// ```swift
 /// enum MailSidebar: SidebarItem {
@@ -44,7 +59,12 @@ import SwiftUI
 /// 2. **コンテンツ選択**: メールをタップ → 詳細に表示
 /// 3. **コンテンツ内遷移**: フィルタや検索ビューへpush（ContentRoute）
 /// 4. **詳細内遷移**: 送信者情報や添付ファイルへpush（DetailRoute）
-public struct ThreeColumnSplitViewRouting<Sidebar: SidebarItem, ContentPlaceholder: View, DetailPlaceholder: View>: View {
+public struct ThreeColumnSplitViewRouting<
+    Sidebar: SidebarItem,
+    ContentPlaceholder: View,
+    DetailPlaceholder: View,
+    SidebarToolbar: ToolbarContent
+>: View {
     @Bindable private var splitViewPresenter: SplitViewPresenter<Sidebar>
     @State private var contentRouter = Router<Sidebar.ContentRoute>()
     @State private var detailRouter = Router<Sidebar.DetailRoute>()
@@ -52,6 +72,7 @@ public struct ThreeColumnSplitViewRouting<Sidebar: SidebarItem, ContentPlacehold
     private let sidebarItems: [Sidebar]
     private let contentPlaceholder: ContentPlaceholder
     private let detailPlaceholder: DetailPlaceholder
+    private let sidebarToolbar: SidebarToolbar
 
     /// 3カラムスプリットビュールーティングを初期化します。
     ///
@@ -61,18 +82,21 @@ public struct ThreeColumnSplitViewRouting<Sidebar: SidebarItem, ContentPlacehold
     ///   - items: サイドバーに表示する項目の配列
     ///   - contentPlaceholder: サイドバー未選択時に表示するコンテンツプレースホルダー
     ///   - detailPlaceholder: コンテンツ未選択時に表示する詳細プレースホルダー
+    ///   - sidebarToolbar: サイドバーのナビゲーションバーに表示するツールバーコンテンツ
     public init(
         splitViewPresenter: SplitViewPresenter<Sidebar>,
         sidebarTitle: String = "サイドバー",
         items: [Sidebar],
         @ViewBuilder contentPlaceholder: () -> ContentPlaceholder,
-        @ViewBuilder detailPlaceholder: () -> DetailPlaceholder
+        @ViewBuilder detailPlaceholder: () -> DetailPlaceholder,
+        @ToolbarContentBuilder sidebarToolbar: () -> SidebarToolbar
     ) {
         self.splitViewPresenter = splitViewPresenter
         self.sidebarTitle = sidebarTitle
         self.sidebarItems = items
         self.contentPlaceholder = contentPlaceholder()
         self.detailPlaceholder = detailPlaceholder()
+        self.sidebarToolbar = sidebarToolbar()
     }
 
     public var body: some View {
@@ -84,6 +108,7 @@ public struct ThreeColumnSplitViewRouting<Sidebar: SidebarItem, ContentPlacehold
                 }
             }
             .navigationTitle(sidebarTitle)
+            .toolbar { sidebarToolbar }
         } content: {
             // コンテンツ（メールリスト等）
             if let selected = splitViewPresenter.selectedSidebar {
@@ -145,9 +170,49 @@ public struct ThreeColumnSplitViewRouting<Sidebar: SidebarItem, ContentPlacehold
     }
 }
 
-// MARK: - Convenience Initializers
+// MARK: - Empty Sidebar Toolbar
 
-extension ThreeColumnSplitViewRouting where ContentPlaceholder == Text, DetailPlaceholder == Text {
+/// サイドバーツールバーなしを表す型。
+///
+/// ツールバーパラメータを省略した場合のデフォルト型として使用されます。
+public struct EmptySidebarToolbar: ToolbarContent {
+    public var body: some ToolbarContent {
+        ToolbarItem(placement: .automatic) {
+            EmptyView()
+        }
+    }
+}
+
+// MARK: - Convenience Initializers (Without Toolbar)
+
+extension ThreeColumnSplitViewRouting where SidebarToolbar == EmptySidebarToolbar {
+    /// ツールバーなしの3カラムスプリットビュールーティングを初期化します。
+    ///
+    /// - Parameters:
+    ///   - splitViewPresenter: サイドバーとコンテンツの選択状態を管理する SplitViewPresenter
+    ///   - sidebarTitle: サイドバーのナビゲーションタイトル。デフォルトは「サイドバー」。
+    ///   - items: サイドバーに表示する項目の配列
+    ///   - contentPlaceholder: サイドバー未選択時に表示するコンテンツプレースホルダー
+    ///   - detailPlaceholder: コンテンツ未選択時に表示する詳細プレースホルダー
+    public init(
+        splitViewPresenter: SplitViewPresenter<Sidebar>,
+        sidebarTitle: String = "サイドバー",
+        items: [Sidebar],
+        @ViewBuilder contentPlaceholder: () -> ContentPlaceholder,
+        @ViewBuilder detailPlaceholder: () -> DetailPlaceholder
+    ) {
+        self.init(
+            splitViewPresenter: splitViewPresenter,
+            sidebarTitle: sidebarTitle,
+            items: items,
+            contentPlaceholder: contentPlaceholder,
+            detailPlaceholder: detailPlaceholder,
+            sidebarToolbar: { EmptySidebarToolbar() }
+        )
+    }
+}
+
+extension ThreeColumnSplitViewRouting where ContentPlaceholder == Text, DetailPlaceholder == Text, SidebarToolbar == EmptySidebarToolbar {
     /// プレースホルダーにデフォルトテキストを使用するイニシャライザ。
     ///
     /// - Parameters:
@@ -169,7 +234,7 @@ extension ThreeColumnSplitViewRouting where ContentPlaceholder == Text, DetailPl
     }
 }
 
-extension ThreeColumnSplitViewRouting where ContentPlaceholder == Text {
+extension ThreeColumnSplitViewRouting where ContentPlaceholder == Text, SidebarToolbar == EmptySidebarToolbar {
     /// コンテンツプレースホルダーにデフォルトテキストを使用するイニシャライザ。
     ///
     /// - Parameters:
@@ -193,7 +258,7 @@ extension ThreeColumnSplitViewRouting where ContentPlaceholder == Text {
     }
 }
 
-extension ThreeColumnSplitViewRouting where DetailPlaceholder == Text {
+extension ThreeColumnSplitViewRouting where DetailPlaceholder == Text, SidebarToolbar == EmptySidebarToolbar {
     /// 詳細プレースホルダーにデフォルトテキストを使用するイニシャライザ。
     ///
     /// - Parameters:
