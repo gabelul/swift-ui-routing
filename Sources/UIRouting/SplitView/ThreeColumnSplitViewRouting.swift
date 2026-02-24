@@ -48,6 +48,7 @@ public struct ThreeColumnSplitViewRouting<Sidebar: SidebarItem, ContentPlacehold
     @Bindable private var splitViewPresenter: SplitViewPresenter<Sidebar>
     @State private var contentRouter = Router<Sidebar.ContentRoute>()
     @State private var detailRouter = Router<Sidebar.DetailRoute>()
+    private let sidebarTitle: String
     private let sidebarItems: [Sidebar]
     private let contentPlaceholder: ContentPlaceholder
     private let detailPlaceholder: DetailPlaceholder
@@ -56,16 +57,19 @@ public struct ThreeColumnSplitViewRouting<Sidebar: SidebarItem, ContentPlacehold
     ///
     /// - Parameters:
     ///   - splitViewPresenter: サイドバーとコンテンツの選択状態を管理する SplitViewPresenter
+    ///   - sidebarTitle: サイドバーのナビゲーションタイトル。デフォルトは「サイドバー」。
     ///   - items: サイドバーに表示する項目の配列
     ///   - contentPlaceholder: サイドバー未選択時に表示するコンテンツプレースホルダー
     ///   - detailPlaceholder: コンテンツ未選択時に表示する詳細プレースホルダー
     public init(
         splitViewPresenter: SplitViewPresenter<Sidebar>,
+        sidebarTitle: String = "サイドバー",
         items: [Sidebar],
         @ViewBuilder contentPlaceholder: () -> ContentPlaceholder,
         @ViewBuilder detailPlaceholder: () -> DetailPlaceholder
     ) {
         self.splitViewPresenter = splitViewPresenter
+        self.sidebarTitle = sidebarTitle
         self.sidebarItems = items
         self.contentPlaceholder = contentPlaceholder()
         self.detailPlaceholder = detailPlaceholder()
@@ -79,7 +83,7 @@ public struct ThreeColumnSplitViewRouting<Sidebar: SidebarItem, ContentPlacehold
                     item.label
                 }
             }
-            .navigationTitle("サイドバー")
+            .navigationTitle(sidebarTitle)
         } content: {
             // コンテンツ（メールリスト等）
             if let selected = splitViewPresenter.selectedSidebar {
@@ -148,13 +152,16 @@ extension ThreeColumnSplitViewRouting where ContentPlaceholder == Text, DetailPl
     ///
     /// - Parameters:
     ///   - splitViewPresenter: サイドバーとコンテンツの選択状態を管理する SplitViewPresenter
+    ///   - sidebarTitle: サイドバーのナビゲーションタイトル。デフォルトは「サイドバー」。
     ///   - items: サイドバーに表示する項目の配列
     public init(
         splitViewPresenter: SplitViewPresenter<Sidebar>,
+        sidebarTitle: String = "サイドバー",
         items: [Sidebar]
     ) {
         self.init(
             splitViewPresenter: splitViewPresenter,
+            sidebarTitle: sidebarTitle,
             items: items,
             contentPlaceholder: { Text("サイドバーから項目を選択してください") },
             detailPlaceholder: { Text("項目を選択してください") }
@@ -167,15 +174,18 @@ extension ThreeColumnSplitViewRouting where ContentPlaceholder == Text {
     ///
     /// - Parameters:
     ///   - splitViewPresenter: サイドバーとコンテンツの選択状態を管理する SplitViewPresenter
+    ///   - sidebarTitle: サイドバーのナビゲーションタイトル。デフォルトは「サイドバー」。
     ///   - items: サイドバーに表示する項目の配列
     ///   - detailPlaceholder: コンテンツ未選択時に表示する詳細プレースホルダー
     public init(
         splitViewPresenter: SplitViewPresenter<Sidebar>,
+        sidebarTitle: String = "サイドバー",
         items: [Sidebar],
         @ViewBuilder detailPlaceholder: () -> DetailPlaceholder
     ) {
         self.init(
             splitViewPresenter: splitViewPresenter,
+            sidebarTitle: sidebarTitle,
             items: items,
             contentPlaceholder: { Text("サイドバーから項目を選択してください") },
             detailPlaceholder: detailPlaceholder
@@ -188,15 +198,18 @@ extension ThreeColumnSplitViewRouting where DetailPlaceholder == Text {
     ///
     /// - Parameters:
     ///   - splitViewPresenter: サイドバーとコンテンツの選択状態を管理する SplitViewPresenter
+    ///   - sidebarTitle: サイドバーのナビゲーションタイトル。デフォルトは「サイドバー」。
     ///   - items: サイドバーに表示する項目の配列
     ///   - contentPlaceholder: サイドバー未選択時に表示するコンテンツプレースホルダー
     public init(
         splitViewPresenter: SplitViewPresenter<Sidebar>,
+        sidebarTitle: String = "サイドバー",
         items: [Sidebar],
         @ViewBuilder contentPlaceholder: () -> ContentPlaceholder
     ) {
         self.init(
             splitViewPresenter: splitViewPresenter,
+            sidebarTitle: sidebarTitle,
             items: items,
             contentPlaceholder: contentPlaceholder,
             detailPlaceholder: { Text("項目を選択してください") }
