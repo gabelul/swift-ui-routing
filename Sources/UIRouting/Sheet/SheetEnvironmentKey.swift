@@ -26,7 +26,7 @@ import SwiftUI
 ///         Button("Show Another Sheet") {
 ///             sheetPresenter.present(.about)
 ///         }
-///         .sheetPresenter(for: AppSheet.self)
+///         .sheetPresenter(for: AppSheet.self, context: .sheet)
 ///     }
 /// }
 /// ```

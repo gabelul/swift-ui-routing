@@ -14,7 +14,7 @@ enum AppSheet: Sheetable {
             NavigationStack {
                 AddTodoSheet()
             }
-            .sheetPresenter(for: AppSheet.self)
+            .sheetPresenter(for: AppSheet.self, context: .sheet)
         case .filter:
             NavigationStack {
                 FilterSheet()
