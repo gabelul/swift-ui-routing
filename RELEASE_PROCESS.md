@@ -1,48 +1,48 @@
-# リリースプロセスガイド
+# Release process guide
 
-swift-ui-routingの新バージョンをリリースする手順を説明します。
+This document describes how to release a new version of `swift-ui-routing`.
 
-## 📋 リリース手順
+## 📋 Release steps
 
-### 1. リリースブランチで開発
+### 1. Develop on a release branch
 
 ```bash
-# リリースブランチに切り替え（例: release/v1.0.12）
+# Switch to the release branch (example: release/v1.0.12)
 git checkout release/v1.0.12
 git pull origin release/v1.0.12
 ```
 
-### 2. CHANGELOG.mdを更新
+### 2. Update `CHANGELOG.md`
 
-開発中は「未リリース」セクションに変更を記録：
+During development, record changes under the "Unreleased" section:
 
 ```markdown
-## [未リリース]
+## [Unreleased]
 
-### 追加
-- 新機能の説明
+### Added
+- Description of new features
 
-### 修正
-- バグ修正の説明
+### Fixed
+- Description of bug fixes
 ```
 
-### 3. リリース準備
+### 3. Prepare the release
 
-リリース準備ができたら、「未リリース」をバージョン番号に変換：
+When you're ready to release, convert "Unreleased" into a versioned section:
 
 ```markdown
 ## [1.0.12] - 2025-11-08
 
-### 追加
-- 新機能の説明
+### Added
+- Description of new features
 
-### 修正
-- バグ修正の説明
+### Fixed
+- Description of bug fixes
 ```
 
-**重要**: バージョン番号は必ずブランチ名と一致させる（`release/v1.0.12` → `[1.0.12]`）
+**Important**: The version number must match the branch name (`release/v1.0.12` → `[1.0.12]`).
 
-### 4. 変更をコミット・プッシュ
+### 4. Commit and push changes
 
 ```bash
 git add CHANGELOG.md
@@ -50,154 +50,154 @@ git commit -m "chore: prepare for v1.0.12 release"
 git push origin release/v1.0.12
 ```
 
-### 5. PRをmainにマージ
+### 5. Merge the PR into `main`
 
 ```bash
-# PRをマージ（これが自動リリースのトリガー）
+# Merge the PR (this triggers the automated release)
 gh pr merge <PR番号> --squash
 ```
 
-**このマージで自動的に実行されること:**
-1. タグ `v1.0.12` が作成される
-2. GitHub Release `v1.0.12` が作成される
-3. 次のリリースブランチ `release/v1.0.13` が作成される
-4. 次のリリース用のドラフトPRが作成される
+**This merge automatically:**
+1. Creates the `v1.0.12` tag
+2. Creates the GitHub Release `v1.0.12`
+3. Creates the next release branch `release/v1.0.13`
+4. Creates a draft PR for the next release
 
-### 6. リリース完了を確認
+### 6. Verify the release
 
 ```bash
-# GitHub Releaseを確認
+# Check the GitHub Release
 gh release view v1.0.12
 
-# 次のドラフトPRを確認
+# Check the next draft PR
 gh pr list --state all --limit 1
 ```
 
-## 🔢 バージョニング規則
+## 🔢 Versioning rules
 
-[セマンティックバージョニング](https://semver.org/lang/ja/)に準拠: `MAJOR.MINOR.PATCH`
+Follows [Semantic Versioning](https://semver.org/): `MAJOR.MINOR.PATCH`
 
 | 変更内容 | バージョン | 例 |
 |---------|-----------|-----|
-| バグ修正のみ | PATCH | 1.0.12 → 1.0.13 |
-| 新機能追加（後方互換） | MINOR | 1.0.13 → 1.1.0 |
-| 破壊的変更 | MAJOR | 1.1.0 → 2.0.0 |
+| Bug fixes only | PATCH | 1.0.12 → 1.0.13 |
+| New features (backwards compatible) | MINOR | 1.0.13 → 1.1.0 |
+| Breaking changes | MAJOR | 1.1.0 → 2.0.0 |
 
-**注意**: 現在のワークフローは自動的にPATCHをインクリメントします。MINOR/MAJORバージョンアップの場合は、次のリリースブランチ名を手動で調整してください。
+**Note**: The current workflow automatically increments PATCH. For MINOR/MAJOR bumps, adjust the next release branch name manually.
 
-## 📝 CHANGELOGの書き方
+## 📝 How to write the changelog
 
-[Keep a Changelog](https://keepachangelog.com/ja/1.0.0/)形式に準拠します。
+Follow the [Keep a Changelog](https://keepachangelog.com/) format.
 
-### 変更の分類
+### Change categories
 
-- **追加 (Added)**: 新機能
-- **変更 (Changed)**: 既存機能の変更
-- **非推奨 (Deprecated)**: 間もなく削除される機能
-- **削除 (Removed)**: 削除された機能
-- **修正 (Fixed)**: バグ修正
-- **セキュリティ (Security)**: セキュリティ関連の変更
+- **Added**: new features
+- **Changed**: changes to existing functionality
+- **Deprecated**: features that will be removed soon
+- **Removed**: removed features
+- **Fixed**: bug fixes
+- **Security**: security-related changes
 
-### 良い例
-
-```markdown
-## [1.0.12] - 2025-11-08
-
-### 追加
-- **新しいテーマ**: Ocean、Forest、Sunset など7種類のビルトインテーマを追加
-
-### 修正
-- **ダークモード**: カードコンポーネントの影がダークモードで正しく表示されない問題を修正
-```
-
-**良い点:**
-- 具体的で詳細な説明
-- ユーザーにとっての価値が明確
-- 太字で重要なポイントを強調
-
-### 悪い例
+### Good example
 
 ```markdown
 ## [1.0.12] - 2025-11-08
 
-### 変更
-- いろいろ修正した
-- バグ直した
+### Added
+- **New themes**: add 7 built-in themes such as Ocean, Forest, Sunset
+
+### Fixed
+- **Dark mode**: fix an issue where card shadows were not rendered correctly in dark mode
 ```
 
-**悪い点:**
-- 何が変わったのか不明確
-- ユーザーにとっての価値が不明
+**Why it’s good:**
+- specific and detailed
+- clear user value
+- uses bold to emphasize important points
 
-## ⚙️ 自動化の仕組み
+### Bad example
+
+```markdown
+## [1.0.12] - 2025-11-08
+
+### Changed
+- fixed some things
+- fixed bugs
+```
+
+**Why it’s bad:**
+- unclear what changed
+- unclear user value
+
+## ⚙️ How the automation works
 
 ### auto-release-on-merge.yml
 
-**トリガー**: リリースブランチ（`release/vX.Y.Z`）がmainにマージされたとき
+**Trigger**: when a release branch (`release/vX.Y.Z`) is merged into `main`
 
-**処理内容:**
-1. ブランチ名からバージョンを抽出
-2. CHANGELOG.mdにバージョンセクションが存在するか検証
-3. タグを自動作成してプッシュ
-4. CHANGELOG.mdから該当バージョンのセクションを抽出
-5. リリースノートを生成
-6. GitHub Releaseを作成
-7. 次のバージョンを計算（PATCHインクリメント）
-8. 次のリリースブランチを作成
-9. CHANGELOG.mdに「未リリース」セクションを追加
-10. 次のリリース用のドラフトPRを作成
+**What it does:**
+1. Extract the version from the branch name
+2. Validate that `CHANGELOG.md` contains a section for that version
+3. Create and push the tag automatically
+4. Extract the matching version section from `CHANGELOG.md`
+5. Generate release notes
+6. Create the GitHub Release
+7. Calculate the next version (increment PATCH)
+8. Create the next release branch
+9. Add an "Unreleased" section to `CHANGELOG.md`
+10. Create a draft PR for the next release
 
-### フロー図
+### Flow diagram
 
 ```
-PRマージ (release/vX.Y.Z → main)
+PR merge (release/vX.Y.Z → main)
   ↓
-auto-release-on-merge.yml 実行
+run auto-release-on-merge.yml
   ↓
-タグ作成 → GitHub Release作成 → 次のリリース準備
+create tag → create GitHub Release → prepare next release
 ```
 
-## 🔧 トラブルシューティング
+## 🔧 Troubleshooting
 
-### CHANGELOG検証エラー
+### Changelog validation error
 
-**エラー**: `❌ エラー: CHANGELOG.mdにバージョン [X.Y.Z] のセクションが見つかりません`
+**Error**: `❌ Error: Could not find version [X.Y.Z] section in CHANGELOG.md`
 
-**対処法**:
-1. リリースブランチでCHANGELOG.mdを修正
-2. フォーマットを確認: `## [X.Y.Z] - YYYY-MM-DD`
-3. 再度コミット・プッシュしてPRをマージ
+**Fix**:
+1. Update `CHANGELOG.md` on the release branch
+2. Confirm the format: `## [X.Y.Z] - YYYY-MM-DD`
+3. Commit/push again and merge the PR
 
-### GitHub Release作成失敗
+### GitHub Release creation fails
 
-**原因**: ワークフローの権限不足
+**Cause**: insufficient workflow permissions
 
-**対処法**:
-1. リポジトリ設定 > Actions > General
-2. "Workflow permissions" を "Read and write permissions" に設定
+**Fix**:
+1. Repository settings > Actions > General
+2. Set "Workflow permissions" to "Read and write permissions"
 
-### バージョン番号を間違えた場合
+### If you used the wrong version number
 
-**マージ前**: PRを閉じて、CHANGELOG.mdを修正してから再度PRを作成
+**Before merge**: close the PR, fix `CHANGELOG.md`, then open a new PR
 
-**マージ後**:
+**After merge**:
 ```bash
-# タグを削除
+# Delete the tag
 git push origin :refs/tags/vX.Y.Z
 
-# GitHub Releaseを手動で削除（Webページから）
+# Delete the GitHub Release manually (via the web UI)
 
-# mainブランチでCHANGELOG.mdを修正してコミット
-# 正しいバージョンで再度リリースブランチを作成してPRをマージ
+# Fix `CHANGELOG.md` on `main` and commit
+# Create a new release branch with the correct version and merge it
 ```
 
-## 📚 参考資料
+## 📚 References
 
-- [セマンティックバージョニング](https://semver.org/lang/ja/)
-- [Keep a Changelog](https://keepachangelog.com/ja/1.0.0/)
-- [GitHub Releases](https://docs.github.com/ja/repositories/releasing-projects-on-github/about-releases)
+- [Semantic Versioning](https://semver.org/)
+- [Keep a Changelog](https://keepachangelog.com/)
+- [GitHub Releases](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases)
 
-## 📁 関連ファイル
+## 📁 Related files
 
-- [.github/workflows/auto-release-on-merge.yml](.github/workflows/auto-release-on-merge.yml) - リリース自動化ワークフロー
-- [CHANGELOG.md](CHANGELOG.md) - 変更履歴
+- [.github/workflows/auto-release-on-merge.yml](.github/workflows/auto-release-on-merge.yml) - release automation workflow
+- [CHANGELOG.md](CHANGELOG.md) - changelog

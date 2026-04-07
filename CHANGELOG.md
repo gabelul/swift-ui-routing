@@ -1,9 +1,9 @@
 # Changelog
 
-このプロジェクトに対する注目すべき変更はすべてこのファイルに記録されます。
+All notable changes to this project will be documented in this file.
 
-このフォーマットは [Keep a Changelog](https://keepachangelog.com/ja/1.0.0/) に基づいており、
-このプロジェクトは [Semantic Versioning](https://semver.org/lang/ja/) に準拠しています。
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [1.0.12] - 2025-11-09
 

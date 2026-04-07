@@ -1,6 +1,6 @@
 name: Auto Release on Merge
 
-# リリースブランチ（release/vX.Y.Z）がmainにマージされたら自動的にリリース処理を実行
+# Run release automation when a release branch (release/vX.Y.Z) is merged into main
 on:
   pull_request:
     types: [closed]
@@ -9,7 +9,7 @@ on:
 
 jobs:
   auto-release:
-    # PRがマージされ、かつブランチ名がrelease/vで始まる場合のみ実行
+    # Run only when a PR is merged and the branch starts with release/v
     if: github.event.pull_request.merged == true && startsWith(github.event.pull_request.head.ref, 'release/v')
     runs-on: ubuntu-latest
     permissions:
@@ -31,7 +31,7 @@ jobs:
       - name: Extract version from branch name
         id: version
         run: |
-          # ブランチ名からバージョンを抽出 (release/v1.0.11 → v1.0.11)
+          # Extract version from branch name (release/v1.0.11 → v1.0.11)
           BRANCH_NAME="${{ github.event.pull_request.head.ref }}"
           VERSION_TAG="${BRANCH_NAME#release/}"
           VERSION="${VERSION_TAG#v}"
@@ -40,39 +40,39 @@ jobs:
           echo "version_tag=$VERSION_TAG" >> $GITHUB_OUTPUT
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-          echo "📦 リリースブランチ: $BRANCH_NAME"
-          echo "🏷️ バージョンタグ: $VERSION_TAG"
-          echo "🔢 バージョン番号: $VERSION"
+          echo "📦 Release branch: $BRANCH_NAME"
+          echo "🏷️ Version tag: $VERSION_TAG"
+          echo "🔢 Version: $VERSION"
 
       - name: Validate CHANGELOG entry
         run: |
           VERSION="${{ steps.version.outputs.version }}"
 
           if ! grep -q "## \[$VERSION\]" CHANGELOG.md; then
-            echo "❌ エラー: CHANGELOG.mdにバージョン [$VERSION] のセクションが見つかりません"
-            echo "リリースブランチでCHANGELOG.mdを更新してください"
+            echo "❌ Error: Could not find version [$VERSION] section in CHANGELOG.md"
+            echo "Please update CHANGELOG.md on the release branch"
             exit 1
           fi
 
-          echo "✅ CHANGELOG.mdに [$VERSION] セクションが存在します"
+          echo "✅ Found [$VERSION] section in CHANGELOG.md"
 
       - name: Create and push tag
         run: |
           VERSION_TAG="${{ steps.version.outputs.version_tag }}"
 
-          # タグが既に存在する場合はスキップ
+          # Skip if tag already exists
           if git rev-parse "$VERSION_TAG" >/dev/null 2>&1; then
-            echo "⚠️ タグ $VERSION_TAG は既に存在します。スキップします。"
+            echo "⚠️ Tag $VERSION_TAG already exists. Skipping."
             exit 0
           fi
 
-          # タグを作成
+          # Create tag
           git tag "$VERSION_TAG"
 
-          # タグをプッシュ
+          # Push tag
           git push origin "$VERSION_TAG"
 
-          echo "✅ タグ $VERSION_TAG を作成してプッシュしました"
+          echo "✅ Created and pushed tag $VERSION_TAG"
 
       - name: Extract changelog for release notes
         id: changelog
@@ -80,42 +80,42 @@ jobs:
           VERSION="${{ steps.version.outputs.version }}"
           TAG="${{ steps.version.outputs.version_tag }}"
 
-          # CHANGELOG.mdから該当バージョンのセクションを抽出
+          # Extract the matching version section from CHANGELOG.md
           if grep -q "## \[$VERSION\]" CHANGELOG.md; then
-            # バージョンセクションの開始行を見つける
+            # Find the start line for the version section
             START_LINE=$(grep -n "## \[$VERSION\]" CHANGELOG.md | cut -d: -f1)
-            # 次のバージョンセクションの開始行を見つける（または末尾）
+            # Find the next version section start line (or EOF)
             NEXT_LINE=$(tail -n +$((START_LINE + 1)) CHANGELOG.md | grep -n "^## \[" | head -1 | cut -d: -f1)
 
             if [ -n "$NEXT_LINE" ]; then
-              # 次のセクションがある場合
+              # There is a next section
               END_LINE=$((START_LINE + NEXT_LINE - 1))
               sed -n "${START_LINE},${END_LINE}p" CHANGELOG.md > changelog_section.md
             else
-              # 最後のセクションの場合
+              # This is the last section
               sed -n "${START_LINE},\$p" CHANGELOG.md > changelog_section.md
             fi
 
-            # バージョン見出しを削除
+            # Remove the version header
             sed -i '1d' changelog_section.md
 
-            # リンクセクションを削除
+            # Remove link reference section
             sed -i '/^\[.*\]: http/d' changelog_section.md
 
-            # 空行を整理
+            # Normalize blank lines
             sed -i '/^$/N;/^\n$/D' changelog_section.md
 
-            # リリースノートを整形して作成
+            # Build release notes markdown
             cat > release_notes.md <<EOF
-          # 🎉 ${TAG} リリース
+          # 🎉 ${TAG} Release
 
-          UIRouting ${TAG} がリリースされました。
+          UIRouting ${TAG} has been released.
 
-          ## 📝 変更内容
+          ## 📝 Changes
 
           $(cat changelog_section.md)
 
-          ## 📦 インストール
+          ## 📦 Installation
 
           \`\`\`swift
           dependencies: [
@@ -123,15 +123,15 @@ jobs:
           ]
           \`\`\`
 
-          ## 🔗 リンク
-          - [変更履歴](https://github.com/no-problem-dev/swift-ui-routing/blob/main/CHANGELOG.md)
-          - [ドキュメント](https://no-problem-dev.github.io/swift-ui-routing/documentation/uirouting/)
+          ## 🔗 Links
+          - [Changelog](https://github.com/no-problem-dev/swift-ui-routing/blob/main/CHANGELOG.md)
+          - [Docs](https://no-problem-dev.github.io/swift-ui-routing/documentation/uirouting/)
           EOF
 
             echo "found=true" >> $GITHUB_OUTPUT
           else
             echo "found=false" >> $GITHUB_OUTPUT
-            echo "⚠️ CHANGELOG.mdにバージョン $VERSION が見つかりませんでした" > release_notes.md
+            echo "⚠️ Could not find version $VERSION in CHANGELOG.md" > release_notes.md
           fi
 
       - name: Create GitHub Release
@@ -151,10 +151,10 @@ jobs:
         run: |
           VERSION="${{ steps.version.outputs.version }}"
 
-          # バージョンをMAJOR.MINOR.PATCHに分解
+          # Split version into MAJOR.MINOR.PATCH
           IFS='.' read -r MAJOR MINOR PATCH <<< "$VERSION"
 
-          # PATCHをインクリメント
+          # Increment PATCH
           NEXT_PATCH=$((PATCH + 1))
           NEXT_VERSION="$MAJOR.$MINOR.$NEXT_PATCH"
           NEXT_VERSION_TAG="v$NEXT_VERSION"
@@ -164,27 +164,27 @@ jobs:
           echo "next_version_tag=$NEXT_VERSION_TAG" >> $GITHUB_OUTPUT
           echo "next_branch=$NEXT_BRANCH" >> $GITHUB_OUTPUT
 
-          echo "📈 次のバージョン: $NEXT_VERSION"
-          echo "🌿 次のリリースブランチ: $NEXT_BRANCH"
+          echo "📈 Next version: $NEXT_VERSION"
+          echo "🌿 Next release branch: $NEXT_BRANCH"
 
       - name: Delete old release branch if exists
         run: |
           NEXT_BRANCH="${{ steps.next_version.outputs.next_branch }}"
 
-          # リモートブランチが存在する場合は削除
+          # Delete remote branch if it already exists
           if git ls-remote --heads origin "$NEXT_BRANCH" | grep -q "$NEXT_BRANCH"; then
             git push origin --delete "$NEXT_BRANCH"
-            echo "🗑️ 既存のブランチ $NEXT_BRANCH を削除しました"
+            echo "🗑️ Deleted existing branch $NEXT_BRANCH"
           fi
 
       - name: Create next release branch
         run: |
           NEXT_BRANCH="${{ steps.next_version.outputs.next_branch }}"
 
-          # mainブランチから新しいリリースブランチを作成
+          # Create a new release branch from main
           git checkout -b "$NEXT_BRANCH"
 
-          echo "✅ 次のリリースブランチ $NEXT_BRANCH を作成しました"
+          echo "✅ Created next release branch $NEXT_BRANCH"
 
       - name: Update CHANGELOG for next version
         run: |
@@ -192,14 +192,14 @@ jobs:
           VERSION_TAG="${{ steps.version.outputs.version_tag }}"
           NEXT_VERSION="${{ steps.next_version.outputs.next_version }}"
 
-          # 「未リリース」セクションが存在しない場合のみ追加
-          if ! grep -q "## \[未リリース\]" CHANGELOG.md; then
-            # 最初のバージョンセクションの前に挿入
+          # Add an "Unreleased" section only if it doesn't exist
+          if ! grep -q "## \[未リリース\]" CHANGELOG.md && ! grep -q "## \[Unreleased\]" CHANGELOG.md; then
+            # Insert before the first version section
             awk '
               /^## \[/ && !inserted {
-                print "## [未リリース]"
+                print "## [Unreleased]"
                 print ""
-                print "なし"
+                print "None"
                 print ""
                 inserted = 1
               }
@@ -207,38 +207,39 @@ jobs:
             ' CHANGELOG.md > CHANGELOG.tmp
             mv CHANGELOG.tmp CHANGELOG.md
 
-            echo "✅ CHANGELOG.mdに「未リリース」セクションを追加しました"
+            echo "✅ Added an \"Unreleased\" section to CHANGELOG.md"
           else
-            echo "ℹ️ CHANGELOG.mdに既に「未リリース」セクションが存在します"
+            echo "ℹ️ An \"Unreleased\" section already exists in CHANGELOG.md"
           fi
 
-          # 比較リンクを最新バージョンに更新
-          sed -i "s|\[未リリース\]: .*|\[未リリース\]: https://github.com/no-problem-dev/swift-ui-routing/compare/$VERSION_TAG...HEAD|" CHANGELOG.md
+          # Update compare link to point at the latest version tag
+          sed -i "s|\\[未リリース\\]: .*|\\[未リリース\\]: https://github.com/no-problem-dev/swift-ui-routing/compare/$VERSION_TAG...HEAD|" CHANGELOG.md || true
+          sed -i "s|\\[Unreleased\\]: .*|\\[Unreleased\\]: https://github.com/no-problem-dev/swift-ui-routing/compare/$VERSION_TAG...HEAD|" CHANGELOG.md || true
 
-          # 必ず変更を発生させるため、自動生成コメントを追加
+          # Ensure the workflow produces a diff by appending a generated marker
           echo "" >> CHANGELOG.md
           echo "<!-- Auto-generated on $(date -u +%Y-%m-%dT%H:%M:%SZ) by release workflow -->" >> CHANGELOG.md
 
-          echo "✅ CHANGELOG.mdを更新しました"
+          echo "✅ Updated CHANGELOG.md"
 
       - name: Commit and push next release branch
         run: |
           NEXT_BRANCH="${{ steps.next_version.outputs.next_branch }}"
           NEXT_VERSION_TAG="${{ steps.next_version.outputs.next_version_tag }}"
 
-          # 変更がある場合のみコミット
+          # Commit only when there are changes
           if git diff --quiet CHANGELOG.md; then
-            echo "ℹ️ CHANGELOG.mdに変更がないため、コミットをスキップします"
+            echo "ℹ️ No changes in CHANGELOG.md; skipping commit"
           else
             git add CHANGELOG.md
             git commit -m "chore: prepare for $NEXT_VERSION_TAG release"
-            echo "✅ 変更をコミットしました"
+            echo "✅ Committed changes"
           fi
 
-          # ブランチをプッシュ
+          # Push branch
           git push origin "$NEXT_BRANCH"
 
-          echo "✅ ブランチ $NEXT_BRANCH をプッシュしました"
+          echo "✅ Pushed branch $NEXT_BRANCH"
 
       - name: Create draft PR for next release
         run: |
@@ -251,32 +252,32 @@ jobs:
             --body "$(cat <<EOF
           # 🚀 Release $NEXT_VERSION_TAG
 
-          次のリリース準備用のブランチです。
+          This is a branch for preparing the next release.
 
-          ## 📝 開発フロー
+          ## 📝 Development flow
 
-          1. **開発**: このブランチに新機能・修正をマージ
-          2. **CHANGELOG更新**: \`CHANGELOG.md\` の「未リリース」セクションに変更を記録
-          3. **リリース準備**: すべての変更が完了したら、「未リリース」を「$NEXT_VERSION_TAG」セクションに変換
-          4. **リリース実行**: このPRをマージ
+          1. **Develop**: merge new features/fixes into this branch
+          2. **Update CHANGELOG**: record changes under the "Unreleased" section in \`CHANGELOG.md\`
+          3. **Prepare release**: when ready, convert "Unreleased" into the "$NEXT_VERSION_TAG" section
+          4. **Release**: merge this PR
 
-          ## ⚙️ 自動化
+          ## ⚙️ Automation
 
-          このPRをmainにマージすると、以下が自動実行されます：
-          - ✅ タグ $NEXT_VERSION_TAG の自動作成
-          - ✅ GitHub Releaseの自動作成
-          - ✅ 次のリリースブランチの自動作成
+          When this PR is merged into main, the following will run automatically:
+          - ✅ Create tag $NEXT_VERSION_TAG
+          - ✅ Create a GitHub Release
+          - ✅ Create the next release branch
 
-          ## 📋 リリース前チェックリスト
+          ## 📋 Pre-release checklist
 
-          - [ ] CHANGELOG.mdの「未リリース」を「[$NEXT_VERSION_TAG]」に変換
-          - [ ] 日付を記載（YYYY-MM-DD形式）
-          - [ ] 比較リンクセクションを更新
-          - [ ] すべてのテストが通過
-          - [ ] ドキュメントが最新
+          - [ ] Convert "Unreleased" into "[$NEXT_VERSION_TAG]" in CHANGELOG.md
+          - [ ] Add the date (YYYY-MM-DD)
+          - [ ] Update compare links
+          - [ ] All tests passing
+          - [ ] Docs up to date
 
           ---
-          🤖 このPRは自動生成されました
+          🤖 This PR was auto-generated
           EOF
           )" \
             --base main \
@@ -290,14 +291,14 @@ jobs:
           NEXT_VERSION_TAG="${{ steps.next_version.outputs.next_version_tag }}"
           NEXT_BRANCH="${{ steps.next_version.outputs.next_branch }}"
 
-          echo "## 🎉 リリース処理完了"
+          echo "## 🎉 Release automation complete"
           echo ""
-          echo "### ✅ 実行された処理"
-          echo "- タグ $VERSION_TAG を作成・プッシュ"
-          echo "- GitHub Releaseが作成されます"
-          echo "- 次のリリースブランチ $NEXT_BRANCH を作成"
-          echo "- 次のリリース用のドラフトPRを作成"
+          echo "### ✅ What ran"
+          echo "- Created and pushed tag $VERSION_TAG"
+          echo "- GitHub Release will be created"
+          echo "- Created next release branch $NEXT_BRANCH"
+          echo "- Created draft PR for the next release"
           echo ""
-          echo "### 🔗 確認"
-          echo "- リリース: https://github.com/${{ github.repository }}/releases/tag/$VERSION_TAG"
-          echo "- 次のPR: https://github.com/${{ github.repository }}/pulls"
+          echo "### 🔗 Links"
+          echo "- Release: https://github.com/${{ github.repository }}/releases/tag/$VERSION_TAG"
+          echo "- PRs: https://github.com/${{ github.repository }}/pulls"

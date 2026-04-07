@@ -1,43 +1,43 @@
 # TodoExample
 
-UIRoutingの基本機能を実証するTodoアプリ
+A Todo app demonstrating the core features of UIRouting.
 
-## 実装機能
+## Implemented features
 
 ### Navigation
-- Todo詳細画面への遷移
-- 設定画面への遷移
-- 戻る操作
+- Navigate to a todo detail screen
+- Navigate to a settings screen
+- Back navigation
 
 ### Sheet
-- Todo追加モーダル
-- フィルター設定モーダル
+- Add-todo modal
+- Filter settings modal
 
 ### Alert
-- 削除確認アラート（NavigationとSheetで独立）
-- エラー表示アラート
+- Delete confirmation alert (independent for Navigation and Sheet)
+- Error alert
 
 ### TabView
-- タブごとに独立したNavigationStack
-- クロスタブナビゲーション（タブ切り替え + 画面遷移）
-- 型安全なタブ管理
+- Independent `NavigationStack` per tab
+- Cross-tab navigation (switch tabs + navigate)
+- Type-safe tab management
 
 ### FullScreenCover & CustomHeightSheet
-- フルスクリーンモーダル（カメラ、メモ編集）
-- カスタム高さシート（カテゴリー選択、クイック追加）
+- Full-screen modals (camera, note editor)
+- Custom-height sheets (category picker, quick add)
 
-## 学習ポイント
+## What to learn
 
-1. **基本パターン**: Navigation, Sheet, Alert の基本的な使い方
-2. **型安全**: `@Environment(.router(AppRoute.self))` による静的メンバールックアップ
-3. **コンテキスト分離**: NavigationとSheetで独立したアラート管理
-4. **TabView統合**: タブベースアプリのルーティング実装
-5. **モーダル管理**: 各種モーダル表示の実装パターン
+1. **Core patterns**: basic usage of Navigation, Sheet, and Alert
+2. **Type safety**: static member lookup via `@Environment(.router(AppRoute.self))`
+3. **Context separation**: independent alert management for Navigation vs Sheet
+4. **TabView integration**: routing in tab-based apps
+5. **Modal management**: patterns for different presentation styles
 
-## 実行方法
+## How to run
 
 ```bash
 cd Examples/TodoExample
 open TodoExample.xcodeproj
-# Xcodeで実行
+# Run from Xcode
 ```
