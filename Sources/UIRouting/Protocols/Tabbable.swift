@@ -57,6 +57,13 @@ public protocol Tabbable<Route>: Hashable, Identifiable {
 
     /// タブアイテムのラベル
     @ViewBuilder var tabLabel: TabLabel { get }
+
+    /// iOS 26 Liquid Glass 用のタブロール (`.search` など)。
+    ///
+    /// デフォルトは `nil`（標準タブ）。検索専用タブなどに `.search` を返すと、
+    /// システムがロールに応じた UI（検索タブの常駐配置、Liquid Glass エフェクトの
+    /// 最適化、サイドバー適応時の役割分類）を自動的に適用します。
+    var tabRole: TabRole? { get }
 }
 
 // MARK: - Default Implementations
@@ -76,4 +83,11 @@ public extension Tabbable where ID == String {
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
+}
+
+// MARK: - tabRole default
+
+public extension Tabbable {
+    /// デフォルトでは通常タブ（ロールなし）。検索タブのみ `.search` を返すように上書きする。
+    var tabRole: TabRole? { nil }
 }
