@@ -1,13 +1,13 @@
 import SwiftUI
 
-/// TabPresenter と TabView を連携させる ViewModifier（iOS 26 宣言型 `Tab(value:role:)` API）。
+/// A `ViewModifier` that connects a `TabPresenter` with a `TabView` using the iOS 26 declarative `Tab(value:role:)` API.
 ///
-/// TabPresenter の selectedTab を TabView にバインドし、
-/// 各タブに自動的にルーティング機能を適用します。
+/// Binds `TabPresenter.selectedTab` to the `TabView` and automatically applies
+/// routing to each tab.
 ///
-/// 通常は `TabRouting` 構造体を通じて使用します。
+/// Typically used through the `TabRouting` struct.
 ///
-/// # 使用例
+/// # Usage
 /// ```swift
 /// @State private var tabPresenter = TabPresenter(initialTab: AppTab.home)
 ///
@@ -40,17 +40,17 @@ public struct TabScopeModifier<Tab: Tabbable>: ViewModifier {
     }
 }
 
-/// タブベースのルーティングを簡単に構築するためのビュー（iOS 26 Liquid Glass 対応）。
+/// A view for easily building tab-based routing with iOS 26 Liquid Glass support.
 ///
-/// TabPresenter を使用してタブの選択状態を管理し、
-/// 各タブに自動的にルーティング機能（Router、SheetPresenter など）を適用します。
+/// Manages tab selection state using a `TabPresenter` and automatically applies
+/// routing features (Router, SheetPresenter, etc.) to each tab.
 ///
-/// 内部では iOS 26 宣言型 `SwiftUI.Tab(value:role:)` API を使用して構築するため、
-/// `.tabViewBottomAccessory` / `.tabBarMinimizeBehavior(_:)` / `.tabViewStyle(.sidebarAdaptable)` /
-/// `TabSection` / `.badge(_:)` などの Liquid Glass 系モディファイアを
-/// そのまま呼び出し側で `TabRouting(...)` にチェーンできます。
+/// Because it is built on the iOS 26 declarative `SwiftUI.Tab(value:role:)` API,
+/// Liquid Glass modifiers such as `.tabViewBottomAccessory`,
+/// `.tabBarMinimizeBehavior(_:)`, `.tabViewStyle(.sidebarAdaptable)`,
+/// `TabSection`, and `.badge(_:)` can be chained directly onto `TabRouting(...)` at the call site.
 ///
-/// # 使用例（フラットな 4 タブ）
+/// # Usage (flat 4-tab layout)
 /// ```swift
 /// struct ContentView: View {
 ///     @State private var tabPresenter = TabPresenter(initialTab: AppTab.home)
@@ -65,7 +65,7 @@ public struct TabScopeModifier<Tab: Tabbable>: ViewModifier {
 /// }
 /// ```
 ///
-/// # 使用例（content ビルダーで各タブの描画をカスタマイズ）
+/// # Usage (customising each tab's content with a content builder)
 /// ```swift
 /// TabRouting(tabPresenter: tabPresenter, tabs: AppTab.allCases) { tab in
 ///     switch tab {
@@ -75,20 +75,22 @@ public struct TabScopeModifier<Tab: Tabbable>: ViewModifier {
 /// }
 /// ```
 ///
-/// ルーティング設定 (Router / SheetPresenter / AlertPresenter / NavigationStack) は
-/// content ビルダー内部で自動付与されるため、呼び出し側は純粋にビュー組み立てだけを記述できます。
+/// Routing configuration (Router / SheetPresenter / AlertPresenter / NavigationStack) is
+/// automatically injected inside the content builder, so the call site only needs to
+/// handle view composition.
 public struct TabRouting<Tab: Tabbable, Content: View>: View {
     @Bindable private var tabPresenter: TabPresenter<Tab>
     private let tabs: [Tab]
     private let content: (Tab) -> Content
 
-    /// タブルーティングを初期化します。
+    /// Initialises the tab routing.
     ///
     /// - Parameters:
-    ///   - tabPresenter: タブの選択状態を管理する TabPresenter
-    ///   - tabs: 表示するタブの配列
-    ///   - content: 各タブのコンテンツを生成するビルダー。内部で `.tabRouting(tab:)` が
-    ///     自動適用されるため、Router / Sheet / Alert の設定は呼び出し側で記述不要。
+    ///   - tabPresenter: The `TabPresenter` that manages tab selection state.
+    ///   - tabs: The array of tabs to display.
+    ///   - content: A builder that generates the content for each tab. `.tabRouting(tab:)` is
+    ///     automatically applied internally, so Router / Sheet / Alert configuration is not
+    ///     needed at the call site.
     public init(
         tabPresenter: TabPresenter<Tab>,
         tabs: [Tab],
@@ -119,9 +121,9 @@ public struct TabRouting<Tab: Tabbable, Content: View>: View {
 // MARK: - Convenience init (default content: tab.contentView)
 
 public extension TabRouting {
-    /// 各タブのコンテンツを `tab.contentView` で描画する簡易イニシャライザ。
+    /// A convenience initialiser that renders each tab's content using `tab.contentView`.
     ///
-    /// `Tabbable.contentView` をそのまま使う典型ケース向けのショートカットです。
+    /// This is a shortcut for the common case where `Tabbable.contentView` is used as-is.
     init(
         tabPresenter: TabPresenter<Tab>,
         tabs: [Tab]
