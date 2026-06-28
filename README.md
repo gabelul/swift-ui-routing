@@ -59,8 +59,16 @@ enum AppAlert: Alertable {
     case delete(onConfirm: () -> Void)
 
     var title: String { "削除しますか？" }
+    var message: String? { nil }
+
     var actions: [AlertAction] {
-        [.cancel, .destructive("削除", action: onConfirm)]
+        switch self {
+        case .delete(let onConfirm):
+            return [
+                AlertAction(title: "キャンセル", role: .cancel) {},
+                AlertAction(title: "削除", role: .destructive, action: onConfirm)
+            ]
+        }
     }
 }
 ```
@@ -68,18 +76,31 @@ enum AppAlert: Alertable {
 ### 2. セットアップ
 
 ```swift
+// App: Router・Presenter を作成して環境に注入する
 @main
 struct MyApp: App {
     @State private var router = Router<AppRoute>()
     @State private var sheetPresenter = SheetPresenter<AppSheet>()
+    @State private var alertPresenter = AlertPresenter<AppAlert>()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .routing(router: router, sheetPresenter: sheetPresenter)
-                .routingScope(for: AppRoute.self)
-                .sheet(item: $sheetPresenter.presentedSheet) { $0.body }
+                .routing(
+                    router: router,
+                    sheetPresenter: sheetPresenter,
+                    alertPresenterOnNavigation: alertPresenter,
+                    alertPresenterOnSheet: AlertPresenter<AppAlert>()
+                )
         }
+    }
+}
+
+// ContentView: NavigationStack のルートを設定する
+struct ContentView: View {
+    var body: some View {
+        HomeView()
+            .routingScope(for: AppRoute.self, alert: AppAlert.self)
     }
 }
 ```
@@ -149,7 +170,7 @@ tabPresenter.select(.home) { context in
 ### FullScreenCover（フルスクリーン）
 
 ```swift
-enum AppFullScreenCover: Identifiable, Hashable {
+enum AppFullScreenCover: FullScreenCoverable {
     case camera
     case editor(id: String)
 

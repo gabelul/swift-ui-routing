@@ -5,16 +5,9 @@ import SwiftUI
 /// # 使用例
 /// ```swift
 /// // 1. カスタム高さシートを定義
-/// enum CustomHeightSheet: Identifiable, Hashable {
+/// enum AppCustomHeightSheet: CustomHeightSheetable {
 ///     case filter
 ///     case quickSettings
-///
-///     var id: String {
-///         switch self {
-///         case .filter: return "filter"
-///         case .quickSettings: return "quickSettings"
-///         }
-///     }
 ///
 ///     var detents: Set<PresentationDetent> {
 ///         switch self {
