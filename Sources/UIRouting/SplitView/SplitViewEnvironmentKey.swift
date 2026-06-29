@@ -2,7 +2,7 @@ import SwiftUI
 
 /// SplitViewPresenter用の環境値アクセスキー。
 ///
-/// `@Environment(.splitView(AppSidebar.self))` の形式で SplitViewPresenter にアクセスするために使用します。
+/// `@Environment(.splitView(AppSidebar.self))` の形式で SplitViewPresenter にアクセスするために使う。
 ///
 /// # 使用例
 /// ```swift
@@ -24,7 +24,7 @@ public struct SplitViewEnvironmentKey<Sidebar: SidebarItem> {
 }
 
 public extension SplitViewEnvironmentKey {
-    /// SplitViewPresenter の環境値キーを生成します。
+    /// SplitViewPresenter の環境値キーを生成する。
     ///
     /// - Parameter type: サイドバー項目の型
     /// - Returns: SplitViewPresenter用の環境値キー
@@ -41,8 +41,8 @@ public extension Environment {
 
 /// SelectedContentBinding用の環境値アクセスキー。
 ///
-/// 3カラムNavigationSplitViewの中央カラムで選択されたアイテムへのBindingを取得します。
-/// `@Environment(.selectedContentBinding(YourContentItem.self))` の形式で使用します。
+/// 3カラムNavigationSplitViewの中央カラムで選択されたアイテムへのBindingを取得する。
+/// `@Environment(.selectedContentBinding(YourContentItem.self))` の形式で使う。
 ///
 /// # 使用例
 /// ```swift
@@ -66,8 +66,8 @@ public extension Environment {
 /// ```
 ///
 /// # 注意
-/// - このBindingは`ThreeColumnSplitViewRouting`によって自動的に環境に注入されます
-/// - 利用者が手動でBindingを作成する必要はありません
+/// - このBindingは`ThreeColumnSplitViewRouting`によって自動的に環境に注入される
+/// - 利用者が手動でBindingを作成する必要はない
 public struct SelectedContentBindingEnvironmentKey<ContentItem: Selectable> {
     fileprivate let specifier: SelectedContentBindingSpecifier<ContentItem>
     fileprivate init() {
@@ -76,7 +76,7 @@ public struct SelectedContentBindingEnvironmentKey<ContentItem: Selectable> {
 }
 
 public extension SelectedContentBindingEnvironmentKey {
-    /// SelectedContentBinding の環境値キーを生成します。
+    /// SelectedContentBinding の環境値キーを生成する。
     ///
     /// - Parameter type: コンテンツアイテムの型
     /// - Returns: SelectedContentBinding用の環境値キー

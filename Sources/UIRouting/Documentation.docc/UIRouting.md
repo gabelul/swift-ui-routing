@@ -1,10 +1,10 @@
 # ``UIRouting``
 
-SwiftUI 向けの型安全なルーティングライブラリ。NavigationStack・Sheet・Alert・TabView・NavigationSplitView を統一パターンで管理します。
+SwiftUI 向けの型安全なルーティングライブラリ。NavigationStack・Sheet・Alert・TabView・NavigationSplitView を統一パターンで管理する。
 
 ## Overview
 
-UIRouting は、SwiftUI の画面遷移・モーダル表示・アラートをすべて「型安全な enum + @Environment」パターンに統一するライブラリです。
+UIRouting は、SwiftUI の画面遷移・モーダル表示・アラートをすべて「型安全な enum + @Environment」パターンに統一するライブラリ。
 
 ```swift
 // ルートを定義して
@@ -33,49 +33,49 @@ Button("詳細へ") {
 
 ### 設計原則
 
-すべての遷移先は `@Environment` 経由でアクセスします。`@State` で Presenter を直接保持するのではなく、`.routing(...)` や `.routerScope(for:)` で注入された環境値を使います。これにより、任意の子ビューからルーティング操作が可能です。
+すべての遷移先は `@Environment` 経由でアクセスする。`@State` で Presenter を直接保持するのではなく、`.routing(...)` や `.routerScope(for:)` で注入された環境値を使う。これにより、任意の子ビューからルーティング操作が可能。
 
 ## Topics
 
-### Essentials
+### はじめに
 
 - <doc:GettingStarted>
 
-### Navigation
+### ナビゲーション
 
 - ``Router``
 - ``Routable``
 - ``RoutingScopeModifier``
 
-### Sheet
+### シート
 
 - ``SheetPresenter``
 - ``Sheetable``
 
-### Alert
+### アラート
 
 - ``AlertPresenter``
 - ``Alertable``
 - ``AlertAction``
 
-### Full Screen Cover
+### フルスクリーンカバー
 
 - ``FullScreenCoverPresenter``
 - ``FullScreenCoverable``
 
-### Custom Height Sheet
+### カスタム高さシート
 
 - ``CustomHeightSheetPresenter``
 - ``CustomHeightSheetable``
 
-### Tab
+### タブ
 
 - ``TabPresenter``
 - ``TabRouting``
 - ``Tabbable``
 - ``TabContext``
 
-### Split View
+### スプリットビュー
 
 - ``SplitViewPresenter``
 - ``SplitViewRouting``
@@ -83,7 +83,7 @@ Button("詳細へ") {
 - ``SidebarItem``
 - ``Selectable``
 
-### Environment Access
+### 環境値アクセス
 
 - ``RouterEnvironmentKey``
 - ``SheetEnvironmentKey``
@@ -91,6 +91,6 @@ Button("詳細へ") {
 - ``FullScreenCoverEnvironmentKey``
 - ``TabEnvironmentKey``
 
-### Presentation Context
+### プレゼンテーションコンテキスト
 
 - ``PresentationContext``

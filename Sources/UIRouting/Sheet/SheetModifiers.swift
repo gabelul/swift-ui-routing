@@ -4,7 +4,7 @@ import SwiftUI
 
 /// Sheet が必要な場合のみ適用する内部用 Modifier。
 ///
-/// Sheet 型が Never でない場合のみ、シート表示機能を適用します。
+/// Sheet 型が Never でない場合のみ、シート表示機能を適用する。
 struct SheetModifierIfNeeded<Sheet: Sheetable>: ViewModifier {
     @Bindable var presenter: SheetPresenter<Sheet>
     @Environment(\.self) private var environment
@@ -30,7 +30,7 @@ public extension View {
     /// シートプレゼンターを有効化するモディファイア
     ///
     /// 指定した `context` に応じて SheetPresenter を環境に注入し、
-    /// `.sheet(item:)` による表示を自動設定します。
+    /// `.sheet(item:)` による表示を自動設定する。
     ///
     /// # コンテキストの使い分け
     /// - `.navigation`（デフォルト）: NavigationStack のルートなど、

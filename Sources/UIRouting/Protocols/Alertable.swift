@@ -2,8 +2,8 @@ import SwiftUI
 
 /// アラートダイアログを表すプロトコル。
 ///
-/// `Alertable` に準拠した型は、型安全なアラート表示に使用できます。
-/// `Identifiable`と`Hashable`の実装は自動的に提供されます。
+/// `Alertable` に準拠した型は、型安全なアラート表示に使用できる。
+/// `Identifiable` と `Hashable` の実装は自動的に提供される。
 ///
 /// # 使用例
 /// ```swift
@@ -42,9 +42,9 @@ import SwiftUI
 /// ```
 ///
 /// # 注意
-/// - クロージャを含むassociated valueがある場合でも、`Hashable`実装は不要です
-/// - クロージャは自動的に無視され、case名とHashable型の値のみで同一性が判定されます
-/// - `id`プロパティの実装も不要です（自動生成されます）
+/// - クロージャを含む associated value がある場合でも、`Hashable` 実装は不要
+/// - クロージャは自動的に無視され、case 名と Hashable 型の値のみで同一性が判定される
+/// - `id` プロパティの実装も不要（自動生成される）
 @MainActor
 public protocol Alertable: Identifiable, Hashable {
     /// アラートのタイトル
@@ -137,8 +137,8 @@ public extension Alertable {
 
 /// アラートのアクションボタンを表す構造体。
 ///
-/// アラートダイアログに表示するボタンの情報を保持します。
-/// タイトル、役割（キャンセル、破壊的操作など）、実行するアクションを指定できます。
+/// アラートダイアログに表示するボタンの情報を保持する。
+/// タイトル、役割（キャンセル、破壊的操作など）、実行するアクションを指定できる。
 ///
 /// # 使用例
 /// ```swift
@@ -163,7 +163,7 @@ public struct AlertAction: Hashable {
     /// ボタンがタップされたときに実行されるアクション
     public let action: () -> Void
 
-    /// アラートアクションを初期化します。
+    /// アラートアクションを初期化する。
     ///
     /// - Parameters:
     ///   - title: ボタンのタイトル

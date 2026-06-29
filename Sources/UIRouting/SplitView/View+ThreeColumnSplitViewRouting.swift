@@ -1,10 +1,10 @@
 import SwiftUI
 
 extension View {
-    /// 3カラムスプリットビューのコンテンツビューにルーティング設定を自動適用します。
+    /// 3カラムスプリットビューのコンテンツビューにルーティング設定を自動適用する。
     ///
-    /// SidebarItem の型から自動的にルーティング型を推論して適用します。
-    /// Router、SheetPresenter、AlertPresenter などが内部で自動生成されます。
+    /// SidebarItem の型から自動的にルーティング型を推論して適用する。
+    /// Router、SheetPresenter、AlertPresenter などが内部で自動生成される。
     ///
     /// # 使用例
     /// ```swift
@@ -38,10 +38,10 @@ extension View {
         )
     }
 
-    /// 3カラムスプリットビューの詳細ビューにルーティング設定を自動適用します。
+    /// 3カラムスプリットビューの詳細ビューにルーティング設定を自動適用する。
     ///
-    /// SidebarItem の型から自動的にルーティング型を推論して適用します。
-    /// Router、SheetPresenter、AlertPresenter などが内部で自動生成されます。
+    /// SidebarItem の型から自動的にルーティング型を推論して適用する。
+    /// Router、SheetPresenter、AlertPresenter などが内部で自動生成される。
     ///
     /// # 使用例
     /// ```swift

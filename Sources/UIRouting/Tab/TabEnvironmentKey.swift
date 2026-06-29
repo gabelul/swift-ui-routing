@@ -2,7 +2,7 @@ import SwiftUI
 
 /// TabPresenter用の環境値アクセスキー。
 ///
-/// `@Environment(.tab(AppTab.self))` の形式で TabPresenter にアクセスするために使用します。
+/// `@Environment(.tab(AppTab.self))` の形式で TabPresenter にアクセスするために使う。
 ///
 /// # 使用例
 /// ```swift
@@ -24,7 +24,7 @@ public struct TabEnvironmentKey<Tab: Tabbable> {
 }
 
 public extension TabEnvironmentKey {
-    /// TabPresenter の環境値キーを生成します。
+    /// TabPresenter の環境値キーを生成する。
     ///
     /// - Parameter type: タブの型
     /// - Returns: TabPresenter用の環境値キー

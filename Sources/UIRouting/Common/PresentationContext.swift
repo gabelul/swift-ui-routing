@@ -5,7 +5,7 @@ import SwiftUI
 /// プレゼンテーション表示のコンテキスト
 ///
 /// シート、フルスクリーンカバー、カスタム高さシート、アラートなどの
-/// プレゼンテーションが表示される階層を指定します。
+/// プレゼンテーションが表示される階層を指定する。
 public enum PresentationContext: Hashable {
     /// ナビゲーション階層（デフォルト）
     case navigation

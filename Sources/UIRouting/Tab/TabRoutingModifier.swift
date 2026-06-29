@@ -3,11 +3,10 @@ import SwiftUI
 /// タブのルーティング設定を自動化する ViewModifier。
 ///
 /// 各タブに対して Router、SheetPresenter、AlertPresenter などのルーティングコンポーネントを
-/// 自動的に設定し、NavigationStack との連携も行います。
+/// 自動的に設定し、NavigationStack との連携も行う。
+/// タブごとに独立したルーティングスタックを持てる。
 ///
-/// これにより、タブごとに独立したルーティングスタックを持つことができます。
-///
-/// 通常は `.tabRouting(tab:)` モディファイアを通じて使用します。
+/// 通常は `.tabRouting(tab:)` モディファイアを通じて使う。
 public struct TabRoutingModifier<
     Tab: Tabbable,
     Route: Routable,
@@ -65,7 +64,7 @@ public struct TabRoutingModifier<
 
 /// NavigationStack を条件分岐で適用する内部用 Modifier。
 ///
-/// タブの Route 型が Never でない場合は NavigationStack を適用します。
+/// タブの Route 型が Never でない場合は NavigationStack を適用する。
 private struct NavigationScopeModifierIfNeeded<
     Tab: Tabbable,
     Route: Routable,

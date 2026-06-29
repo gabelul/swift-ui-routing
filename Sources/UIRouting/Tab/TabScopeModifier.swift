@@ -3,9 +3,9 @@ import SwiftUI
 /// TabPresenter と TabView を連携させる ViewModifier（iOS 26 宣言型 `Tab(value:role:)` API）。
 ///
 /// TabPresenter の selectedTab を TabView にバインドし、
-/// 各タブに自動的にルーティング機能を適用します。
+/// 各タブに自動的にルーティング機能を適用する。
 ///
-/// 通常は `TabRouting` 構造体を通じて使用します。
+/// 通常は `TabRouting` 構造体を通じて使う。
 ///
 /// # 使用例
 /// ```swift
@@ -42,13 +42,13 @@ public struct TabScopeModifier<Tab: Tabbable>: ViewModifier {
 
 /// タブベースのルーティングを簡単に構築するためのビュー（iOS 26 Liquid Glass 対応）。
 ///
-/// TabPresenter を使用してタブの選択状態を管理し、
-/// 各タブに自動的にルーティング機能（Router、SheetPresenter など）を適用します。
+/// TabPresenter を使ってタブの選択状態を管理し、
+/// 各タブに自動的にルーティング機能（Router、SheetPresenter など）を適用する。
 ///
-/// 内部では iOS 26 宣言型 `SwiftUI.Tab(value:role:)` API を使用して構築するため、
+/// 内部では iOS 26 宣言型 `SwiftUI.Tab(value:role:)` API を使って構築するため、
 /// `.tabViewBottomAccessory` / `.tabBarMinimizeBehavior(_:)` / `.tabViewStyle(.sidebarAdaptable)` /
 /// `TabSection` / `.badge(_:)` などの Liquid Glass 系モディファイアを
-/// そのまま呼び出し側で `TabRouting(...)` にチェーンできます。
+/// そのまま呼び出し側で `TabRouting(...)` にチェーンできる。
 ///
 /// # 使用例（フラットな 4 タブ）
 /// ```swift
@@ -76,13 +76,13 @@ public struct TabScopeModifier<Tab: Tabbable>: ViewModifier {
 /// ```
 ///
 /// ルーティング設定 (Router / SheetPresenter / AlertPresenter / NavigationStack) は
-/// content ビルダー内部で自動付与されるため、呼び出し側は純粋にビュー組み立てだけを記述できます。
+/// content ビルダー内部で自動付与されるため、呼び出し側は純粋にビュー組み立てだけを記述できる。
 public struct TabRouting<Tab: Tabbable, Content: View>: View {
     @Bindable private var tabPresenter: TabPresenter<Tab>
     private let tabs: [Tab]
     private let content: (Tab) -> Content
 
-    /// タブルーティングを初期化します。
+    /// タブルーティングを初期化する。
     ///
     /// - Parameters:
     ///   - tabPresenter: タブの選択状態を管理する TabPresenter
@@ -121,7 +121,7 @@ public struct TabRouting<Tab: Tabbable, Content: View>: View {
 public extension TabRouting {
     /// 各タブのコンテンツを `tab.contentView` で描画する簡易イニシャライザ。
     ///
-    /// `Tabbable.contentView` をそのまま使う典型ケース向けのショートカットです。
+    /// `Tabbable.contentView` をそのまま使う典型ケース向けのショートカット。
     init(
         tabPresenter: TabPresenter<Tab>,
         tabs: [Tab]

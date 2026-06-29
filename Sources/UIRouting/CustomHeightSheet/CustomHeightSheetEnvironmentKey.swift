@@ -2,8 +2,8 @@ import SwiftUI
 
 /// CustomHeightSheetPresenter用の環境値アクセスキー。
 ///
-/// `@Environment(.customHeightSheet(CustomSheet.self))` の形式で CustomHeightSheetPresenter にアクセスするために使用します。
-/// シート内からカスタム高さシートを開く場合は `@Environment(.customHeightSheet(CustomSheet.self, context: .sheet))` を使用します。
+/// `@Environment(.customHeightSheet(CustomSheet.self))` の形式で CustomHeightSheetPresenter にアクセスするために使用する。
+/// シート内からカスタム高さシートを開く場合は `@Environment(.customHeightSheet(CustomSheet.self, context: .sheet))` を使用する。
 ///
 /// # 使用例
 /// ```swift
@@ -13,7 +13,7 @@ import SwiftUI
 ///
 ///     var body: some View {
 ///         Button("Show Custom Sheet") {
-///             presenter?.present(.filter)
+///             presenter.present(.filter)
 ///         }
 ///     }
 /// }
@@ -24,7 +24,7 @@ import SwiftUI
 ///
 ///     var body: some View {
 ///         Button("Show Another Custom Sheet") {
-///             presenter?.present(.filter)
+///             presenter.present(.filter)
 ///         }
 ///         .customHeightSheetPresenter(for: AppCustomSheet.self)
 ///     }
@@ -38,7 +38,7 @@ public struct CustomHeightSheetEnvironmentKey<Sheet> where Sheet: Identifiable &
 }
 
 public extension CustomHeightSheetEnvironmentKey {
-    /// CustomHeightSheetPresenter の環境値キーを生成します。
+    /// CustomHeightSheetPresenter の環境値キーを生成する。
     ///
     /// - Parameters:
     ///   - type: カスタム高さシートの型

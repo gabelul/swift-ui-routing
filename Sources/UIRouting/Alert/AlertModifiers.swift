@@ -4,7 +4,7 @@ import SwiftUI
 
 /// Alert が必要な場合のみ適用する内部用 Modifier。
 ///
-/// Alert 型が Never でない場合のみ、アラート表示機能を適用します。
+/// Alert 型が Never でない場合のみ、アラート表示機能を適用する。
 struct AlertModifierIfNeeded<Alert: Alertable>: ViewModifier {
     @Bindable var presenter: AlertPresenter<Alert>
 
@@ -42,8 +42,8 @@ struct AlertModifierIfNeeded<Alert: Alertable>: ViewModifier {
 
 /// Navigation コンテキストでアラートを表示する ViewModifier。
 ///
-/// NavigationStack 内でアラートを表示するために使用します。
-/// `.routingScope()` により自動適用されるため、通常は直接使用する必要はありません。
+/// NavigationStack 内でアラートを表示するために使用する。
+/// `.routingScope()` により自動適用されるため、通常は直接使用する必要はない。
 public struct AlertOnNavigationModifier<Alert: Alertable>: ViewModifier {
     @Environment private var alertPresenter: AlertPresenter<Alert>
 
@@ -79,8 +79,8 @@ public struct AlertOnNavigationModifier<Alert: Alertable>: ViewModifier {
 
 /// Sheet コンテキストでアラートを表示する ViewModifier。
 ///
-/// シート内でアラートを表示するために使用します。
-/// シート内のビューに `.sheetAlert()` を適用することで有効化されます。
+/// シート内でアラートを表示するために使用する。
+/// シート内のビューに `.sheetAlert()` を適用することで有効化される。
 public struct AlertOnSheetModifier<Alert: Alertable>: ViewModifier {
     @Environment private var alertPresenter: AlertPresenter<Alert>
 
@@ -115,10 +115,10 @@ public struct AlertOnSheetModifier<Alert: Alertable>: ViewModifier {
 }
 
 public extension View {
-    /// Navigation コンテキストでアラートを表示可能にします。
+    /// Navigation コンテキストでアラートを表示可能にする。
     ///
-    /// 通常は `.routingScope()` により自動適用されるため、直接呼ぶ必要はありません。
-    /// 独自のNavigationStackを使用する場合など、高度な使い方で明示的に適用する場合に使用します。
+    /// 通常は `.routingScope()` により自動適用されるため、直接呼ぶ必要はない。
+    /// 独自の NavigationStack を使用する場合など、高度なユースケースで明示的に適用する。
     ///
     /// # 使用例
     /// ```swift
@@ -139,19 +139,19 @@ public extension View {
         modifier(AlertOnNavigationModifier<Alert>())
     }
 
-    /// Sheet 内でアラートを表示可能にします。
+    /// Sheet 内でアラートを表示可能にする。
     ///
-    /// シート内のビューでアラートを表示したい場合に使用します。
+    /// シート内のビューでアラートを表示したい場合に使用する。
     ///
     /// # 使用例
     /// ```swift
     /// struct SettingsSheet: View {
-    ///     @Environment(\.alert(AppAlert.self, context: .sheet)) private var alertPresenter
+    ///     @Environment(.alert(AppAlert.self, context: .sheet)) private var alertPresenter
     ///
     ///     var body: some View {
     ///         Form {
     ///             Button("削除") {
-    ///                 alertPresenter?.present(.confirmDelete)
+    ///                 alertPresenter.present(.confirmDelete)
     ///             }
     ///         }
     ///         .sheetAlert(for: AppAlert.self)

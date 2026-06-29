@@ -3,9 +3,9 @@ import SwiftUI
 /// 3カラムSplitView のコンテンツビューに対してルーティング設定を自動化する ViewModifier。
 ///
 /// コンテンツビューに対して Router、SheetPresenter、AlertPresenter などのルーティングコンポーネントを
-/// 自動的に設定します。
+/// 自動的に設定する。
 ///
-/// 通常は `.threeColumnContentRouting()` モディファイアを通じて使用します。
+/// 通常は `.threeColumnContentRouting()` モディファイアを通じて使う。
 public struct ThreeColumnContentRoutingModifier<
     Sidebar: SidebarItem,
     Route: Routable,
@@ -56,9 +56,9 @@ public struct ThreeColumnContentRoutingModifier<
 /// 3カラムSplitView の詳細ビューに対してルーティング設定を自動化する ViewModifier。
 ///
 /// 詳細ビューに対して Router、SheetPresenter、AlertPresenter などのルーティングコンポーネントを
-/// 自動的に設定します。
+/// 自動的に設定する。
 ///
-/// 通常は `.threeColumnDetailRouting()` モディファイアを通じて使用します。
+/// 通常は `.threeColumnDetailRouting()` モディファイアを通じて使う。
 public struct ThreeColumnDetailRoutingModifier<
     Sidebar: SidebarItem,
     Route: Routable,

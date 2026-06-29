@@ -3,7 +3,7 @@ import SwiftUI
 /// 3カラムNavigationSplitViewのルーティングシステム。
 ///
 /// サイドバー | コンテンツ（中央） | 詳細（右）の3カラムレイアウトで、
-/// 各カラムの選択状態とナビゲーションを一元管理します。
+/// 各カラムの選択状態とナビゲーションを一元管理する。
 ///
 /// # 機能
 /// - **サイドバー選択**: `SplitViewPresenter.selectedSidebar`
@@ -76,7 +76,7 @@ public struct ThreeColumnSplitViewRouting<
     private let sidebarToolbar: SidebarToolbar
     private let onDelete: ((Sidebar) -> Void)?
 
-    /// 3カラムスプリットビュールーティングを初期化します。
+    /// 3カラムスプリットビュールーティングを初期化する。
     ///
     /// - Parameters:
     ///   - splitViewPresenter: サイドバーとコンテンツの選択状態を管理する SplitViewPresenter
@@ -199,7 +199,7 @@ public struct ThreeColumnSplitViewRouting<
 
 /// サイドバーツールバーなしを表す型。
 ///
-/// ツールバーパラメータを省略した場合のデフォルト型として使用されます。
+/// ツールバーパラメータを省略した場合のデフォルト型として使われる。
 public struct EmptySidebarToolbar: ToolbarContent {
     public var body: some ToolbarContent {
         ToolbarItem(placement: .automatic) {
@@ -211,7 +211,7 @@ public struct EmptySidebarToolbar: ToolbarContent {
 // MARK: - Convenience Initializers (Without Toolbar)
 
 extension ThreeColumnSplitViewRouting where SidebarToolbar == EmptySidebarToolbar {
-    /// ツールバーなしの3カラムスプリットビュールーティングを初期化します。
+    /// ツールバーなしの3カラムスプリットビュールーティングを初期化する。
     ///
     /// - Parameters:
     ///   - splitViewPresenter: サイドバーとコンテンツの選択状態を管理する SplitViewPresenter

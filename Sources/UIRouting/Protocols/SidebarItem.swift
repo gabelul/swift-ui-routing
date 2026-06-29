@@ -2,8 +2,8 @@ import SwiftUI
 
 /// NavigationSplitView のサイドバー項目を表すプロトコル。
 ///
-/// `SidebarItem` に準拠した型は、NavigationSplitView による型安全なサイドバー選択に使用できます。
-/// `Identifiable`と`Hashable`の実装は自動的に提供されます。
+/// `SidebarItem` に準拠した型は、NavigationSplitView による型安全なサイドバー選択に使用できる。
+/// `Identifiable` と `Hashable` の実装は自動的に提供される。
 ///
 /// # 使用例（2カラム）
 /// ```swift
@@ -39,14 +39,14 @@ import SwiftUI
 /// ```
 ///
 /// # 3カラムレイアウト対応
-/// 3カラムNavigationSplitViewを使用する場合は、以下の型を定義します：
+/// 3 カラム NavigationSplitView を使用する場合は、以下の型を定義する：
 /// - `ContentItem`: 中央カラムで選択可能なアイテムの型（例: Email）
 /// - `ContentRoute`: 中央カラム内でのナビゲーションルート
 /// - `contentView`: 中央カラムに表示するビュー
 ///
 /// # 注意
-/// - `id`プロパティの実装は不要です（自動生成されます）
-/// - `Hashable`の実装も不要です（自動提供されます）
+/// - `id` プロパティの実装は不要（自動生成される）
+/// - `Hashable` の実装も不要（自動提供される）
 @MainActor
 public protocol SidebarItem: Hashable, Identifiable {
     // View 関連
@@ -106,8 +106,8 @@ public extension SidebarItem where ID == String {
 
 /// 3カラムレイアウトの中央カラムで選択可能なアイテムを表すプロトコル。
 ///
-/// `Selectable`に準拠した型は、NavigationSplitViewの中央カラムのリストで
-/// 選択可能なアイテムとして使用できます（例: メール、連絡先、ファイルなど）。
+/// `Selectable` に準拠した型は、NavigationSplitView の中央カラムのリストで
+/// 選択可能なアイテムとして使用できる（例: メール、連絡先、ファイルなど）。
 ///
 /// # 使用例
 /// ```swift

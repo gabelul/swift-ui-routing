@@ -2,8 +2,8 @@ import SwiftUI
 
 /// タブの定義を表すプロトコル。
 ///
-/// `Tabbable` に準拠した型は、TabView による型安全なタブ管理に使用できます。
-/// `Identifiable`と`Hashable`の実装は自動的に提供されます。
+/// `Tabbable` に準拠した型は、TabView による型安全なタブ管理に使用できる。
+/// `Identifiable` と `Hashable` の実装は自動的に提供される。
 ///
 /// # 使用例
 /// ```swift
@@ -36,9 +36,9 @@ import SwiftUI
 /// ```
 ///
 /// # 注意
-/// - `id`プロパティの実装は不要です（自動生成されます）
-/// - `Hashable`の実装も不要です（自動提供されます）
-/// - ルーティング不要な場合は型宣言省略可能（デフォルトで`Never`）
+/// - `id` プロパティの実装は不要（自動生成される）
+/// - `Hashable` の実装も不要（自動提供される）
+/// - ルーティング不要な場合は型宣言省略可能（デフォルトで `Never`）
 @MainActor
 public protocol Tabbable<Route>: Hashable, Identifiable {
     // View 関連
@@ -62,7 +62,7 @@ public protocol Tabbable<Route>: Hashable, Identifiable {
     ///
     /// デフォルトは `nil`（標準タブ）。検索専用タブなどに `.search` を返すと、
     /// システムがロールに応じた UI（検索タブの常駐配置、Liquid Glass エフェクトの
-    /// 最適化、サイドバー適応時の役割分類）を自動的に適用します。
+    /// 最適化、サイドバー適応時の役割分類）を自動的に適用する。
     var tabRole: TabRole? { get }
 }
 

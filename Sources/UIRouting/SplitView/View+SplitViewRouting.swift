@@ -1,10 +1,10 @@
 import SwiftUI
 
 extension View {
-    /// スプリットビューの詳細ビューにルーティング設定を自動適用します。
+    /// スプリットビューの詳細ビューにルーティング設定を自動適用する。
     ///
-    /// SidebarItem の型から自動的にルーティング型を推論して適用します。
-    /// Router、SheetPresenter、AlertPresenter などが内部で自動生成されます。
+    /// SidebarItem の型から自動的にルーティング型を推論して適用する。
+    /// Router、SheetPresenter、AlertPresenter などが内部で自動生成される。
     ///
     /// # 使用例
     /// ```swift

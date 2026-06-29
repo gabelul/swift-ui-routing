@@ -1,21 +1,21 @@
 # Getting Started with UIRouting
 
-UIRouting をプロジェクトに追加してルーティングを設定する手順を説明します。
+UIRouting をプロジェクトに追加してルーティングを設定する手順。
 
-## Installation
+## インストール
 
-Swift Package Manager でインストールします。`Package.swift` に依存関係を追加してください。
+Swift Package Manager でインストールする。`Package.swift` に依存関係を追加する。
 
 ```swift
 dependencies: [
     .package(
         url: "https://github.com/no-problem-dev/swift-ui-routing.git",
-        from: "1.0.0"
+        from: "2.1.0"
     )
 ]
 ```
 
-ターゲットの依存関係にも追加します。
+ターゲットの依存関係にも追加する。
 
 ```swift
 .target(
@@ -26,13 +26,13 @@ dependencies: [
 )
 ```
 
-Xcode の場合は **File > Add Package Dependencies** からパッケージ URL を入力して追加します。
+Xcode の場合は **File > Add Package Dependencies** からパッケージ URL を入力して追加する。
 
-## Basic Usage
+## 基本的な使い方
 
 ### 1. ルートを定義する
 
-`Routable` に準拠した enum を作成し、各 case に対応するビューを `body` で返します。
+`Routable` に準拠した enum を作成し、各 case に対応するビューを `body` で返す。
 
 ```swift
 import UIRouting
@@ -53,11 +53,11 @@ enum AppRoute: Routable {
 }
 ```
 
-クロージャを含む associated value があっても `Hashable` の実装は不要です。UIRouting が Mirror ベースの実装を自動提供します。
+クロージャを含む associated value があっても `Hashable` の実装は不要。UIRouting が Mirror ベースの実装を自動提供する。
 
 ### 2. シート・アラートを定義する
 
-シートは `Sheetable`、アラートは `Alertable` に準拠した enum を作成します。
+シートは `Sheetable`、アラートは `Alertable` に準拠した enum を作成する。
 
 ```swift
 enum AppSheet: Sheetable {
@@ -92,7 +92,7 @@ enum AppAlert: Alertable {
 
 ### 3. ルーティングをセットアップする
 
-アプリのエントリポイントで `Router` と各 `Presenter` を作成し、`.routing(...)` で環境に注入します。
+アプリのエントリポイントで `Router` と各 `Presenter` を作成し、`.routing(...)` で環境に注入する。
 
 ```swift
 @main
@@ -115,7 +115,7 @@ struct MyApp: App {
 }
 ```
 
-ContentView の body で `routingScope(for:alert:)` を適用して NavigationStack を設定します。
+ContentView の body で `routingScope(for:alert:)` を適用して NavigationStack を設定する。
 
 ```swift
 struct ContentView: View {
@@ -128,7 +128,7 @@ struct ContentView: View {
 
 ### 4. ビューから遷移を実行する
 
-`@Environment` で各 Presenter を取得して遷移を実行します。
+`@Environment` で各 Presenter を取得して遷移を実行する。
 
 ```swift
 struct HomeView: View {
@@ -156,7 +156,7 @@ struct HomeView: View {
 
 ## TabView を使う
 
-タブベースのアプリは `Tabbable` と `TabRouting` を組み合わせて構築します。
+タブベースのアプリは `Tabbable` と `TabRouting` を組み合わせて構築する。
 
 ```swift
 enum AppTab: Tabbable {
@@ -193,4 +193,4 @@ struct RootView: View {
 }
 ```
 
-`TabRouting` は各タブに `Router`・`SheetPresenter`・`AlertPresenter` を自動的に設定します。
+`TabRouting` は各タブに `Router`・`SheetPresenter`・`AlertPresenter` を自動的に設定する。

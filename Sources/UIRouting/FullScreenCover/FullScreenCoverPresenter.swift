@@ -26,7 +26,8 @@ import SwiftUI
 ///         customHeightSheetPresenter: CustomHeightSheetPresenter<CustomHeightSheet>(),
 ///         fullScreenCoverPresenter: FullScreenCoverPresenter<FullScreenCover>(),
 ///         alertPresenterOnNavigation: AlertPresenter<Alert>(),
-///         alertPresenterOnSheet: AlertPresenter<Alert>()
+///         alertPresenterOnSheet: AlertPresenter<Alert>(),
+///         splitViewPresenter: SplitViewPresenter<Never>()
 ///     )
 ///
 /// // 3. .fullScreenCover()モディファイアを設定
@@ -42,11 +43,11 @@ import SwiftUI
 ///
 /// // 4. カバーを表示
 /// struct MainView: View {
-///     @Environment(\.fullScreenCover(FullScreenCover.self)) private var fullScreenCoverPresenter
+///     @Environment(.fullScreenCover(FullScreenCover.self)) private var fullScreenCoverPresenter
 ///
 ///     var body: some View {
 ///         Button("オンボーディングを表示") {
-///             fullScreenCoverPresenter?.present(.onboarding)
+///             fullScreenCoverPresenter.present(.onboarding)
 ///         }
 ///     }
 /// }

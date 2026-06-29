@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Router用の環境値アクセスキー。
 ///
-/// `@Environment(.router(Screen.self))` の形式で Router にアクセスするために使用します。
+/// `@Environment(.router(Screen.self))` の形式で Router にアクセスするために使う。
 ///
 /// # 使用例
 /// ```swift
@@ -24,7 +24,7 @@ public struct RouterEnvironmentKey<Route: Routable> {
 }
 
 public extension RouterEnvironmentKey {
-    /// Router の環境値キーを生成します。
+    /// Router の環境値キーを生成する。
     ///
     /// - Parameter type: ルーティング対象の型
     /// - Returns: Router用の環境値キー

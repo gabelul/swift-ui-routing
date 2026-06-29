@@ -2,8 +2,8 @@ import SwiftUI
 
 /// SheetPresenter用の環境値アクセスキー。
 ///
-/// `@Environment(.sheet(Sheet.self))` の形式で SheetPresenter にアクセスするために使用します。
-/// シート内からシートを開く場合は `@Environment(.sheet(Sheet.self, context: .sheet))` を使用します。
+/// `@Environment(.sheet(Sheet.self))` の形式で SheetPresenter にアクセスするために使う。
+/// シート内からシートを開く場合は `@Environment(.sheet(Sheet.self, context: .sheet))` を使う。
 ///
 /// # 使用例
 /// ```swift
@@ -38,7 +38,7 @@ public struct SheetEnvironmentKey<Sheet> where Sheet: Identifiable & Hashable {
 }
 
 public extension SheetEnvironmentKey {
-    /// SheetPresenter の環境値キーを生成します。
+    /// SheetPresenter の環境値キーを生成する。
     ///
     /// - Parameters:
     ///   - type: シートの型
