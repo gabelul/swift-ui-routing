@@ -2,6 +2,7 @@ import XCTest
 @testable import UIRouting
 
 /// UIRouting パッケージの基本テスト。
+@MainActor
 final class UIRoutingTests: XCTestCase {
 
     // MARK: - Router Tests
@@ -116,12 +117,12 @@ final class UIRoutingTests: XCTestCase {
 
 // MARK: - Test Types
 
-enum TestRoute: Routable {
+enum TestRoute: Routable, Sheetable {
     case home
     case detail(id: String)
     case settings
 
-    var id: String {
+    nonisolated var id: String {
         switch self {
         case .home: return "home"
         case .detail(let id): return "detail_\(id)"
@@ -166,7 +167,3 @@ enum TestAlert: Alertable {
 }
 
 import SwiftUI
-
-extension View {
-    var body: some View { self }
-}
