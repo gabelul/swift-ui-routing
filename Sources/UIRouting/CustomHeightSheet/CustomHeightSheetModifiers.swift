@@ -4,7 +4,7 @@ import SwiftUI
 
 /// CustomHeightSheet が必要な場合のみ適用する内部用 Modifier。
 ///
-/// CustomSheet 型が Never でない場合のみ、カスタム高さシート機能を適用します。
+/// CustomSheet 型が Never でない場合のみ、カスタム高さシート機能を適用する。
 struct CustomHeightSheetModifierIfNeeded<CustomSheet: CustomHeightSheetable>: ViewModifier {
     @Bindable var presenter: CustomHeightSheetPresenter<CustomSheet>
     @Environment(\.self) private var environment
@@ -29,7 +29,7 @@ struct CustomHeightSheetModifierIfNeeded<CustomSheet: CustomHeightSheetable>: Vi
 public extension View {
     /// シート内でカスタム高さシートプレゼンターを有効化するモディファイア
     ///
-    /// シート内から別のカスタム高さシートを開く場合に使用します。
+    /// シート内から別のカスタム高さシートを開く場合に使用する。
     ///
     /// # 使用例
     /// ```swift

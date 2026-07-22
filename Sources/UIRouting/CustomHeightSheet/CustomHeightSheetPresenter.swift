@@ -5,16 +5,9 @@ import SwiftUI
 /// # 使用例
 /// ```swift
 /// // 1. カスタム高さシートを定義
-/// enum CustomHeightSheet: Identifiable, Hashable {
+/// enum AppCustomHeightSheet: CustomHeightSheetable {
 ///     case filter
 ///     case quickSettings
-///
-///     var id: String {
-///         switch self {
-///         case .filter: return "filter"
-///         case .quickSettings: return "quickSettings"
-///         }
-///     }
 ///
 ///     var detents: Set<PresentationDetent> {
 ///         switch self {
@@ -40,7 +33,8 @@ import SwiftUI
 ///         customHeightSheetPresenter: CustomHeightSheetPresenter<CustomHeightSheet>(),
 ///         fullScreenCoverPresenter: FullScreenCoverPresenter<FullScreenCover>(),
 ///         alertPresenterOnNavigation: AlertPresenter<Alert>(),
-///         alertPresenterOnSheet: AlertPresenter<Alert>()
+///         alertPresenterOnSheet: AlertPresenter<Alert>(),
+///         splitViewPresenter: SplitViewPresenter<Never>()
 ///     )
 ///
 /// // 3. .sheet()モディファイアを設定（detents付き）
@@ -57,11 +51,11 @@ import SwiftUI
 ///
 /// // 4. カスタム高さシートを表示
 /// struct MainView: View {
-///     @Environment(\.customHeightSheet(CustomHeightSheet.self)) private var customHeightSheetPresenter
+///     @Environment(.customHeightSheet(CustomHeightSheet.self)) private var customHeightSheetPresenter
 ///
 ///     var body: some View {
 ///         Button("フィルターを表示") {
-///             customHeightSheetPresenter?.present(.filter)
+///             customHeightSheetPresenter.present(.filter)
 ///         }
 ///     }
 /// }

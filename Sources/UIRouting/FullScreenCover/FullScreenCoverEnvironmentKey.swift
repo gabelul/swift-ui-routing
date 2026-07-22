@@ -2,8 +2,8 @@ import SwiftUI
 
 /// FullScreenCoverPresenter用の環境値アクセスキー。
 ///
-/// `@Environment(.fullScreenCover(Cover.self))` の形式で FullScreenCoverPresenter にアクセスするために使用します。
-/// シート内からフルスクリーンカバーを開く場合は `@Environment(.fullScreenCover(Cover.self, context: .sheet))` を使用します。
+/// `@Environment(.fullScreenCover(Cover.self))` の形式で FullScreenCoverPresenter にアクセスするために使用する。
+/// シート内からフルスクリーンカバーを開く場合は `@Environment(.fullScreenCover(Cover.self, context: .sheet))` を使用する。
 ///
 /// # 使用例
 /// ```swift
@@ -13,7 +13,7 @@ import SwiftUI
 ///
 ///     var body: some View {
 ///         Button("Show Cover") {
-///             presenter?.present(.onboarding)
+///             presenter.present(.onboarding)
 ///         }
 ///     }
 /// }
@@ -24,7 +24,7 @@ import SwiftUI
 ///
 ///     var body: some View {
 ///         Button("Show Another Cover") {
-///             presenter?.present(.onboarding)
+///             presenter.present(.onboarding)
 ///         }
 ///         .fullScreenCoverPresenter(for: AppCover.self)
 ///     }
@@ -38,7 +38,7 @@ public struct FullScreenCoverEnvironmentKey<Cover> where Cover: Identifiable & H
 }
 
 public extension FullScreenCoverEnvironmentKey {
-    /// FullScreenCoverPresenter の環境値キーを生成します。
+    /// FullScreenCoverPresenter の環境値キーを生成する。
     ///
     /// - Parameters:
     ///   - type: フルスクリーンカバーの型

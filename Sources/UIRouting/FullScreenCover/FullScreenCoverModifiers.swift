@@ -4,8 +4,8 @@ import SwiftUI
 
 /// FullScreenCover が必要な場合のみ適用する内部用 Modifier。
 ///
-/// FullScreen 型が Never でない場合のみ、フルスクリーンカバー機能を適用します。
-/// macOS では fullScreenCover が利用できないため、通常の sheet を使用します。
+/// FullScreen 型が Never でない場合のみ、フルスクリーンカバー機能を適用する。
+/// macOS では fullScreenCover が利用できないため、通常の sheet を使用する。
 struct FullScreenCoverModifierIfNeeded<FullScreen: FullScreenCoverable>: ViewModifier {
     @Bindable var presenter: FullScreenCoverPresenter<FullScreen>
     @Environment(\.self) private var environment
@@ -38,7 +38,7 @@ struct FullScreenCoverModifierIfNeeded<FullScreen: FullScreenCoverable>: ViewMod
 public extension View {
     /// シート内でフルスクリーンカバープレゼンターを有効化するモディファイア
     ///
-    /// シート内から別のフルスクリーンカバーを開く場合に使用します。
+    /// シート内から別のフルスクリーンカバーを開く場合に使用する。
     ///
     /// # 使用例
     /// ```swift

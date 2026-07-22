@@ -2,7 +2,7 @@ import SwiftUI
 
 /// AlertPresenter用の環境値アクセスキー。
 ///
-/// `@Environment(.alert(Alert.self, context: .navigation))` の形式で AlertPresenter にアクセスするために使用します。
+/// `@Environment(.alert(Alert.self, context: .navigation))` の形式で AlertPresenter にアクセスするために使用する。
 ///
 /// # 使用例
 /// ```swift
@@ -11,7 +11,7 @@ import SwiftUI
 ///
 ///     var body: some View {
 ///         Button("Show Alert") {
-///             alertPresenter?.present(.error(message: "エラーが発生しました"))
+///             alertPresenter.present(.error(message: "エラーが発生しました"))
 ///         }
 ///     }
 /// }
@@ -24,7 +24,7 @@ public struct AlertEnvironmentKey<Alert: Alertable> {
 }
 
 public extension AlertEnvironmentKey {
-    /// AlertPresenter の環境値キーを生成します。
+    /// AlertPresenter の環境値キーを生成する。
     ///
     /// - Parameters:
     ///   - type: アラートの型

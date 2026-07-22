@@ -2,10 +2,10 @@ import SwiftUI
 
 /// SplitView の詳細ビューに対してルーティング設定を自動化する ViewModifier。
 ///
-/// 各詳細ビューに対して Router、SheetPresenter、AlertPresenter などのルーティングコンポーネントを
-/// 自動的に設定し、NavigationStack との連携も行います。
+/// 各詳細ビューに Router、SheetPresenter、AlertPresenter などのルーティングコンポーネントを
+/// 自動設定し、NavigationStack との連携も行う。
 ///
-/// 通常は `.splitViewRouting()` モディファイアを通じて使用します。
+/// 通常は `.splitViewRouting()` モディファイアを通じて使う。
 public struct SplitViewRoutingModifier<
     Sidebar: SidebarItem,
     Route: Routable,

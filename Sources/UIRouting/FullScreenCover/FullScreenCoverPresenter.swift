@@ -5,16 +5,9 @@ import SwiftUI
 /// # 使用例
 /// ```swift
 /// // 1. カバー画面を定義
-/// enum FullScreenCover: Identifiable, Hashable {
+/// enum AppFullScreenCover: FullScreenCoverable {
 ///     case onboarding
 ///     case camera
-///
-///     var id: String {
-///         switch self {
-///         case .onboarding: return "onboarding"
-///         case .camera: return "camera"
-///         }
-///     }
 ///
 ///     @ViewBuilder
 ///     var body: some View {
@@ -33,7 +26,8 @@ import SwiftUI
 ///         customHeightSheetPresenter: CustomHeightSheetPresenter<CustomHeightSheet>(),
 ///         fullScreenCoverPresenter: FullScreenCoverPresenter<FullScreenCover>(),
 ///         alertPresenterOnNavigation: AlertPresenter<Alert>(),
-///         alertPresenterOnSheet: AlertPresenter<Alert>()
+///         alertPresenterOnSheet: AlertPresenter<Alert>(),
+///         splitViewPresenter: SplitViewPresenter<Never>()
 ///     )
 ///
 /// // 3. .fullScreenCover()モディファイアを設定
@@ -49,11 +43,11 @@ import SwiftUI
 ///
 /// // 4. カバーを表示
 /// struct MainView: View {
-///     @Environment(\.fullScreenCover(FullScreenCover.self)) private var fullScreenCoverPresenter
+///     @Environment(.fullScreenCover(FullScreenCover.self)) private var fullScreenCoverPresenter
 ///
 ///     var body: some View {
 ///         Button("オンボーディングを表示") {
-///             fullScreenCoverPresenter?.present(.onboarding)
+///             fullScreenCoverPresenter.present(.onboarding)
 ///         }
 ///     }
 /// }

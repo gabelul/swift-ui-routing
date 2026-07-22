@@ -2,8 +2,8 @@ import SwiftUI
 
 /// TabView の選択状態を管理する型安全なプレゼンター。
 ///
-/// タブの選択状態を管理し、各タブごとに独立した Router を保持します。
-/// `TabRouting` と組み合わせて使用することで、タブベースのルーティングを実現します。
+/// タブの選択状態を管理し、各タブごとに独立した Router を保持する。
+/// `TabRouting` と組み合わせてタブベースのルーティングを実現する。
 ///
 /// # 使用例
 /// ```swift
@@ -24,16 +24,40 @@ public final class TabPresenter<Tab: Tabbable> {
     /// 各タブごとの Router を保持
     private var routers: [Tab.ID: Router<Tab.Route>] = [:]
 
-    /// TabPresenter を初期化します。
+    /// TabPresenter を初期化する。
     ///
     /// - Parameter initialTab: 最初に選択されるタブ
     public init(initialTab: Tab) {
         self.selectedTab = initialTab
     }
 
+    // MARK: - Stack Observation
+
+    /// 現在選択されているタブの NavigationStack が root より深いかどうか。
+    ///
+    /// 選択中タブで `router.navigate(to:)` により push がスタックされている場合は `true`、
+    /// root にいる (path が空) または router が未登録の場合は `false`。
+    ///
+    /// `@Observable` 配下の `Router.path` を読むため、SwiftUI ビューから
+    /// 観測すると push/pop に追従して再評価される。
+    ///
+    /// # 使用例
+    /// ```swift
+    /// @Environment(.tab(AppTab.self)) private var tabPresenter
+    ///
+    /// var body: some View {
+    ///     ContentView()
+    ///         .toolbar(tabPresenter.isSelectedTabPushed ? .hidden : .visible, for: .tabBar)
+    /// }
+    /// ```
+    public var isSelectedTabPushed: Bool {
+        guard let router = routers[selectedTab.id] else { return false }
+        return !router.path.isEmpty
+    }
+
     // MARK: - Router Registration
 
-    /// Router を登録します（TabRoutingModifier から内部的に呼ばれます）。
+    /// Router を登録する（TabRoutingModifier から内部的に呼ばれる）。
     ///
     /// - Parameters:
     ///   - router: 登録する Router
@@ -44,7 +68,7 @@ public final class TabPresenter<Tab: Tabbable> {
 
     // MARK: - Tab Selection
 
-    /// 指定したタブを選択します。
+    /// 指定したタブを選択する。
     ///
     /// # 使用例
     /// ```swift
@@ -60,10 +84,10 @@ public final class TabPresenter<Tab: Tabbable> {
         selectedTab = tab
     }
 
-    /// 指定したタブを選択し、そのタブのコンテキストでコールバックを実行します。
+    /// 指定したタブを選択し、そのタブのコンテキストでコールバックを実行する。
     ///
-    /// タブ切り替えと同時に、そのタブの Router を使った画面遷移を行いたい場合に使用します。
-    /// コールバックはタブ切り替えのアニメーション完了後に実行されます。
+    /// タブ切り替えと同時に、そのタブの Router を使った画面遷移を行いたい場合に使う。
+    /// コールバックはタブ切り替えのアニメーション完了後に実行される。
     ///
     /// # 使用例
     /// ```swift

@@ -3,7 +3,7 @@ import SwiftUI
 /// NavigationSplitView の選択状態を管理する型安全なプレゼンター。
 ///
 /// 2カラムおよび3カラムのNavigationSplitViewに対応し、
-/// サイドバーとコンテンツの選択状態を一元管理します。
+/// サイドバーとコンテンツの選択状態を一元管理する。
 ///
 /// # 2カラムレイアウト
 /// ```swift
@@ -45,11 +45,11 @@ public final class SplitViewPresenter<Sidebar: SidebarItem> {
 
     /// 現在選択されているコンテンツ項目（中央カラム、3カラムレイアウト用）
     ///
-    /// 3カラムレイアウトでは、中央カラムのリストで選択されたアイテムを保持します。
-    /// 2カラムレイアウトでは使用されません（常にnil）。
+    /// 3カラムレイアウトでは、中央カラムのリストで選択されたアイテムを保持する。
+    /// 2カラムレイアウトでは使わない（常にnil）。
     public var selectedContent: Sidebar.ContentItem?
 
-    /// SplitViewPresenter を初期化します。
+    /// SplitViewPresenter を初期化する。
     ///
     /// - Parameter initialSelection: 最初に選択されるサイドバー項目（オプション）
     public init(initialSelection: Sidebar? = nil) {
@@ -59,10 +59,10 @@ public final class SplitViewPresenter<Sidebar: SidebarItem> {
 
     // MARK: - Sidebar Selection
 
-    /// 指定したサイドバー項目を選択します。
+    /// 指定したサイドバー項目を選択する。
     ///
     /// 3カラムレイアウトの場合、サイドバー選択が変更されると
-    /// コンテンツの選択は自動的にリセットされます。
+    /// コンテンツの選択は自動的にリセットされる。
     ///
     /// # 使用例
     /// ```swift
@@ -85,10 +85,9 @@ public final class SplitViewPresenter<Sidebar: SidebarItem> {
 
     // MARK: - Content Selection (3-column support, future use)
 
-    /// 指定したコンテンツ項目を選択します（3カラム用、将来使用）。
+    /// 指定したコンテンツ項目を選択する（3カラム用）。
     ///
-    /// このメソッドは3カラムレイアウトでのみ使用されます。
-    /// 2カラムレイアウトでは使用しません。
+    /// 3カラムレイアウトでのみ使われる。2カラムレイアウトでは使わない。
     ///
     /// - Parameter content: 選択するコンテンツ項目
     public func select<Content>(content: Content) where Content == Sidebar.ContentItem {

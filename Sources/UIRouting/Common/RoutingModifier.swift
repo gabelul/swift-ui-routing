@@ -3,9 +3,9 @@ import SwiftUI
 /// ルーティング環境を注入する ViewModifier。
 ///
 /// Router、SheetPresenter、AlertPresenter などのルーティングコンポーネントを
-/// 環境値として注入し、子ビュー全体で利用可能にします。
+/// 環境値として注入し、子ビュー全体で利用可能にする。
 ///
-/// 通常は `.routing()` モディファイアを通じて使用します。
+/// 通常は `.routing()` モディファイアを通じて使用する。
 public struct RoutingModifier<
     Route: Routable,
     Sheet,
@@ -60,10 +60,10 @@ public struct RoutingModifier<
 }
 
 public extension View {
-    /// ルーティングコンポーネント（Router、Presenter類）を環境に注入します。
+    /// ルーティングコンポーネント（Router、Presenter 類）を環境に注入する。
     ///
     /// すべてのルーティング機能を使用する場合は、このメソッドを使用して
-    /// 各Presenterを環境値として設定します。
+    /// 各 Presenter を環境値として設定する。
     ///
     /// # 使用例
     /// ```swift
@@ -78,7 +78,8 @@ public extension View {
     ///         customHeightSheetPresenter: CustomHeightSheetPresenter<AppCustomSheet>(),
     ///         fullScreenCoverPresenter: FullScreenCoverPresenter<AppCover>(),
     ///         alertPresenterOnNavigation: alertPresenter,
-    ///         alertPresenterOnSheet: AlertPresenter<AppAlert>()
+    ///         alertPresenterOnSheet: AlertPresenter<AppAlert>(),
+    ///         splitViewPresenter: SplitViewPresenter<Never>()
     ///     )
     /// ```
     ///
@@ -89,6 +90,7 @@ public extension View {
     ///   - fullScreenCoverPresenter: フルスクリーンカバー表示管理
     ///   - alertPresenterOnNavigation: Navigation コンテキストのアラート表示管理
     ///   - alertPresenterOnSheet: Sheet コンテキストのアラート表示管理
+    ///   - splitViewPresenter: SplitView 表示管理
     /// - Returns: ルーティング環境が注入されたビュー
     func routing<Route: Routable, Sheet, CustomHeightSheet, FullScreenCover, Alert: Alertable, Sidebar: SidebarItem>(
         router: Router<Route>,
@@ -115,10 +117,10 @@ public extension View {
         ))
     }
 
-    /// ルーティングコンポーネントを環境に注入します（簡易版）。
+    /// ルーティングコンポーネントを環境に注入する（簡易版）。
     ///
-    /// CustomHeightSheet と FullScreenCover が不要な場合に使用する簡易版です。
-    /// 内部的には CustomHeightSheetPresenter<Never> と FullScreenCoverPresenter<Never> が設定されます。
+    /// CustomHeightSheet と FullScreenCover が不要な場合に使用する簡易版。
+    /// 内部的には CustomHeightSheetPresenter<Never> と FullScreenCoverPresenter<Never> が設定される。
     ///
     /// # 使用例
     /// ```swift

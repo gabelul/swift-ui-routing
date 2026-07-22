@@ -2,7 +2,7 @@ import SwiftUI
 
 /// アラートの表示を管理する型安全なプレゼンター
 ///
-/// Navigation と Sheet で独立したアラートを表示できます。
+/// Navigation と Sheet で独立したアラートを表示できる。
 ///
 /// # 使用例
 /// ```swift
@@ -23,11 +23,11 @@ import SwiftUI
 ///
 /// // 3. アラートを表示
 /// struct MainView: View {
-///     @Environment(\.alert(Alert.self, context: .navigation)) private var alertPresenter
+///     @Environment(.alert(Alert.self, context: .navigation)) private var alertPresenter
 ///
 ///     var body: some View {
 ///         Button("削除") {
-///             alertPresenter?.present(.delete(
+///             alertPresenter.present(.delete(
 ///                 itemName: "アイテム",
 ///                 onConfirm: { /* 削除処理 */ }
 ///             ))

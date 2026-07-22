@@ -37,10 +37,7 @@ import SwiftUI
 /// // 3. NavigationStackとroutingScopeを設定
 /// var body: some View {
 ///     HomeView()
-///         .routingScope(for: Screen.self)
-///         .navigationDestination(for: Screen.self) { screen in
-///             screen.body
-///         }
+///         .routingScope(for: Screen.self, alert: Alert.self)
 /// }
 ///
 /// // 4. 画面遷移を実行

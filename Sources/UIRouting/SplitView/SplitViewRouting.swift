@@ -2,8 +2,8 @@ import SwiftUI
 
 /// スプリットビューベースのルーティングを簡単に構築するためのビュー。
 ///
-/// SplitViewPresenter を使用してサイドバーの選択状態を管理し、
-/// 各詳細ビューに自動的にルーティング機能（Router、SheetPresenter など）を適用します。
+/// SplitViewPresenter を使ってサイドバーの選択状態を管理し、
+/// 各詳細ビューに自動的にルーティング機能（Router、SheetPresenter など）を適用する。
 ///
 /// # 使用例
 /// ```swift
@@ -58,7 +58,7 @@ public struct SplitViewRouting<Sidebar: SidebarItem, PlaceholderContent: View>: 
     private let sidebarItems: [Sidebar]
     private let placeholderContent: PlaceholderContent
 
-    /// スプリットビュールーティングを初期化します。
+    /// スプリットビュールーティングを初期化する。
     ///
     /// - Parameters:
     ///   - splitViewPresenter: サイドバーの選択状態を管理する SplitViewPresenter

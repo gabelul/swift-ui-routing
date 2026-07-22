@@ -3,9 +3,9 @@ import SwiftUI
 /// Router と NavigationStack を連携させる ViewModifier。
 ///
 /// Router の path を NavigationStack にバインドし、
-/// 各画面に自動的にアラート機能を適用します。
+/// 各画面に自動的にアラート機能を適用する。
 ///
-/// 通常は `.routingScope()` モディファイアを通じて使用します。
+/// 通常は `.routingScope()` モディファイアを通じて使う。
 ///
 /// # 使用例
 /// ```swift
@@ -34,9 +34,9 @@ public struct RoutingScopeModifier<Route: Routable, Alert: Alertable>: ViewModif
 }
 
 public extension View {
-    /// NavigationStack と Router を連携させ、ルーティングスコープを設定します。
+    /// NavigationStack と Router を連携させ、ルーティングスコープを設定する。
     ///
-    /// このモディファイアは以下を行います：
+    /// このモディファイアは以下を行う：
     /// - Router の path を NavigationStack にバインド
     /// - 各画面に `.routingAlert()` を自動適用
     /// - `.navigationDestination()` で画面遷移先を設定

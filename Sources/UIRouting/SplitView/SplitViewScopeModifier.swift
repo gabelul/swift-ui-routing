@@ -3,9 +3,9 @@ import SwiftUI
 /// SplitViewPresenter と NavigationSplitView を連携させる ViewModifier。
 ///
 /// SplitViewPresenter の選択状態を NavigationSplitView にバインドし、
-/// 各詳細ビューに自動的にアラート機能を適用します。
+/// 各詳細ビューに自動的にアラート機能を適用する。
 ///
-/// 通常は `.splitViewScope()` モディファイアを通じて使用します。
+/// 通常は `.splitViewScope()` モディファイアを通じて使う。
 ///
 /// # 使用例
 /// ```swift
@@ -72,9 +72,9 @@ public struct SplitViewScopeModifier<Sidebar: SidebarItem, Sheet: Sheetable, Ale
 }
 
 public extension View {
-    /// NavigationSplitView と SplitViewPresenter を連携させ、スプリットビュースコープを設定します。
+    /// NavigationSplitView と SplitViewPresenter を連携させ、スプリットビュースコープを設定する。
     ///
-    /// このモディファイアは以下を行います：
+    /// このモディファイアは以下を行う：
     /// - SplitViewPresenter の選択状態を NavigationSplitView にバインド
     /// - 各詳細ビューに `.routingAlert()` を自動適用
     /// - DetailRoute が指定されている場合、NavigationStack で詳細ビューをラップ

@@ -2,8 +2,8 @@ import SwiftUI
 
 /// 画面遷移の宛先を表すプロトコル。
 ///
-/// `Routable` に準拠した型は、NavigationStack による型安全な画面遷移に使用できます。
-/// `Identifiable`と`Hashable`の実装は自動的に提供されます。
+/// `Routable` に準拠した型は、NavigationStack による型安全な画面遷移に使用できる。
+/// `Identifiable` と `Hashable` の実装は自動的に提供される。
 ///
 /// # 使用例
 /// ```swift
@@ -27,9 +27,9 @@ import SwiftUI
 /// ```
 ///
 /// # 注意
-/// - クロージャを含むassociated valueがある場合でも、`Hashable`実装は不要です
-/// - クロージャは自動的に無視され、case名とHashable型の値のみで同一性が判定されます
-/// - `id`プロパティの実装も不要です（自動生成されます）
+/// - クロージャを含む associated value がある場合でも、`Hashable` 実装は不要
+/// - クロージャは自動的に無視され、case 名と Hashable 型の値のみで同一性が判定される
+/// - `id` プロパティの実装も不要（自動生成される）
 @MainActor
 public protocol Routable: Hashable, Identifiable {
     associatedtype Body: View
