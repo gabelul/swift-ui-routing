@@ -45,7 +45,6 @@ import SwiftUI
 /// - クロージャを含む associated value がある場合でも、`Hashable` 実装は不要
 /// - クロージャは自動的に無視され、case 名と Hashable 型の値のみで同一性が判定される
 /// - `id` プロパティの実装も不要（自動生成される）
-@MainActor
 public protocol Alertable: Identifiable, Hashable {
     /// アラートのタイトル
     var title: String { get }

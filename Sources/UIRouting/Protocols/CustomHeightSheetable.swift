@@ -37,12 +37,11 @@ import SwiftUI
 /// - クロージャを含む associated value がある場合でも、`Hashable` 実装は不要
 /// - クロージャは自動的に無視され、case 名と Hashable 型の値のみで同一性が判定される
 /// - `id` プロパティの実装も不要（自動生成される）
-@MainActor
 public protocol CustomHeightSheetable: Identifiable, Hashable {
     associatedtype Body: View
 
     /// シートの内容ビュー
-    @ViewBuilder var body: Body { get }
+    @MainActor @ViewBuilder var body: Body { get }
 
     /// シートの高さ設定
     var detents: Set<PresentationDetent> { get }
